@@ -1,8 +1,21 @@
-.. image:: docs/source/_static/images/logo.png
-   :target: https://github.com/aarondettmann/template-py-repo
-   :alt: logo
+Python package to read, write and analyse CPACS AeroPerformanceMaps.
 
-TODO
+You need to have TIXI and TIGL install on your computer to use this package. 
+
+Install with pip
+================
+
+.. code-block:: bash
+
+   $ pip install cpacspy
+
+To build and install locally:
+=============================
+
+.. code-block:: bash
+   $ cd cpacspy
+   $ python -m build
+   $ pip install --user .
 
 License
 =======

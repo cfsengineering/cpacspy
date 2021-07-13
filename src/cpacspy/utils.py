@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # ----------------------------------------------------------------------
-# Copyright $$YEAR$$ $$COPYRIGHT_HOLDER$$
+# Copyright 2021 CFS Engineering
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,29 @@
 # limitations under the License.
 # ----------------------------------------------------------------------
 
-# Author: $$AUTHOR$$
+# Author: Aidan Jungo
+
+# XPATH
+AEROPERFORMANCE_XPATH = '/cpacs/vehicles/aircraft/model/analyses/aeroPerformance'
+REF_XPATH  = '/cpacs/vehicles/aircraft/model/reference'
+
+# Lists
+PARAMS = ['altitude','machNumber','angleOfSideslip','angleOfAttack']
+COEFS = ['cd','cl','cs','cmd','cml','cms']
+PARAMS_COEFS = PARAMS + COEFS
 
 
-print("Charlie and the Chocolate Factory"[::-1])
+def listify(value):
+    """If variable, return a list of 1 value, if already a list don't change a list. """
+
+    if value is not None:
+        if not isinstance(value,list):
+            value = [value]
+    else:
+        value = []
+
+    return value
+
+
+
+        
