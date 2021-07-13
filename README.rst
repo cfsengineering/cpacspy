@@ -1,6 +1,10 @@
 Python package to read, write and analyse CPACS AeroPerformanceMaps.
 
 You need to have TIXI and TIGL install on your computer to use this package. 
+For more information:
+TIXI: https://github.com/DLR-SC/tixi
+TIGL: https://github.com/DLR-SC/tigl
+
 
 Install with pip
 ================
@@ -9,13 +13,16 @@ Install with pip
 
    $ pip install cpacspy
 
-To build and install locally:
-=============================
+
+To build and install locally
+============================
 
 .. code-block:: bash
+
    $ cd cpacspy
    $ python -m build
    $ pip install --user .
+
 
 License
 =======
