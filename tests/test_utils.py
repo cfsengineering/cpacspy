@@ -24,7 +24,6 @@ import sys
 import pytest
 from pytest import approx
 
-
 sys.path.append('../src/')
 from cpacspy.utils import listify
 

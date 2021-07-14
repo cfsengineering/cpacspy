@@ -24,28 +24,74 @@ import sys
 import pytest
 from pytest import approx
 
+from tixi3.tixi3wrapper import Tixi3Exception
+from tigl3.tigl3wrapper import Tigl3Exception
 
 sys.path.append('../src/')
-from cpacspy.cpacsfunctions import (get_xpath_parent)
+from cpacspy.cpacsfunctions import (add_float_vector, create_branch,
+                                    get_float_vector, get_tigl_aircraft,
+                                    get_value, get_xpath_parent, open_tigl,
+                                    open_tixi, get_value_or_default)
 
-
+CPACS_IN_PATH = 'examples/D150_simple.xml'
 
 def test_open_tixi():
 
-    assert 1==1
+    """Test the function 'open_tixi'"""
+
+    # Create TIXI handles for a valid CPACS file
+    tixi_handle = open_tixi(CPACS_IN_PATH)
+
+    assert tixi_handle
+
+    # Raise error for an invalid CPACS path
+    with pytest.raises(Tixi3Exception):
+        tixi_handle = open_tixi('invalid_CPACS_path')
 
 
 def test_open_tigl():
+    """Test the function 'open_tigl'"""
 
-    assert 1==1
+    # Create TIGL handle for a valid TIXI handles
+    tixi_handle = open_tixi(CPACS_IN_PATH)
+    tigl_handle = open_tigl(tixi_handle)
+
+    assert tigl_handle
+
+    # Raise error for an invalid TIXI handles
+    with pytest.raises(AttributeError):
+        tixi_handle = open_tigl('invalid_TIGL_handle')
 
 def test_get_tigl_aircraft():
 
-    assert 1 == 1
+    tixi_handle = open_tixi(CPACS_IN_PATH)
+    tigl_handle = open_tigl(tixi_handle)
+    assert get_tigl_aircraft(tigl_handle)
 
 def test_get_value():
 
-    assert 1 == 1
+    tixi = open_tixi(CPACS_IN_PATH)
+
+    # Raise ValueError with not existing xpath
+    xpath = '/cpacs/vehicles/aircraft/model/reference/notARealPath'
+    with pytest.raises(ValueError):
+        get_value(tixi, xpath)
+
+    # Return Float 
+    xpath = '/cpacs/vehicles/aircraft/model/reference/area'
+    assert get_value(tixi, xpath) == 122.4
+
+    # Return String 
+    xpath = '/cpacs/header/name'
+    assert get_value(tixi, xpath) == 'D150'
+
+    # Return Boolean
+    xpath = '/cpacs/toolspecific/pytest/aTrueBoolean'
+    assert get_value(tixi, xpath) == True
+
+    xpath = '/cpacs/toolspecific/pytest/aFalseBoolean'
+    assert get_value(tixi, xpath) == False
+
 
 def test_get_value_or_default():
 

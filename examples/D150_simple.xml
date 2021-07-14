@@ -5221,6 +5221,11 @@
     </profiles>
   </vehicles>
   <toolspecific>
+    <pytest>
+      <anInteger>6</anInteger>
+      <aTrueBoolean>True</aTrueBoolean>
+      <aFalseBoolean>False</aFalseBoolean>
+    </pytest>
     <CEASIOMpy>
       <geometry>
         <analysis>
