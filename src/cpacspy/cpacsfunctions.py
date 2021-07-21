@@ -167,15 +167,22 @@ def get_value_or_default(tixi,xpath,default_value):
         value_name = xpath.split("/")[-1]
         create_branch(tixi,xpath_parent,False)
 
-        is_int = False
-        is_float = False
-        is_bool = False
-        try: # check if it is an 'int' or 'float'
+        try:
             is_int = isinstance(float(default_value), int)
+        except:
+            is_int = False
+
+        try:
             is_float = isinstance(float(default_value), float)
+        except:
+            is_float = False
+
+        try:
             is_bool = isinstance(default_value, bool)
         except:
-            pass
+            is_bool = False
+
+            
         if is_bool:
            tixi.addTextElement(xpath_parent,value_name,str(value))
         elif is_float or is_int:

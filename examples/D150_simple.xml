@@ -5225,6 +5225,7 @@
       <anInteger>6</anInteger>
       <aTrueBoolean>True</aTrueBoolean>
       <aFalseBoolean>False</aFalseBoolean>
+      <aCorrectFloatVector mapType="vector">1;0.95;0.9;0.8;0.7;0.6;</aCorrectFloatVector>
     </pytest>
     <CEASIOMpy>
       <geometry>
