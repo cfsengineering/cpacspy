@@ -32,8 +32,8 @@ sys.path.append('../src/')
 from cpacspy.cpacspy import CPACS
 
 
-CPACS_PATH = 'examples/D150_simple.xml'
-CSV_PATH = 'examples/aeromap.csv'
+CPACS_PATH = '../examples/D150_simple.xml'
+CSV_PATH = '../examples/aeromap.csv'
 
 
 def test_main_attrib():
@@ -125,14 +125,14 @@ def test_duplicate_aeromap():
 
 def test_save_cpacs():
 
-    test_path = 'tests/output.xml'
-    test_path_1 = 'tests/output_1.xml'
+    test_path = '../tests/output.xml'
+    test_path_1 = '../tests/output_1.xml'
 
     my_cpacs = CPACS(CPACS_PATH)
 
     # Raise error when tring to save a not xml file
     with pytest.raises(ValueError):
-        my_cpacs.save_cpacs('tests/output.txt')
+        my_cpacs.save_cpacs('../tests/output.txt')
 
     # Delete test file from a past run (could be still there if an error occurs)
     if os.path.exists(test_path):
