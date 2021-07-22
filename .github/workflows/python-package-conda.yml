@@ -21,6 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         conda env update --file environment.yml --name ceasiompy
+        conda activate ceasiompy
     - name: Add pythonpath
       run: |
         pip install -e .
