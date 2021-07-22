@@ -1,0 +1,29 @@
+name: ceasiompy
+channels:
+  - dlr-sc
+  - conda-forge
+  - defaults
+dependencies:
+  - cpacscreator=0.1=py36h6bb024c_6
+  - matplotlib=3.2.1=0
+  - matplotlib-base=3.2.1=py36hb8e4980_0
+  - numpy=1.18.4=py36h7314795_0
+  - numpydoc=0.9.2=py_0
+  - pandas=1.0.4=py36h830a2c2_0
+  - pip=20.1.1=py_1
+  - python=3.6.10=h8356626_1011_cpython
+  - python-dateutil=2.8.1=py_0
+  - python-jsonrpc-server=0.3.4=py_0
+  - python-language-server=0.31.7=py36_0
+  - python_abi=3.6=1_cp36m
+  - pythonocc-core=0.17.3=py36h6bb024c_10
+  - qt=5.9.7=h0c104cb_3
+  - qtawesome=0.7.0=py_0
+  - qtconsole=4.7.4=py_0
+  - qtpy=1.9.0=py_0
+  - scikit-learn=0.23.1=py36h0e1014b_0
+  - scipy=1.4.1=py36h2d22cac_3
+  - setuptools=47.1.1=py36h9f0ad1d_0
+  - tixi3=3.0.3=py36hf484d3e_4
+
+
