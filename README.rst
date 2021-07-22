@@ -1,3 +1,5 @@
+[![Pytest using Conda](https://github.com/cfsengineering/cpacspy/actions/workflows/python-package-conda.yml/badge.svg?branch=main)](https://github.com/cfsengineering/cpacspy/actions/workflows/python-package-conda.yml)
+
 Python package to read, write and analyse CPACS AeroPerformanceMaps.
 
 You need to have TIXI and TIGL install on your computer to use this package. 
