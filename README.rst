@@ -1,4 +1,7 @@
-[![Pytest using Conda](https://github.com/cfsengineering/cpacspy/actions/workflows/python-package-conda.yml/badge.svg?branch=main)](https://github.com/cfsengineering/cpacspy/actions/workflows/python-package-conda.yml)
+.. image:: https://github.com/cfsengineering/cpacspy/actions/workflows/python-package-conda.yml/badge.svg?branch=main
+    :target: https://github.com/cfsengineering/cpacspy/actions/workflows/python-package-conda.yml
+    :alt: Pytest Status
+
 
 Python package to read, write and analyse CPACS AeroPerformanceMaps.
 
