@@ -33,7 +33,7 @@ from cpacspy.cpacsfunctions import (add_float_vector, create_branch,
                                     get_value, get_xpath_parent, open_tigl,
                                     open_tixi, get_value_or_default)
 
-CPACS_PATH = '../examples/D150_simple.xml'
+CPACS_PATH = 'examples/D150_simple.xml'
 
 def test_open_tixi():
 
