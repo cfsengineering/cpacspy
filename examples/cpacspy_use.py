@@ -23,10 +23,10 @@ print('Ref point:', f'({my_cpacs.aircraft.ref_point_x},{my_cpacs.aircraft.ref_po
 
 # Aircraft specific values
 # Wing
-my_cpacs.aircraft.ref_wing_idx = 1 
+my_cpacs.aircraft.ref_wing_idx = 1
 print('Main wing aspect ratio',my_cpacs.aircraft.wing_ar)
 print('Main wing area',my_cpacs.aircraft.wing_area)
-print('Main wing half span',my_cpacs.aircraft.wing_half_span)
+print('Main wing span',my_cpacs.aircraft.wing_span)
 
 # Get list of all available aeroMaps
 print(my_cpacs.get_uid_list())

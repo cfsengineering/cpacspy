@@ -56,7 +56,7 @@ class Aircraft:
     def ref_wing_idx(self, new_idx):
         self._ref_wing_idx = new_idx
 
-        self.wing_half_span = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_wingspan()
+        self.wing_span = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_wingspan()
         self.wing_area = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_surface_area()
         self.wing_ar = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_aspect_ratio()
         
@@ -70,7 +70,7 @@ class Aircraft:
         text_line.append(f'Reference point: \t({self.ref_point_x},{self.ref_point_y},{self.ref_point_z}) [m]')
         text_line.append(' ')
         text_line.append(f'Reference wing index: \t{self._ref_wing_idx}')
-        text_line.append(f'Wing half span: \t{self.wing_half_span} [m]')
+        text_line.append(f'Wing span: \t\t{self.wing_span} [m]')
         text_line.append(f'Wing area: \t\t{self.wing_area} [m^2]')
         text_line.append(f'Wing AR: \t\t{self.wing_ar} [-]')
         text_line.append(' ')

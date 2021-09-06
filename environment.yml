@@ -25,5 +25,6 @@ dependencies:
   - scipy=1.4.1=py36h2d22cac_3
   - setuptools=47.1.1=py36h9f0ad1d_0
   - tixi3=3.0.3=py36hf484d3e_4
+  - tigl3=3.0.0=py37h6bb024c_9
 
 
