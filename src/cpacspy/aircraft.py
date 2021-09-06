@@ -56,7 +56,7 @@ class Aircraft:
     def ref_wing_idx(self, new_idx):
         self._ref_wing_idx = new_idx
 
-        self.wing_half_span = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_wing_half_span()
+        self.wing_half_span = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_wingspan()
         self.wing_area = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_surface_area()
         self.wing_ar = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_aspect_ratio()
         

@@ -63,7 +63,7 @@ NewAeromap.description = 'Test of creation of a new aeromap'
 NewAeromap.save()
 
 # Duplicate an aeromap
-DuplicatedAeromap= my_cpacs.duplicate_aeromap('my_new_aeromap', 'my_duplicated_aeromap')
+DuplicatedAeromap = my_cpacs.duplicate_aeromap('my_new_aeromap', 'my_duplicated_aeromap')
 DuplicatedAeromap.add_values(mach=0.666,alt=10000,aos=0.0,aoa=2.4,cd=0.001,cl=1.1,cs=0.22,cmd=0.22)
 DuplicatedAeromap.save()
 

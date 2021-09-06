@@ -5059,9 +5059,9 @@
                 <altitude mapType="vector">0;0;0;11000;11000;15000</altitude>
                 <machNumber mapType="vector">0.2;0.3;0.3;0.3;0.4;0.555</machNumber>
                 <angleOfAttack mapType="vector">0;2;4;6;2;2.4</angleOfAttack>
-                <angleOfSideslip mapType="vector">0;0;0;0;0;0</angleOfSideslip>
-                <cl mapType="vector">0.9999;0.9999;0.9999;0.9999;0.9999;1.1</cl>
-                <cd mapType="vector">0.1111;0.1111;0.1111;0.1111;0.1111;0.001</cd>
+                <angleOfSideslip mapType="vector">0;0;0;0;2;0</angleOfSideslip>
+                <cl mapType="vector">0.6666;0.7777;0.8888;0.9999;1.111;1.1</cl>
+                <cd mapType="vector">0.12;0.13;0.16;0.2;0.25;0.001</cd>
               </aeroPerformanceMap>
             </aeroMap>
             <aeroMap uID="extended_aeromap">
