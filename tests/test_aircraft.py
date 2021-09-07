@@ -46,14 +46,13 @@ def test_main_attrib():
     assert my_cpacs.aircraft.ref_point_z == 0
 
     # Check value for wing index 1 (default)
-    assert my_cpacs.aircraft.wing_span == approx(16.95,2)
-    assert my_cpacs.aircraft.wing_area == approx(130.5,2)
-    
-    ### TODO: uncomment when Tigl function "get_aspect_ratio" is fixed
-    #assert my_cpacs.aircraft.wing_ar == approx(9.4,2)   
+    assert my_cpacs.aircraft.wing_span == approx(33.91,rel=1e-2)
+    assert my_cpacs.aircraft.wing_area == approx(130.5,rel=1e-2)
+    assert my_cpacs.aircraft.wing_ar == approx(9.4,rel=1e-2)   
 
     # Check value for wing index 3
     my_cpacs.aircraft.ref_wing_idx = 3
-    assert my_cpacs.aircraft.wing_span == approx(5.87,2)
-    assert my_cpacs.aircraft.wing_area == approx(46.59,2)
-    assert my_cpacs.aircraft.wing_ar == approx(3.2,2)   
+    assert my_cpacs.aircraft.wing_span == approx(5.87,rel=1e-2)
+    assert my_cpacs.aircraft.wing_area == approx(46.59,rel=1e-2)
+    # TODO: uncomment when Tigl function to get AR is fixed
+    # assert my_cpacs.aircraft.wing_ar == approx(3.2,rel=1e-2)   

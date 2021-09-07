@@ -70,4 +70,3 @@ dependencies:
   - xz=5.2.5=h7b6447c_0
   - zlib=1.2.11=h7b6447c_3
   - zstd=1.4.9=haebb681_0
-prefix: /home/jungo/anaconda3/envs/ceasiompy_test

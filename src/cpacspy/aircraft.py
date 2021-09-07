@@ -58,8 +58,11 @@ class Aircraft:
 
         self.wing_span = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_wingspan()
         self.wing_area = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_surface_area()
-        self.wing_ar = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_aspect_ratio()
-        
+
+        ### TODO: use the function "get_aspect_ratio" instead, when it will be fixed in Tigl
+        # self.wing_ar = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_aspect_ratio()
+        self.wing_ar = self.wing_span**2 / self.aircraft_tigl.get_wing(self._ref_wing_idx).get_reference_area(1)/2
+
     def __str__(self): 
 
         text_line = []
