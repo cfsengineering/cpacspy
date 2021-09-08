@@ -137,7 +137,7 @@ def get_value(tixi, xpath):
 
 def get_value_or_default(tixi,xpath,default_value):
     """ Do the same than the function 'get_value'
-    but if no value is found at this place it returns the default value and add
+    but if no value is found at this xpath it returns the default value and add
     it at the xpath. If the xpath does not exist, it is created.
 
     Source :
