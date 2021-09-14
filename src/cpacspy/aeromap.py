@@ -30,7 +30,6 @@ from cpacspy.cpacsfunctions import (add_float_vector, create_branch,
 from cpacspy.utils import (AEROPERFORMANCE_XPATH, COEFS, PARAMS, PARAMS_COEFS, listify)
 
 
-
 def get_filter(df,list_of,alt_list,mach_list,aos_list,aoa_list):
     """ Get a dataframe filter for a set of parameters lists. """
 
@@ -60,13 +59,16 @@ class AeroMap:
         Args:
             tixi (object): TIXI object open from a CPACS file
             uid (str): UID of the AeroMap
-            create_new (bool, optional): If True crate a new AeroMap in TIXI, if false find it in the CPACS file. Defaults to False.
+            create_new (bool, optional): If True crate a new AeroMap in TIXI, 
+                                         if False find it in the CPACS file. 
+                                         Defaults to False.
         """
         
         self.tixi = tixi
         self.uid = uid
         self.name = uid
         self.description = ''
+        self.atmospheric_model = 'ISA'
         self.df = pd.DataFrame(columns=PARAMS_COEFS)
 
         if create_new:
@@ -75,13 +77,17 @@ class AeroMap:
 
         else:
             self.xpath = self.tixi.uIDGetXPath(uid) + '/aeroPerformanceMap'
-            xpath_name = get_xpath_parent(self.xpath) + '/name'
-            if self.tixi.checkElement(xpath_name):
-                self.name = self.tixi.getTextElement(xpath_name)
+            name_xpath = get_xpath_parent(self.xpath) + '/name'
+            if self.tixi.checkElement(name_xpath):
+                self.name = self.tixi.getTextElement(name_xpath)
             
-            xpath_description = get_xpath_parent(self.xpath) + '/description'
-            if self.tixi.checkElement(xpath_description):
-                self.description = self.tixi.getTextElement(xpath_description)
+            description_xpath = get_xpath_parent(self.xpath) + '/description'
+            if self.tixi.checkElement(description_xpath):
+                self.description = self.tixi.getTextElement(description_xpath)
+            
+            atm_model_xpath = get_xpath_parent(self.xpath) + '/boundaryConditions/atmosphericModel'
+            if self.tixi.checkElement(atm_model_xpath):
+                self.atmospheric_model = self.tixi.getTextElement(atm_model_xpath)
 
             self.get_param_and_coef()
 
@@ -121,6 +127,12 @@ class AeroMap:
         new_row = {'altitude': alt, 'machNumber': mach, 'angleOfSideslip': aos, 'angleOfAttack': aoa,
                    'cd': cd, 'cl': cl, 'cs': cs, 'cmd': cmd, 'cml': cml, 'cms': cms}
 
+        # Check if all colomn already exist
+        for col in new_row:
+            if not col in self.df.columns:
+                self.df[col] = np.nan
+
+        # Add the new row
         self.df = self.df.append(new_row, ignore_index=True)
 
     def plot(self,x_param,y_param,alt=None,mach=None,aos=None,aoa=None):
@@ -170,11 +182,13 @@ class AeroMap:
                     coef_xpath = self.xpath + '/' + coef
                     create_branch(self.tixi,coef_xpath)
                     add_float_vector(self.tixi,coef_xpath,self.df[coef].tolist())
-            
+                else:
+                    print(f'Warning: {coef} coeffiecient from "{self.uid}" aeroMap cannot be written in the CPACS file becuase it contains NaN!')
+                       
         # Create and fill the '/name' field
         name_xpath = get_xpath_parent(self.xpath) + '/name'
         create_branch(self.tixi,name_xpath)
-        self.tixi.updateTextElement(name_xpath,self.uid)
+        self.tixi.updateTextElement(name_xpath,self.name)
         
         # Create and fill the '/description' field
         description_xpath = get_xpath_parent(self.xpath) + '/description'
@@ -185,7 +199,7 @@ class AeroMap:
         atm_model_xpath = get_xpath_parent(self.xpath) + '/boundaryConditions/atmosphericModel'
         if not self.tixi.checkElement(atm_model_xpath):
             create_branch(self.tixi,atm_model_xpath)
-        self.tixi.updateTextElement(atm_model_xpath,'ISA')
+        self.tixi.updateTextElement(atm_model_xpath,self.atmospheric_model)
 
     def export_csv(self, csv_path):
         """ Export the AeroMap as a CSV file. """
@@ -249,6 +263,7 @@ class AeroMap:
         text_line.append(f'\nAeroMap uid: {self.uid}')
         text_line.append(f'AeroMap xpath: {self.xpath}')
         text_line.append(f'AeroMap description: {self.description}')
+        text_line.append(f'Atmospheric model: {self.atmospheric_model}')
         text_line.append(' ')
         text_line.append(f'Number of states: \t\t\t{self.df["angleOfAttack"].size}')
         text_line.append(f'Unique altitude: \t\t\t{str(self.df["altitude"].unique().tolist()).strip("[]")}')

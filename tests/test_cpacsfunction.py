@@ -23,15 +23,14 @@ import sys
 
 import pytest
 from pytest import approx
-
-from tixi3.tixi3wrapper import Tixi3Exception
 from tigl3.tigl3wrapper import Tigl3Exception
+from tixi3.tixi3wrapper import Tixi3Exception
 
 sys.path.append('../src/')
 from cpacspy.cpacsfunctions import (add_float_vector, create_branch,
                                     get_float_vector, get_tigl_aircraft,
-                                    get_value, get_xpath_parent, open_tigl,
-                                    open_tixi, get_value_or_default)
+                                    get_value, get_value_or_default,
+                                    get_xpath_parent, open_tigl, open_tixi)
 
 CPACS_PATH = 'examples/D150_simple.xml'
 
