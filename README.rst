@@ -11,13 +11,16 @@
     :alt: License
 
 
-Python package to read, write and analyse CPACS AeroPerformanceMaps.
+cpacspy
+=======
+
+cpacspy is a Python package to read, write and analyse `CPACS <https://www.cpacs.de/>`_ AeroPerformanceMaps.
 
 
 Installation
 ============
 
-You need to have .. _TIXI:https://github.com/DLR-SC/tixi and .. _TIGL:https://github.com/DLR-SC/tigl install on your computer to use this package. The easiest way is to use a Conda environment, to create one:
+You need to have `TIXI <https://github.com/DLR-SC/tixi>`_ and `TIGL <https://github.com/DLR-SC/tigl>`_ install on your computer to use this package. The easiest way is to use a Conda environment, to create one:
 
 - Install Miniconda: https://docs.conda.io/en/latest/miniconda.html
 
@@ -49,7 +52,7 @@ To build and install locally
 How to use this package
 =======================
 
-To see how to use this module, check out /example/cpacspy_use.py
+To see how to use this module, check out `/example/cpacspy_use.py <https://github.com/cfsengineering/cpacspy/blob/main/examples/cpacspy_use.py>`_
 
 
 License
