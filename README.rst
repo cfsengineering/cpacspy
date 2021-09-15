@@ -7,7 +7,7 @@
     :alt: Pytest status
 
 .. image:: https://img.shields.io/badge/license-Apache%202-blue.svg
-    :target: https://github.com/cfsengineering/CEASIOMpy/blob/master/LICENSE
+    :target: https://github.com/cfsengineering/cpacspy/blob/main/LICENSE.txt
     :alt: License
 
 

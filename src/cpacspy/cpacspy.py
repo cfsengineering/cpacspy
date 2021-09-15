@@ -52,12 +52,12 @@ class CPACS:
     def load_all_aeromaps(self):
         """ Load all the aeromap present in the CPACS file as object. """
 
-        for aeromap_uid in self.get_uid_list():
+        for aeromap_uid in self.get_aeromap_uid_list():
             aeromap = AeroMap(self.tixi,aeromap_uid)
             self.aeromap.append(aeromap)
             self.nb_aeromap += 1
 
-    def get_uid_list(self):
+    def get_aeromap_uid_list(self):
         """ Get the list of all aeroMap UID. """
 
         uid_list = []
@@ -91,7 +91,7 @@ class CPACS:
         if ' ' in uid:
             raise ValueError('AeroMap uid should not contain any space!')
 
-        if uid not in self.get_uid_list():
+        if uid not in self.get_aeromap_uid_list():
             new_aeromap = AeroMap(self.tixi,uid,create_new=True)
             self.aeromap.append(new_aeromap)
             self.nb_aeromap += 1
@@ -118,10 +118,10 @@ class CPACS:
         """ Duplicate an aeromap and retrun the new aeromap object. """
 
         # Check uid's
-        if not uid_base in self.get_uid_list():
+        if not uid_base in self.get_aeromap_uid_list():
             raise ValueError('The AeroMap to duplicate does not exit!')
 
-        if uid_duplicate in self.get_uid_list():
+        if uid_duplicate in self.get_aeromap_uid_list():
             raise ValueError('This uid for the duplicate already exit!')
 
         # Get AeroMap and duplicate
@@ -161,13 +161,15 @@ class CPACS:
     def __str__(self): 
 
         text_line = []
-        text_line.append('\n----------------------------------------------------------------------------------------------------')
+        text_line.append('\nCPACS file -----------------------------------------------------------------------------------------')
+        text_line.append(' ')
         text_line.append(f'Aircraft name : {self.ac_name}')
         text_line.append(f'CPACS file path: {self.cpacs_file}')
         text_line.append(' ')
-        text_line.append('Aeromaps list:')
-        for aeromap_uid in self.get_uid_list():
-            text_line.append(aeromap_uid)
+        text_line.append('List of AeroMaps:')
+        for aeromap_uid in self.get_aeromap_uid_list():
+            text_line.append('  ' + aeromap_uid)
+        text_line.append(' ')
         text_line.append('----------------------------------------------------------------------------------------------------\n')
 
         return ('\n').join(text_line)

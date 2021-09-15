@@ -52,12 +52,12 @@ def test_main_attrib():
      #   tixi_handle = open_tixi('invalid_CPACS_path')
 
 
-def test_get_uid_list():
+def test_get_aeromap_uid_list():
 
     my_cpacs = CPACS(CPACS_PATH)
 
     # Get the list of aeromap uid on the CPACS file
-    assert my_cpacs.get_uid_list() == ['aeromap_test1','aeromap_test2','extended_aeromap']
+    assert my_cpacs.get_aeromap_uid_list() == ['aeromap_test1','aeromap_test2','extended_aeromap']
 
 
 def test_get_aeromap_by_uid():
