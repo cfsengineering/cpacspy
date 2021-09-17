@@ -1,6 +1,7 @@
 # Script to show how to use the cpacspy package 
 
 import sys
+
 sys.path.append('../src/')
 
 # Importing cpacspy
@@ -88,11 +89,10 @@ imported_aeromap.save()
 aspect_ratio = my_cpacs.aircraft.wing_ar
 cd0,e = one_aeromap.get_cd0_oswald(aspect_ratio,alt=15500.0,aos=0.0,mach=0.5)
 
-# ...
-
+# Get Force
+one_aeromap.calculate_forces(my_cpacs.aircraft)
+print(one_aeromap.get('cd',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
+print(one_aeromap.get('drag',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 
 # Save all the change in a CPACS file
 my_cpacs.save_cpacs('D150_simple_updated_aeromap.xml',overwrite=True)
-
-
-

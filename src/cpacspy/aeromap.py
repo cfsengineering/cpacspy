@@ -25,6 +25,8 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
+from ambiance import Atmosphere
+
 from cpacspy.cpacsfunctions import (add_float_vector, create_branch,
                                     get_float_vector, get_xpath_parent)
 from cpacspy.utils import (AEROPERFORMANCE_XPATH, COEFS, PARAMS, PARAMS_COEFS, listify)
@@ -251,10 +253,31 @@ class AeroMap:
 
         return cd0,e
 
-    def get_forces(self,aircraft):
-        """ Get forces """
-        # TODO
-        pass
+
+    def calculate_forces(self,aircraft):  
+        """ Calculate forces and momement from coefficients """
+
+        COEF2FORCE_DICT = {'cd':'drag','cl':'lift','cs':'side'}
+        COEF2MOMENT_DICT = {'cmd':'md','cml':'ml','cms':'ms'}
+
+        for coef in COEF2FORCE_DICT:
+            if coef in self.df:
+                self.df[COEF2FORCE_DICT[coef]] = self.df.apply(lambda x: 0.5 * Atmosphere(x['altitude']).density[0] 
+                                                                         * aircraft.ref_area 
+                                                                         * (x['machNumber']*Atmosphere(x['altitude']).speed_of_sound[0]) ** 2 
+                                                                         * x[coef], axis=1)
+            else:
+                print(f'Warning: {COEF2FORCE_DICT[coef]} will not be calculated because there is no {coef} coefficient in the aeroMap!')
+
+        for coef in COEF2MOMENT_DICT:
+            if coef in self.df:
+                self.df[COEF2MOMENT_DICT[coef]] = self.df.apply(lambda x: 0.5 * Atmosphere(x['altitude']).density[0] 
+                                                                          * aircraft.ref_area * aircraft.ref_lenght 
+                                                                          * (x['machNumber']*Atmosphere(x['altitude']).speed_of_sound[0]) ** 2 
+                                                                          * x[coef], axis=1)
+            else:
+                print(f'Warning: {COEF2MOMENT_DICT[coef]} will not be calculated because there is no {coef} coefficient in the aeroMap!')
+
 
     def __str__(self): 
 
