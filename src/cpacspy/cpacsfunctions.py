@@ -134,6 +134,85 @@ def get_value(tixi, xpath):
 
     return value
 
+def copy_branch(tixi, xpath_from, xpath_to):
+    """ Function to copy a CPACS branch.
+
+    Function 'copy_branch' copy the branch (with sub-branches) from
+    'xpath_from' to 'xpath_to' by using recursion. The new branch should
+    be identical (uiD, attribute, etc). There is no log in this function
+    because of its recursivity.
+
+    Source :
+        * TIXI functions: http://tixi.sourceforge.net/Doc/index.html
+
+    Args:
+        tixi_handle (handles): TIXI Handle of the CPACS file
+        xpath_from (str): xpath of the branch to copy
+        xpath_to (str): Destination xpath
+
+    Returns:
+        tixi (handles): Modified TIXI Handle (with copied branch)
+    """
+
+    if not tixi.checkElement(xpath_from):
+        raise ValueError(xpath_from + ' XPath does not exist!')
+    if not tixi.checkElement(xpath_to):
+        raise ValueError(xpath_to + ' XPath does not exist!')
+
+    child_nb = tixi.getNumberOfChilds(xpath_from)
+
+    if child_nb:
+        xpath_to_split = xpath_to.split("/")
+        xpath_to_parent = '/'.join(str(m) for m in xpath_to_split[:-1])
+
+        child_list = []
+        for i in range(child_nb):
+            child_list.append(tixi.getChildNodeName(xpath_from, i+1))
+
+        # If it is a text Element --> no child
+        if "#" in child_list[0]:
+            elem_to_copy = tixi.getTextElement(xpath_from)
+            tixi.updateTextElement(xpath_to, elem_to_copy)
+
+        else:
+            # If child are named child (e.g. wings/wing)
+            if all(x == child_list[0] for x in child_list):
+                namedchild_nb = tixi.getNamedChildrenCount(xpath_from,
+                                                           child_list[0])
+
+                for i in range(namedchild_nb):
+                    new_xpath_from = xpath_from + "/" + child_list[0] \
+                                     + '[' + str(i+1) + ']'
+                    new_xpath_to = xpath_to + "/" + child_list[0] \
+                                   + '[' + str(i+1) + ']'
+                    tixi.createElement(xpath_to, child_list[0])
+
+                    # Call the function itself for recursion
+                    copy_branch(tixi, new_xpath_from, new_xpath_to)
+
+            else:
+                for child in child_list:
+                    new_xpath_from = xpath_from + "/" + child
+                    new_xpath_to = xpath_to + "/" + child
+
+                    # Create child
+                    tixi.createElement(xpath_to, child)
+
+                    # Call the function itself for recursion
+                    copy_branch(tixi, new_xpath_from, new_xpath_to)
+
+        # Copy attribute(s) if exists
+        last_attrib = 0
+        attrib_index = 1
+        while not last_attrib:
+            try:
+                attrib_name = tixi.getAttributeName(xpath_from, attrib_index)
+                attrib_text = tixi.getTextAttribute(xpath_from, attrib_name)
+                tixi.addTextAttribute(xpath_to, attrib_name, attrib_text)
+                attrib_index = attrib_index + 1
+            except:
+                last_attrib = 1
+
 
 def get_value_or_default(tixi,xpath,default_value):
     """ Do the same than the function 'get_value'

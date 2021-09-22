@@ -192,6 +192,10 @@ def test_create_branch():
     # Check if the new branch exist
     assert tixi.checkElement(xpath + '[3]')
 
+def test_copy_branch():
+    pass
+    #TODO
+
 
 
    
