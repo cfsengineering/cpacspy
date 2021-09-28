@@ -11,7 +11,7 @@
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3</modification>
         <creator>cpacs2to3</creator>
-        <timestamp>2019-01-31T16:03:44</timestamp>
+        <timestamp uID="ts1">2019-01-31T16:03:44</timestamp>
         <version>1.1</version>
         <cpacsVersion>3.0</cpacsVersion>
       </update>

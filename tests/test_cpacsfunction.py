@@ -27,10 +27,12 @@ from tigl3.tigl3wrapper import Tigl3Exception
 from tixi3.tixi3wrapper import Tixi3Exception
 
 sys.path.append('../src/')
-from cpacspy.cpacsfunctions import (add_float_vector, create_branch,
-                                    get_float_vector, get_tigl_aircraft,
-                                    get_value, get_value_or_default,
-                                    get_xpath_parent, open_tigl, open_tixi)
+from cpacspy.cpacsfunctions import (add_float_vector, add_string_vector,
+                                    add_uid, copy_branch, create_branch,
+                                    get_float_vector, get_string_vector,
+                                    get_tigl_aircraft, get_uid, get_value,
+                                    get_value_or_default, get_xpath_parent,
+                                    open_tigl, open_tixi)
 
 CPACS_PATH = 'examples/D150_simple.xml'
 
@@ -90,7 +92,6 @@ def test_get_value():
 
     xpath = '/cpacs/toolspecific/pytest/aFalseBoolean'
     assert get_value(tixi, xpath) == False
-
 
 def test_get_value_or_default():
 
@@ -192,10 +193,128 @@ def test_create_branch():
     # Check if the new branch exist
     assert tixi.checkElement(xpath + '[3]')
 
+def test_copy_branch():
+    """Test the function 'copy_branch'"""
 
+    tixi = open_tixi(CPACS_PATH)
+
+    # Create a new 'header' branch and copy the original 'header' into it
+    xpath_new = '/cpacs/header'
+    xpath_from = '/cpacs/header[1]'
+    xpath_to = '/cpacs/header[2]'
+    create_branch(tixi, xpath_new, True)
+    copy_branch(tixi, xpath_from, xpath_to)
+
+    # Check if a specific element has been copied
+    xpath_elem_from = '/cpacs/header[1]/updates/update[1]/timestamp'
+    xpath_elem_to = '/cpacs/header[2]/updates/update[1]/timestamp'
+    elem_from = tixi.getTextElement(xpath_elem_from)
+    elem_to = tixi.getTextElement(xpath_elem_to)
+
+    assert elem_from == elem_to
+
+    # Check if a specific attribute has been copied
+    attrib_text_from = tixi.getTextAttribute(xpath_elem_from, 'uID')
+    attrib_text_to = tixi.getTextAttribute(xpath_elem_to, 'uID')
+
+    assert attrib_text_from == attrib_text_to
+
+def test_add_string_vector():
+    """ Test the function 'add_sting_vector'"""
+
+    tixi = open_tixi(CPACS_PATH)
+    xpath = '/cpacs/toolspecific/CEASIOMpy/testVector/'
+
+    # Add a new vector
+    string_vector = ['aaa','bbb','ccc']
+    add_string_vector(tixi,xpath,string_vector)
+    added_sting_vector_str = tixi.getTextElement(xpath)
+    added_sting_vector = added_sting_vector_str.split(';')
+    added_sting_vector = [str(elem) for elem in added_sting_vector]
+
+    assert added_sting_vector == string_vector
+
+    # Update a vector
+    string_vector = ['abc','123','test-01']
+    add_string_vector(tixi,xpath,string_vector)
+    added_sting_vector_str = tixi.getTextElement(xpath)
+    added_sting_vector = added_sting_vector_str.split(';')
+    added_sting_vector = [str(elem) for elem in added_sting_vector]
+
+    assert added_sting_vector == string_vector
+
+def test_get_string_vector():
+    """ Test the function 'get_string_vector'"""
+
+    tixi = open_tixi(CPACS_PATH)
+    xpath = '/cpacs/toolspecific/CEASIOMpy/testVector'
+
+    # Add a new vector
+    string_vector = ['aaa', 'zzz']
+    add_string_vector(tixi,xpath,string_vector)
+
+    # Get a string vector
+    string_vector_get = get_string_vector(tixi,xpath)
+
+    assert string_vector_get == string_vector
+
+    # Raise an error when the XPath is wrong
+    wrong_xpath = '/cpacs/toolspecific/CEASIOMpy/testVectorWrong'
+    with pytest.raises(ValueError):
+        vector = get_string_vector(tixi,wrong_xpath)
+
+    # Raise an error when no value at XPath
+    no_value_xpath = '/cpacs/toolspecific/CEASIOMpy'
+    with pytest.raises(ValueError):
+        vector = get_string_vector(tixi,no_value_xpath)
+
+def test_get_uid():
+    """Test the function 'get_uid'"""
+
+    tixi = open_tixi(CPACS_PATH)
+
+    # Check if a false xpath raises ValueError
+    xpath = '/cpacs/vehicles/aircraft/MYmodel'
+    with pytest.raises(ValueError):
+        value_error = get_uid(tixi,xpath)
+
+    # Check if a no uid at xpath raises ValueError
+    xpath = '/cpacs/vehicles/aircraft'
+    with pytest.raises(ValueError):
+        value_error = get_uid(tixi,xpath)
+
+    # Check if it get correctly the uid
+    xpath = '/cpacs/vehicles/aircraft/model'
+    uid = get_uid(tixi,xpath)
+    assert uid == 'D150_VAMP'
+
+def test_add_uid():
+    """Test the function 'add_uid'"""
+
+    tixi = open_tixi(CPACS_PATH)
+
+    # Update UID
+    xpath = '/cpacs/vehicles/aircraft/model'
+    new_uid = 'New_aircrat_name'
+    add_uid(tixi,xpath,new_uid)
+    updated_uid = tixi.getTextAttribute(xpath, 'uID')
+
+    assert updated_uid == new_uid
+
+    # Add UID
+    xpath = '/cpacs/vehicles/aircraft/model/name'
+    new_uid = 'nameUID'
+    add_uid(tixi,xpath,new_uid)
+    added_uid = tixi.getTextAttribute(xpath, 'uID')
+
+    assert added_uid == new_uid
+
+    # Add existing UID (should add "1" at the end of the UID)
+    xpath = '/cpacs/vehicles/aircraft/model/name'
+    new_uid = 'Fuselage1'
+    add_uid(tixi,xpath,new_uid)
+    added_uid = tixi.getTextAttribute(xpath, 'uID')
+
+    assert added_uid == 'Fuselage11'
 
    
-
-
-
-    
