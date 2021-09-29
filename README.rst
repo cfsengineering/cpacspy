@@ -11,15 +11,16 @@
     :alt: License
 
 
+.. figure:: /logo/logo_white_bg.png
+    :width: 300 px
+    :align: center
+    :alt: cpacspy logo
+
 cpacspy
 =======
 
 cpacspy is a Python package to read, write and analyse `CPACS <https://www.cpacs.de/>`_ AeroPerformanceMaps.
 
-.. figure:: /logo/logo_white_bg.png
-    :width: 300 px
-    :align: center
-    :alt: cpacspy logo
 
 Installation
 ============
