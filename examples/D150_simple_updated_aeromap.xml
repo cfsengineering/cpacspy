@@ -11,7 +11,7 @@
       <update>
         <modification>Converted to cpacs 3.0 using cpacs2to3</modification>
         <creator>cpacs2to3</creator>
-        <timestamp>2019-01-31T16:03:44</timestamp>
+        <timestamp uID="ts1">2019-01-31T16:03:44</timestamp>
         <version>1.1</version>
         <cpacsVersion>3.0</cpacsVersion>
       </update>
@@ -5108,7 +5108,7 @@
                 <machNumber mapType="vector">0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.666</machNumber>
                 <angleOfSideslip mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0</angleOfSideslip>
                 <angleOfAttack mapType="vector">0;1;2;3;4;5;6;7;8;9;10;11;2.4</angleOfAttack>
-                <cd mapType="vector">0;0.001;0.004;0.009;0.016;0.025;0.036;0.049;0.064;0.081;0.1;0.121;0.001</cd>
+                <cd mapType="vector">1;1.001;1.004;1.009;1.016;1.025;1.036;1.049;1.064;1.081;1.1;1.121;1.001</cd>
                 <cl mapType="vector">0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1;1.1;1.1</cl>
                 <cs mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0.22</cs>
                 <cmd mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0.22</cmd>
@@ -5125,7 +5125,7 @@
                 <machNumber mapType="vector">0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.555;0.666</machNumber>
                 <angleOfSideslip mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0</angleOfSideslip>
                 <angleOfAttack mapType="vector">0;1;2;3;4;5;6;7;8;9;10;11;2.4</angleOfAttack>
-                <cd mapType="vector">0;0.001;0.004;0.009;0.016;0.025;0.036;0.049;0.064;0.081;0.1;0.121;0.001</cd>
+                <cd mapType="vector">1;1.001;1.004;1.009;1.016;1.025;1.036;1.049;1.064;1.081;1.1;1.121;1.001</cd>
                 <cl mapType="vector">0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1;1.1;1.1</cl>
                 <cs mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0.22</cs>
                 <cmd mapType="vector">0;0;0;0;0;0;0;0;0;0;0;0;0.22</cmd>

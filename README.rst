@@ -29,10 +29,11 @@ You need to have `TIXI <https://github.com/DLR-SC/tixi>`_ and `TIGL <https://git
 
 - Install Miniconda: https://docs.conda.io/en/latest/miniconda.html
 
-- Create a Conda environment with the following command:
+- Clone this repository and create a Conda environment with the following command:
 
 .. code-block:: bash
 
+   $ git clone https://github.com/cfsengineering/cpacspy.git
    $ cd cpacspy
    $ conda env create -f environment.yml
    $ conda activate cpacspy_env

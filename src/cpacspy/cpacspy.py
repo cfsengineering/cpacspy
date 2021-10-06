@@ -24,7 +24,7 @@ import pandas as pd
 
 from cpacspy.aeromap import AeroMap
 from cpacspy.aircraft import Aircraft
-from cpacspy.cpacsfunctions import open_tixi
+from cpacspy.cpacsfunctions import open_tigl, open_tixi
 from cpacspy.utils import AEROPERFORMANCE_XPATH
 
 
@@ -35,6 +35,7 @@ class CPACS:
         # CPACS
         self.cpacs_file = cpacs_file
         self.tixi = open_tixi(cpacs_file)
+        self.tigl = open_tigl(self.tixi)
 
         # Aircraft name
         ac_name_xpath = '/cpacs/header/name'
@@ -42,7 +43,7 @@ class CPACS:
             self.ac_name = self.tixi.getTextElement(ac_name_xpath)
 
         # Aircraft data
-        self.aircraft = Aircraft(self.tixi)
+        self.aircraft = Aircraft(self.tixi,self.tigl)
 
         # AeroMaps
         self.aeromap = []

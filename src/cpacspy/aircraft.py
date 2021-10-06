@@ -25,7 +25,7 @@ from cpacspy.utils import REF_XPATH
 
 class Aircraft:
 
-    def __init__(self,tixi):
+    def __init__(self,tixi,tigl):
         """ Aircraft class to store references values and other information about the aircraft
 
         Args:
@@ -33,7 +33,7 @@ class Aircraft:
         """
         
         self.tixi = tixi
-        self.tigl = open_tigl(self.tixi)
+        self.tigl = tigl
 
         # Reference values
         self.ref_lenght = get_value_or_default(self.tixi,REF_XPATH + '/length',1)
