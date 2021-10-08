@@ -19,7 +19,7 @@
 
 # Author: Aidan Jungo
 
-from cpacspy.cpacsfunctions import (get_value_or_default, open_tigl, get_tigl_aircraft)
+from cpacspy.cpacsfunctions import (get_value_or_default, get_tigl_aircraft)
 from cpacspy.utils import REF_XPATH
 
 
@@ -44,7 +44,7 @@ class Aircraft:
 
         # Aircraft specific values (extract with TiGL)
         self.aircraft_tigl = get_tigl_aircraft(self.tigl)
-        self.ref_wing_idx = 1 # By defauld the reference wing is "1", could be changed by updating this attribute
+        self.ref_wing_idx = self.get_main_wing_idx() # By default the reference wing is the largest one
   
     # When self.ref_wing_idx is change:  
     # TODO: change it by uid also
@@ -62,6 +62,43 @@ class Aircraft:
         ### TODO: use the function "get_aspect_ratio" instead, when it will be fixed in Tigl
         # self.wing_ar = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_aspect_ratio()
         self.wing_ar = self.wing_span**2 / self.aircraft_tigl.get_wing(self._ref_wing_idx).get_reference_area(1)/2
+
+
+    # TODO: add test for this function
+    def get_main_wing_idx(self):
+        """ Find the larest wing index
+
+        Args:
+            self (object)
+        """
+        
+        # TODO: move that in a file with all the other useful xpath
+        WINGS_XPATH = '/cpacs/vehicles/aircraft/model/wings'
+
+        # Get Number of wings
+        if self.tixi.checkElement(WINGS_XPATH):
+            wing_count = self.tixi.getNamedChildrenCount(WINGS_XPATH, 'wing')
+        else:
+            wing_count = 0
+
+        wing_area_max = 0
+        wing_idx = None
+
+        for i_wing in range(wing_count):
+            wing_xpath = WINGS_XPATH + '/wing[' + str(i_wing+1) + ']'
+            wing_uid = self.tixi.getTextAttribute(wing_xpath,'uID')
+
+            # *2 to take the symetry into account
+            wing_area = self.tigl.wingGetReferenceArea(i_wing+1,1) * 2
+
+            # Get value from the largest wing (larger span)
+            if wing_area > wing_area_max:
+                wing_area_max = wing_area
+                wing_span = self.tigl.wingGetSpan(wing_uid)
+
+                wing_idx = i_wing+1
+
+        return wing_idx
 
     def __str__(self): 
 
