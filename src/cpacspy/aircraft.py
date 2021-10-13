@@ -64,7 +64,6 @@ class Aircraft:
         self.wing_ar = self.wing_span**2 / self.aircraft_tigl.get_wing(self._ref_wing_idx).get_reference_area(1)/2
 
 
-    # TODO: add test for this function
     def get_main_wing_idx(self):
         """ Find the larest wing index
 
@@ -72,30 +71,14 @@ class Aircraft:
             self (object)
         """
         
-        # TODO: move that in a file with all the other useful xpath
-        WINGS_XPATH = '/cpacs/vehicles/aircraft/model/wings'
-
-        # Get Number of wings
-        if self.tixi.checkElement(WINGS_XPATH):
-            wing_count = self.tixi.getNamedChildrenCount(WINGS_XPATH, 'wing')
-        else:
-            wing_count = 0
-
         wing_area_max = 0
         wing_idx = None
 
-        for i_wing in range(wing_count):
-            wing_xpath = WINGS_XPATH + '/wing[' + str(i_wing+1) + ']'
-            wing_uid = self.tixi.getTextAttribute(wing_xpath,'uID')
+        for i_wing in range(self.aircraft_tigl.get_wing_count()):
+            wing_area = self.aircraft_tigl.get_wing(i_wing+1).get_surface_area()
 
-            # *2 to take the symetry into account
-            wing_area = self.tigl.wingGetReferenceArea(i_wing+1,1) * 2
-
-            # Get value from the largest wing (larger span)
             if wing_area > wing_area_max:
                 wing_area_max = wing_area
-                wing_span = self.tigl.wingGetSpan(wing_uid)
-
                 wing_idx = i_wing+1
 
         return wing_idx
