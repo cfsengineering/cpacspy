@@ -77,7 +77,7 @@ def open_tigl(tixi_handle):
     return tigl_handle
 
 
-def get_tigl_aircraft(tigl):
+def get_tigl_configuration(tigl):
     """ Get the TiGL aircraft configuration manager. """
     
     # Get the configuration manager

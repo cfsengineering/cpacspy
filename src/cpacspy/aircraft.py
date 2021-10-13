@@ -19,7 +19,7 @@
 
 # Author: Aidan Jungo
 
-from cpacspy.cpacsfunctions import (get_value_or_default, get_tigl_aircraft)
+from cpacspy.cpacsfunctions import (get_value_or_default, get_tigl_configuration)
 from cpacspy.utils import REF_XPATH
 
 
@@ -43,7 +43,7 @@ class Aircraft:
         self.ref_point_z = get_value_or_default(self.tixi,REF_XPATH + '/point/z',0)
 
         # Aircraft specific values (extract with TiGL)
-        self.aircraft_tigl = get_tigl_aircraft(self.tigl)
+        self.configuration = get_tigl_configuration(self.tigl)
         self.ref_wing_idx = self.get_main_wing_idx() # By default the reference wing is the largest one
   
     # When self.ref_wing_idx is change:  
@@ -56,12 +56,12 @@ class Aircraft:
     def ref_wing_idx(self, new_idx):
         self._ref_wing_idx = new_idx
 
-        self.wing_span = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_wingspan()
-        self.wing_area = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_surface_area()
+        self.wing_span = self.configuration.get_wing(self._ref_wing_idx).get_wingspan()
+        self.wing_area = self.configuration.get_wing(self._ref_wing_idx).get_surface_area()
 
         ### TODO: use the function "get_aspect_ratio" instead, when it will be fixed in Tigl
-        # self.wing_ar = self.aircraft_tigl.get_wing(self._ref_wing_idx).get_aspect_ratio()
-        self.wing_ar = self.wing_span**2 / self.aircraft_tigl.get_wing(self._ref_wing_idx).get_reference_area(1)/2
+        # self.wing_ar = self.configuration.get_wing(self._ref_wing_idx).get_aspect_ratio()
+        self.wing_ar = self.wing_span**2 / self.configuration.get_wing(self._ref_wing_idx).get_reference_area(1)/2
 
 
     def get_main_wing_idx(self):
@@ -74,8 +74,8 @@ class Aircraft:
         wing_area_max = 0
         wing_idx = None
 
-        for i_wing in range(self.aircraft_tigl.get_wing_count()):
-            wing_area = self.aircraft_tigl.get_wing(i_wing+1).get_surface_area()
+        for i_wing in range(self.configuration.get_wing_count()):
+            wing_area = self.configuration.get_wing(i_wing+1).get_surface_area()
 
             if wing_area > wing_area_max:
                 wing_area_max = wing_area

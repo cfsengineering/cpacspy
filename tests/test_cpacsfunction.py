@@ -30,7 +30,7 @@ sys.path.append('../src/')
 from cpacspy.cpacsfunctions import (add_float_vector, add_string_vector,
                                     add_uid, copy_branch, create_branch,
                                     get_float_vector, get_string_vector,
-                                    get_tigl_aircraft, get_uid, get_value,
+                                    get_tigl_configuration, get_uid, get_value,
                                     get_value_or_default, get_xpath_parent,
                                     open_tigl, open_tixi)
 
@@ -63,11 +63,11 @@ def test_open_tigl():
     with pytest.raises(AttributeError):
         tixi_handle = open_tigl('invalid_TIGL_handle')
 
-def test_get_tigl_aircraft():
+def test_get_tigl_configuration():
 
     tixi_handle = open_tixi(CPACS_PATH)
     tigl_handle = open_tigl(tixi_handle)
-    assert get_tigl_aircraft(tigl_handle)
+    assert get_tigl_configuration(tigl_handle)
 
 def test_get_value():
 
