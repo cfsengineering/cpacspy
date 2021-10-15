@@ -53,7 +53,7 @@ dependencies:
   - six=1.16.0
   - sqlite=3.36.0
   - tbb=2019.5
-  - tigl3=3.2.0
+  - tigl3=3.2.1
   - tixi3=3.1.1
   - tk=8.6.10
   - tornado=6.1
