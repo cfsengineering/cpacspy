@@ -92,7 +92,6 @@ imported_aeromap = cpacs.create_aeromap_from_csv('aeromap.csv','imported_aeromap
 imported_aeromap.description = 'This aeromap has been imported from a CSV file'
 imported_aeromap.save()
 
-
 # CD0 and oswald factor
 aspect_ratio = cpacs.aircraft.wing_ar
 cd0,e = one_aeromap.get_cd0_oswald(aspect_ratio,alt=15500.0,aos=0.0,mach=0.5)

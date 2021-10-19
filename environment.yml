@@ -3,64 +3,16 @@ channels:
   - dlr-sc
   - defaults
 dependencies:
-  - _libgcc_mutex=0.1
-  - blas=1.0
-  - ca-certificates=2021.7.5
-  - certifi=2021.5.30
-  - cycler=0.10.0
-  - dbus=1.13.18
-  - expat=2.4.1
-  - fontconfig=2.13.1
-  - freetype=2.10.4
-  - glib=2.69.1
-  - gst-plugins-base=1.14.0
-  - gstreamer=1.14.0
-  - icu=58.2
-  - jpeg=9b
-  - kiwisolver
-  - lcms2=2.12
-  - libffi=3.3
-  - libopenblas=0.3.13
-  - libpng=1.6.37
-  - libtiff=4.2.0
-  - libuuid=1.0.3
-  - libwebp-base=1.2.0
-  - libxml2=2.9.12
-  - lz4-c=1.9.3
-  - matplotlib=3.3.4
-  - matplotlib-base=3.3.4
-  - ncurses=6.2
-  - numpy=1.17.0
-  - numpy-base=1.17.0
-  - olefile=0.46
-  - opencascade=7.4.0
-  - openjpeg=2.4.0
-  - openssl=1.1.1l
-  - pandas=1.1.5
-  - pcre=8.45
-  - pillow=8.3.1
-  - pip=21.0.1
-  - pyparsing=2.4.7
-  - pyqt=5.9.2
-  - python=3.6.13
-  - python-dateutil=2.8.2
-  - pythonocc-core=7.4.1
-  - pytz=2021.1
-  - qt=5.9.7
-  - readline=8.1
-  - setuptools=52.0.0
-  - sip=4.19.8
-  - six=1.16.0
-  - sqlite=3.36.0
-  - tbb=2019.5
+  - matplotlib
+  - numpy
+  - pandas
+  - pip
+  - python=3.7
+  - pytest
+  - setuptools
   - tigl3=3.2.1
   - tixi3=3.1.1
-  - tk=8.6.10
-  - tornado=6.1
-  - wheel=0.37.0
-  - xz=5.2.5
-  - zlib=1.2.11
-  - zstd=1.4.9
-  
+  - wheel
+ 
   - pip:
     - ambiance
