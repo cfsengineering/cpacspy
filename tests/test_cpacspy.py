@@ -45,7 +45,7 @@ def test_main_attrib():
     assert my_cpacs.ac_name == 'D150'
 
     #assert my_cpacs.aeromap == []
-    assert my_cpacs.nb_aeromap == 3
+    assert my_cpacs.nb_aeromaps == 3
 
     # Raise error for an invalid CPACS path
     #with pytest.raises(Tixi3Exception):
@@ -87,7 +87,7 @@ def test_create_aeromap():
     # Create a new aeromap
     my_cpacs.create_aeromap('new_aeromap')
     assert my_cpacs.get_aeromap_by_uid('new_aeromap').uid == 'new_aeromap'
-    assert my_cpacs.nb_aeromap == 4
+    assert my_cpacs.nb_aeromaps == 4
 
 
 def test_create_aeromap_from_csv():
@@ -101,7 +101,7 @@ def test_create_aeromap_from_csv():
     # Create a new aeromap from a CSV file
     my_cpacs.create_aeromap_from_csv(CSV_PATH)
     assert my_cpacs.get_aeromap_by_uid('aeromap').uid == 'aeromap'
-    assert my_cpacs.nb_aeromap == 4
+    assert my_cpacs.nb_aeromaps == 4
 
 
 def test_duplicate_aeromap():
@@ -119,7 +119,7 @@ def test_duplicate_aeromap():
     # Duplicate an aeroomap
     my_cpacs.duplicate_aeromap('aeromap_test1','duplicated_aeromap')
     assert my_cpacs.get_aeromap_by_uid('duplicated_aeromap').uid == 'duplicated_aeromap'
-    assert my_cpacs.nb_aeromap == 4
+    assert my_cpacs.nb_aeromaps == 4
 
 
 def test_save_cpacs():

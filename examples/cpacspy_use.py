@@ -33,7 +33,7 @@ print('Main wing span',cpacs.aircraft.wing_span)
 print(cpacs.get_aeromap_uid_list())
 
 # Loop in all aeroMaps
-for aeromap in cpacs.aeromap:
+for aeromap in cpacs.aeromaps:
     print('---')
     print(aeromap.uid)
     print(aeromap.description)

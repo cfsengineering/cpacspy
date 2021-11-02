@@ -46,17 +46,17 @@ class CPACS:
         self.aircraft = Aircraft(self.tixi,self.tigl)
 
         # AeroMaps
-        self.aeromap = []
-        self.nb_aeromap = 0
+        self.aeromaps = []
+        self.nb_aeromaps = 0
         self.load_all_aeromaps()
 
     def load_all_aeromaps(self):
-        """ Load all the aeromap present in the CPACS file as object. """
+        """ Load all the aeromaps present in the CPACS file as object. """
 
         for aeromap_uid in self.get_aeromap_uid_list():
             aeromap = AeroMap(self.tixi,aeromap_uid)
-            self.aeromap.append(aeromap)
-            self.nb_aeromap += 1
+            self.aeromaps.append(aeromap)
+            self.nb_aeromaps += 1
 
     def get_aeromap_uid_list(self):
         """ Get the list of all aeroMap UID. """
@@ -80,7 +80,7 @@ class CPACS:
     def get_aeromap_by_uid(self, uid):
         """ Get an aeromap object by its uid. """
 
-        for am in self.aeromap:
+        for am in self.aeromaps:
             if am.uid == uid:
                 return am
 
@@ -94,8 +94,8 @@ class CPACS:
 
         if uid not in self.get_aeromap_uid_list():
             new_aeromap = AeroMap(self.tixi,uid,create_new=True)
-            self.aeromap.append(new_aeromap)
-            self.nb_aeromap += 1
+            self.aeromaps.append(new_aeromap)
+            self.nb_aeromaps += 1
             return new_aeromap
         else:
             raise ValueError('This uid already exit!')
@@ -133,8 +133,8 @@ class CPACS:
         am_duplicated.df = am_base.df
         am_duplicated.description = am_base.description + f' (duplicate from "{uid_base}")'
 
-        self.aeromap.append(am_duplicated)
-        self.nb_aeromap += 1
+        self.aeromaps.append(am_duplicated)
+        self.nb_aeromaps += 1
 
         return am_duplicated
 
