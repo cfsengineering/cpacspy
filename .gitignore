@@ -143,3 +143,6 @@ tags
 
 # Mac
 .DS_Store
+
+# Jupyter Notebook
+*checkpoint.ipynb
