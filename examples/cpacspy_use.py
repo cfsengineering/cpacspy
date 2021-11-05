@@ -101,5 +101,14 @@ one_aeromap.calculate_forces(cpacs.aircraft)
 print(one_aeromap.get('cd',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 print(one_aeromap.get('drag',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 
+# Test add damping derivative coef
+for axis in ['dp','dq','dr']:
+    for coef in ['cd','cl','cs','cmd','cml','cms']:
+        one_aeromap.add_damping_derivatives(alt=0.0,aos=0.0,mach=0.1,aoa=-6.0,coef=coef,axis=axis,value=0.0666)
+
+print(one_aeromap.df.columns)
+print(one_aeromap.df)
+print(one_aeromap.get('dcddrStar',alt=0.0,aos=0.0,mach=0.1,aoa=-6.0))
+
 # Save all the change in a CPACS file
 cpacs.save_cpacs('D150_simple_updated_aeromap.xml',overwrite=True)

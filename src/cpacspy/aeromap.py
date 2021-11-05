@@ -137,6 +137,40 @@ class AeroMap:
         # Add the new row
         self.df = self.df.append(new_row, ignore_index=True)
 
+
+    def add_damping_derivatives(self,alt,mach,aos,aoa,coef,axis,value):
+        """ Add a damping derivative coeficient for an existing set of alt,mach,aos,aoa
+            
+        Args:
+            alt (float): Altitude
+            mach (float): Mach number
+            aos (float): Angle of sideslip
+            aoa (float): Angle of attack
+            coef (str) : equivalent aero coefficient (cd,cl,cs,cmd,cml,cms)
+            axis (str) : axis of rotation (dp,dq,dr)
+            value (float) : value of the coeficient
+        
+        """
+
+        damping_coef_list = ['dcddpStar', 'dcddqStar', 'dcddrStar',
+                             'dcldpStar', 'dcldqStar', 'dcldrStar', 
+                             'dcmddpStar', 'dcmddqStar', 'dcmddrStar', 
+                             'dcmldpStar', 'dcmldqStar', 'dcmldrStar', 
+                             'dcmsdpStar', 'dcmsdqStar', 'dcmsdrStar', 
+                             'dcsdpStar', 'dcsdqStar', 'dcsdrStar']      
+        
+        damping_coef = 'd' + coef + axis + 'Star'
+
+        if damping_coef not in damping_coef_list:
+            raise ValueError(f'Damping coeficient "{damping_coef}" is not valid!')
+
+        # Check if parameters already exist
+        self.df.loc[(self.df['altitude']==alt) & 
+                    (self.df['machNumber']==mach) & 
+                    (self.df['angleOfSideslip']==aos) & 
+                    (self.df['angleOfAttack']==aoa),[damping_coef]] = value
+
+
     def plot(self,x_param,y_param,alt=None,mach=None,aos=None,aoa=None):
         """ Plot 'x_param' vs 'y_param' with filtered parameters passed as float or string. """
 
