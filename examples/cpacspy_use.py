@@ -108,7 +108,7 @@ for axis in ['dp','dq','dr']:
 
 print(one_aeromap.df.columns)
 print(one_aeromap.df)
-print(one_aeromap.get('dcddrStar',alt=0.0,aos=0.0,mach=0.1,aoa=-6.0))
+print(one_aeromap.get('dcddrStar_negativeRates',alt=0.0,aos=0.0,mach=0.1,aoa=-6.0))
 
 # Save all the change in a CPACS file
 cpacs.save_cpacs('D150_simple_updated_aeromap.xml',overwrite=True)

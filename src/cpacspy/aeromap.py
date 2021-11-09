@@ -138,7 +138,7 @@ class AeroMap:
         self.df = self.df.append(new_row, ignore_index=True)
 
 
-    def add_damping_derivatives(self,alt,mach,aos,aoa,coef,axis,value):
+    def add_damping_derivatives(self,alt,mach,aos,aoa,coef,axis,value,rate=-1.0):
         """ Add a damping derivative coeficient for an existing set of alt,mach,aos,aoa
             
         Args:
@@ -149,6 +149,7 @@ class AeroMap:
             coef (str) : equivalent aero coefficient (cd,cl,cs,cmd,cml,cms)
             axis (str) : axis of rotation (dp,dq,dr)
             value (float) : value of the coeficient
+            rate (float, optional): Rotation rate. Defaults to -1.0.
         
         """
 
@@ -163,6 +164,13 @@ class AeroMap:
 
         if damping_coef not in damping_coef_list:
             raise ValueError(f'Damping coeficient "{damping_coef}" is not valid!')
+
+        if rate < 0:
+            damping_coef = damping_coef + '_negativeRates'
+        elif rate > 0:
+            damping_coef = damping_coef + '_positiveRates'
+        else:
+            raise ValueError(f'Rotation rate "{rate}" is not valid!')
 
         # Check if parameters already exist
         self.df.loc[(self.df['altitude']==alt) & 
