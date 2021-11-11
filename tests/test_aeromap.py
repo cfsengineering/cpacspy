@@ -49,6 +49,13 @@ def test_aeromap_class():
     assert set(aeromap_1.df.columns) == set(['altitude','machNumber','angleOfSideslip','angleOfAttack','cd','cl','cs','cmd','cml','cms'])
     assert aeromap_1.df.altitude.size == 1 
 
+    # Test if damping derivatives coefficients are correctly loaded
+    aeromap_test_dampder = my_cpacs.get_aeromap_by_uid('aeromap_test_dampder')
+    assert aeromap_test_dampder.df['dampingDerivatives_negativeRates_dcddpStar'].tolist()[0] == 0.00111
+    assert 'dampingDerivatives_negativeRates_dcsdrStar' in aeromap_test_dampder.df.columns # only nan in it
+    assert 'dampingDerivatives_negativeRates_dcsdqStar' in aeromap_test_dampder.df.columns # one nan in it
+    assert not 'dampingDerivatives_positiveRates_dcsdrStar' in aeromap_test_dampder.df.columns # no field in the aeromap
+
 def test_get():
 
     # Load the CPACS file and 'aeromap_test2'
@@ -57,6 +64,33 @@ def test_get():
 
     assert aeromap_2.get('cl',alt=11000.0,mach=0.4) == np.array([1.111])
     assert aeromap_2.get('cd',aoa=2.0,aos=0.0) == np.array([0.13])
+
+def test_add_damping_derivatives():
+    """ Test 'add_damping_derivatives' function """
+    
+    my_cpacs = CPACS(CPACS_PATH)
+    aeromap_test_dampder = my_cpacs.get_aeromap_by_uid('aeromap_test_dampder')
+
+    # Test if coefficients are correctly added
+    aeromap_test_dampder.add_damping_derivatives(alt=15000.0, mach=0.555, aos=0.0, aoa=0.0, coef='cs',axis='dr',value=0.0555,rate=1.0)
+    assert 'dampingDerivatives_positiveRates_dcsdrStar' in aeromap_test_dampder.df.columns 
+
+    # Test if raise Value Error for non-existing damping coefficient
+    with pytest.raises(ValueError):
+        aeromap_test_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=1.0, coef='cw',axis='dr',value=0.0555,rate=0)
+
+    # Test if raise Value Error for non-existing axis
+    with pytest.raises(ValueError):
+        aeromap_test_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=1.0, coef='cs',axis='dz',value=0.0555,rate=0)
+
+    # Test if raise Value Error for rate = 0
+    with pytest.raises(ValueError):
+        aeromap_test_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=1.0, coef='cs',axis='dr',value=0.0555,rate=0)
+
+
+    # Test if raise Value Error for non-existing set of parameters
+    with pytest.raises(ValueError):
+        aeromap_test_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=22.0, coef='cs',axis='dr',value=0.0555,rate=1.0)
 
 
 def test_add_values_and_save():
