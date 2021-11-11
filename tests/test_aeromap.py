@@ -71,7 +71,11 @@ def test_add_values_and_save():
     
     # Check value before it is saved
     assert (aeromap_3.get('cl',alt=10000,mach=0.3) == np.array([0.5,0.6,0.7])).all()
-    assert (aeromap_3.get('cms',alt=10000,mach=0.3) == np.array([0.555,0.666])).all()
+    
+    cms = aeromap_3.get('cms',alt=10000,mach=0.3)
+    assert (cms[0] == 0.555)
+    assert (cms[1] == 0.666)
+    assert np.isnan(cms[2])
 
     # Modify name and description
     aeromap_3.name = 'aeromap_new_name'
@@ -83,12 +87,17 @@ def test_add_values_and_save():
 
     # Check value after it has been saved
     my_cpacs_test = CPACS(CPACS_TEST_PATH)
-    aeromap_3_test = my_cpacs_test.get_aeromap_by_uid('aeromap_test3')
-        
-    assert (aeromap_3_test.get('cl',alt=10000,mach=0.3) == np.array([0.5,0.6,0.7])).all()
+    aeromap_3_test = my_cpacs_test.get_aeromap_by_uid('aeromap_test3')  
     
+    assert (aeromap_3_test.get('cl',alt=10000,mach=0.3) == np.array([0.5,0.6,0.7])).all()
+
+    cms = aeromap_3_test.get('cms',alt=10000,mach=0.3)
+    assert (cms[0] == 0.555)
+    assert (cms[1] == 0.666)
+    assert np.isnan(cms[2])
+
     # "/cms" should not be witten in the CPACS file because it contains a NaN
-    xpath = my_cpacs_test.tixi.uIDGetXPath('aeromap_test3') + '/aeroPerformanceMap/cms'
+    xpath = my_cpacs_test.tixi.uIDGetXPath('aeromap_test3') + '/aeroPerformanceMap/cmsa'
     assert not my_cpacs_test.tixi.checkElement(xpath) 
 
     # Check if name and description has been saved correctly

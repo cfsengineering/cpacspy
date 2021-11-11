@@ -101,14 +101,23 @@ one_aeromap.calculate_forces(cpacs.aircraft)
 print(one_aeromap.get('cd',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 print(one_aeromap.get('drag',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 
+import random
 # Test add damping derivative coef
-for axis in ['dp','dq','dr']:
-    for coef in ['cd','cl','cs','cmd','cml','cms']:
-        one_aeromap.add_damping_derivatives(alt=0.0,aos=0.0,mach=0.1,aoa=-6.0,coef=coef,axis=axis,value=0.0666)
+
+for index, row in one_aeromap.df.iterrows():
+    if row['altitude']== 15500.0:
+                continue
+    for axis in ['dp','dq','dr']:
+        for coef in ['cd','cl','cs','cmd','cml','cms']:
+            one_aeromap.add_damping_derivatives(alt=row['altitude'],mach=row['machNumber'],aos=row['angleOfSideslip'],aoa=row['angleOfAttack'],coef=coef,axis=axis,value=random.randrange(1,1000)/1000)
+            one_aeromap.add_damping_derivatives(alt=row['altitude'],mach=row['machNumber'],aos=row['angleOfSideslip'],aoa=row['angleOfAttack'],coef=coef,axis=axis,rate=1.5,value=random.randrange(1,1000)/1000)
 
 print(one_aeromap.df.columns)
 print(one_aeromap.df)
-print(one_aeromap.get('dcddrStar_negativeRates',alt=0.0,aos=0.0,mach=0.1,aoa=-6.0))
+print(one_aeromap.get('dampingDerivatives_negativeRates_dcddrStar',alt=0.0,mach=0.1,aos=0.0,aoa=-6.0))
+print(one_aeromap.get_damping_derivatives('cd','dr','neg',alt=0.0,mach=0.1,aos=0.0,aoa=-6.0))
+one_aeromap.export_csv('aeromap_with_damping_derivatives.csv')
+one_aeromap.save()
 
 # Save all the change in a CPACS file
 cpacs.save_cpacs('D150_simple_updated_aeromap.xml',overwrite=True)

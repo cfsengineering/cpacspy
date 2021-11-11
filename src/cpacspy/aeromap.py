@@ -29,13 +29,13 @@ from ambiance import Atmosphere
 
 from cpacspy.cpacsfunctions import (add_float_vector, create_branch,
                                     get_float_vector, get_xpath_parent)
-from cpacspy.utils import (AEROPERFORMANCE_XPATH, COEFS, PARAMS, PARAMS_COEFS, listify)
+from cpacspy.utils import (AEROPERFORMANCE_XPATH, COEFS, PARAMS, PARAMS_COEFS, DAMPING_COEFS, listify)
 
 
 def get_filter(df,list_of,alt_list,mach_list,aos_list,aoa_list):
     """ Get a dataframe filter for a set of parameters lists. """
 
-    filt = df[list_of] ==  df[list_of]
+    filt = pd.Series(True, index=df.index)
 
     if alt_list:
         filt &= df['altitude'].isin(alt_list)
@@ -122,6 +122,40 @@ class AeroMap:
         filt = get_filter(self.df,list_of,alt_list,mach_list,aos_list,aoa_list)
         
         return self.df.loc[filt,list_of].to_numpy()
+    
+    def get_damping_derivatives(self,coef,axis,rates,alt=None,mach=None,aos=None,aoa=None):
+        """ Get damping derivatives coefficients as a numpy vector with other parameters as filter (optional).
+        
+        Args:
+            coef (str): Coefficient to get ['cl','cd','cm','cml','cmd','cms']
+            axis (str): Axis to get ['dp','dq','dr']
+            rates (str): Rates to get ['pos','neg']
+            alt (float, optional): Altitude
+            mach (float, optional): Mach number
+            aos (float, optional): Angle of sideslip
+            aoa (float, optional): Angle of attack
+
+        """
+
+        if coef not in COEFS:
+            raise ValueError(f'{coef} is not a valid coefficient! \n Must be one of the following: {",".join(COEFS)}')
+
+        if axis not in ['dp','dq','dr']:
+            raise ValueError(f'{axis} is not a valid axis! \n Must be one of the following: {"dp","dq","dr"}')
+
+        if rates in ['posivitive','pos','p']:
+            rates_name = 'positiveRates'
+        elif rates in ['negative','neg','n']:
+            rates_name = 'negativeRates'
+        else:
+            raise ValueError(f'Invalid rates "{rates}"! \nMust be written as: \n("posivitive","pos","p" or "+") for positiveRates or \n("negative","neg","n" or "-") for negativeRates')
+
+        col_name = 'dampingDerivatives_' + rates_name + '_d' + coef + axis + 'Star'
+
+        if not col_name in self.df.columns:
+            raise ValueError(f'Damping derivative for {coef} coefficient on {axis} axis with {rates_name} has not been found!')
+        
+        return self.get(col_name,alt=alt,aos=aos,mach=mach,aoa=aoa)
 
     def add_values(self,alt,mach,aos,aoa,cd=np.nan,cl=np.nan,cs=np.nan,cmd=np.nan,cml=np.nan,cms=np.nan): 
         """ Add a row in an Aeromap dataframe."""
@@ -137,7 +171,6 @@ class AeroMap:
         # Add the new row
         self.df = self.df.append(new_row, ignore_index=True)
 
-
     def add_damping_derivatives(self,alt,mach,aos,aoa,coef,axis,value,rate=-1.0):
         """ Add a damping derivative coeficient for an existing set of alt,mach,aos,aoa
             
@@ -152,31 +185,26 @@ class AeroMap:
             rate (float, optional): Rotation rate. Defaults to -1.0.
         
         """
-
-        damping_coef_list = ['dcddpStar', 'dcddqStar', 'dcddrStar',
-                             'dcldpStar', 'dcldqStar', 'dcldrStar', 
-                             'dcmddpStar', 'dcmddqStar', 'dcmddrStar', 
-                             'dcmldpStar', 'dcmldqStar', 'dcmldrStar', 
-                             'dcmsdpStar', 'dcmsdqStar', 'dcmsdrStar', 
-                             'dcsdpStar', 'dcsdqStar', 'dcsdrStar']      
-        
+  
         damping_coef = 'd' + coef + axis + 'Star'
 
-        if damping_coef not in damping_coef_list:
+        if damping_coef not in DAMPING_COEFS:
             raise ValueError(f'Damping coeficient "{damping_coef}" is not valid!')
 
         if rate < 0:
-            damping_coef = damping_coef + '_negativeRates'
+            col_name = 'dampingDerivatives_negativeRates_' + damping_coef
         elif rate > 0:
-            damping_coef = damping_coef + '_positiveRates'
+            col_name = 'dampingDerivatives_positiveRates_' + damping_coef
         else:
             raise ValueError(f'Rotation rate "{rate}" is not valid!')
 
         # Check if parameters already exist
+        # TODO add an error if this set of parameters does not exist
         self.df.loc[(self.df['altitude']==alt) & 
                     (self.df['machNumber']==mach) & 
                     (self.df['angleOfSideslip']==aos) & 
-                    (self.df['angleOfAttack']==aoa),[damping_coef]] = value
+                    (self.df['angleOfAttack']==aoa),[col_name]] = value
+
 
 
     def plot(self,x_param,y_param,alt=None,mach=None,aos=None,aoa=None):
@@ -215,20 +243,32 @@ class AeroMap:
                     create_branch(self.tixi,param_xpath)
                     add_float_vector(self.tixi,param_xpath,self.df[param].tolist())
                 else:
-                    raise ValueError('All the 4 parametres (alt,mach,aos,aoa) must be define to save an aeroMap!')
+                    raise ValueError('All the 4 parametres (alt,mach,aos,aoa) must not contains NaN value to be saved in an aeroMap!')
             else:
                 raise ValueError('All the 4 parametres (alt,mach,aos,aoa) must be define to save an aeroMap!')
 
         # Create and fill coefficients fields
         for coef in COEFS:
             if coef in self.df:
-                if not self.df[coef].isnull().values.any():
+                if not self.df[coef].isnull().values.all():
                     coef_xpath = self.xpath + '/' + coef
                     create_branch(self.tixi,coef_xpath)
                     add_float_vector(self.tixi,coef_xpath,self.df[coef].tolist())
                 else:
-                    print(f'Warning: {coef} coeffiecient from "{self.uid}" aeroMap cannot be written in the CPACS file becuase it contains NaN!')
-                       
+                    print(f'Warning: {coef} coeffiecient from "{self.uid}" aeroMap will not be written in the CPACS file becuase it contains only NaN!')
+
+        # Create and fill damping derivatives fields
+        for rates in ['negativeRates','positiveRates']:
+            for damping_coef in DAMPING_COEFS:
+                col_name = 'dampingDerivatives_' + rates + '_' + damping_coef
+                if col_name in self.df:
+                    if not self.df[col_name].isnull().values.all():
+                        damping_coef_xpath = self.xpath + '/dampingDerivatives/' + rates + '/' + damping_coef
+                        create_branch(self.tixi,damping_coef_xpath)
+                        add_float_vector(self.tixi,damping_coef_xpath,self.df[col_name].tolist())
+                    else:
+                        print(f'Warning: {damping_coef} coeffiecient from "{self.uid}" aeroMap will not be written in the CPACS file becuase it contains onlz NaN!')
+
         # Create and fill the '/name' field
         name_xpath = get_xpath_parent(self.xpath) + '/name'
         create_branch(self.tixi,name_xpath)
