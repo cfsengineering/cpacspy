@@ -50,11 +50,11 @@ def test_aeromap_class():
     assert aeromap_1.df.altitude.size == 1 
 
     # Test if damping derivatives coefficients are correctly loaded
-    aeromap_test_dampder = my_cpacs.get_aeromap_by_uid('aeromap_test_dampder')
-    assert aeromap_test_dampder.df['dampingDerivatives_negativeRates_dcddpStar'].tolist()[0] == 0.00111
-    assert 'dampingDerivatives_negativeRates_dcsdrStar' in aeromap_test_dampder.df.columns # only nan in it
-    assert 'dampingDerivatives_negativeRates_dcsdqStar' in aeromap_test_dampder.df.columns # one nan in it
-    assert not 'dampingDerivatives_positiveRates_dcsdrStar' in aeromap_test_dampder.df.columns # no field in the aeromap
+    aeromap_dampder = my_cpacs.get_aeromap_by_uid('aeromap_test_dampder')
+    assert aeromap_dampder.df['dampingDerivatives_negativeRates_dcddpStar'].tolist()[0] == 0.00111
+    assert 'dampingDerivatives_negativeRates_dcsdrStar' in aeromap_dampder.df.columns # only nan in it
+    assert 'dampingDerivatives_negativeRates_dcsdqStar' in aeromap_dampder.df.columns # one nan in it
+    assert not 'dampingDerivatives_positiveRates_dcsdrStar' in aeromap_dampder.df.columns # no field in the aeromap
 
 def test_get():
 
@@ -65,32 +65,33 @@ def test_get():
     assert aeromap_2.get('cl',alt=11000.0,mach=0.4) == np.array([1.111])
     assert aeromap_2.get('cd',aoa=2.0,aos=0.0) == np.array([0.13])
 
-def test_add_damping_derivatives():
-    """ Test 'add_damping_derivatives' function """
-    
+def test_get_damping_derivatives():
+
+    # Load the CPACS file and 'aeromap_test_dampder'
     my_cpacs = CPACS(CPACS_PATH)
-    aeromap_test_dampder = my_cpacs.get_aeromap_by_uid('aeromap_test_dampder')
+    aeromap_dampder = my_cpacs.get_aeromap_by_uid('aeromap_test_dampder')
 
-    # Test if coefficients are correctly added
-    aeromap_test_dampder.add_damping_derivatives(alt=15000.0, mach=0.555, aos=0.0, aoa=0.0, coef='cs',axis='dr',value=0.0555,rate=1.0)
-    assert 'dampingDerivatives_positiveRates_dcsdrStar' in aeromap_test_dampder.df.columns 
-
-    # Test if raise Value Error for non-existing damping coefficient
+    # Test if wrong damping derivatives coefficients raises ValueError
     with pytest.raises(ValueError):
-        aeromap_test_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=1.0, coef='cw',axis='dr',value=0.0555,rate=0)
-
-    # Test if raise Value Error for non-existing axis
+        aeromap_dampder.get_damping_derivatives('cxx','dp','neg')
+    
+    # Test if wrong damping derivatives axis raises ValueError
     with pytest.raises(ValueError):
-        aeromap_test_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=1.0, coef='cs',axis='dz',value=0.0555,rate=0)
-
-    # Test if raise Value Error for rate = 0
+        aeromap_dampder.get_damping_derivatives('cl','dd','neg')
+    
+    # Test if wrong damping derivatives rate raises ValueError
     with pytest.raises(ValueError):
-        aeromap_test_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=1.0, coef='cs',axis='dr',value=0.0555,rate=0)
+        aeromap_dampder.get_damping_derivatives('cl','dd','should_be_pos_or_neg')
 
+    # Test all possible keyword for rates
+    for rate in ['posivitive','pos','p','negative','neg','n']:
+        assert aeromap_dampder.get_damping_derivatives('cl','dp',rate)[1] == 0.00112
 
-    # Test if raise Value Error for non-existing set of parameters
-    with pytest.raises(ValueError):
-        aeromap_test_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=22.0, coef='cs',axis='dr',value=0.0555,rate=1.0)
+    # Test to get one value
+    assert aeromap_dampder.get_damping_derivatives('cl','dp','neg',alt=15000.0,mach=0.555,aos=0.0,aoa=7.0)[0] == 0.00118
+
+    # Test if non existing parameter gives a vector of lenght 0
+    assert len(aeromap_dampder.get_damping_derivatives('cl','dp','neg',alt=11111.0,mach=0.555,aos=0.0,aoa=7.0)) == 0
 
 
 def test_add_values_and_save():
@@ -138,6 +139,46 @@ def test_add_values_and_save():
     assert aeromap_3_test.name == 'aeromap_new_name'
     assert aeromap_3_test.description == 'This is a new description'
 
+
+def test_add_damping_derivatives_and_save():
+    """ Test 'add_damping_derivatives' function """
+    
+    my_cpacs = CPACS(CPACS_PATH)
+    aeromap_dampder = my_cpacs.get_aeromap_by_uid('aeromap_test_dampder')
+
+    # Test if raise Value Error for non-existing damping coefficient
+    with pytest.raises(ValueError):
+        aeromap_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=1.0, coef='cw',axis='dr',value=0.0555,rate=0)
+
+    # Test if raise Value Error for non-existing axis
+    with pytest.raises(ValueError):
+        aeromap_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=1.0, coef='cs',axis='dz',value=0.0555,rate=0)
+
+    # Test if raise Value Error for rate = 0
+    with pytest.raises(ValueError):
+        aeromap_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=1.0, coef='cs',axis='dr',value=0.0555,rate=0)
+
+    # Test if raise Value Error for non-existing set of parameters
+    with pytest.raises(ValueError):
+        aeromap_dampder.add_damping_derivatives(alt=15000, mach=0.555, aos=0, aoa=22.0, coef='cs',axis='dr',value=0.0555,rate=1.0)
+    
+    # Test if coefficients are correctly added
+    aeromap_dampder.add_damping_derivatives(alt=15000.0, mach=0.555, aos=0.0, aoa=0.0, coef='cs',axis='dr',value=0.0555,rate=1.0)
+    assert 'dampingDerivatives_positiveRates_dcsdrStar' in aeromap_dampder.df.columns 
+
+    # Save the modified CPACS file
+    aeromap_dampder.save()
+    my_cpacs.save_cpacs(CPACS_TEST_PATH,overwrite=True)
+
+    # Check value after it has been saved
+    my_cpacs_test = CPACS(CPACS_TEST_PATH)
+    aeromap_dampder_test = my_cpacs_test.get_aeromap_by_uid('aeromap_test_dampder')  
+
+    assert aeromap_dampder_test.get('dampingDerivatives_positiveRates_dcsdrStar',alt=15000,mach=0.555)[0] == 0.0555
+    assert np.isnan(aeromap_dampder_test.get('dampingDerivatives_positiveRates_dcsdrStar',alt=15000,mach=0.555)[11])
+
+    assert aeromap_dampder_test.get('dampingDerivatives_negativeRates_dcmldpStar',alt=15000,mach=0.555)[0] == 0.00111
+    assert aeromap_dampder_test.get('dampingDerivatives_negativeRates_dcmldpStar',alt=15000,mach=0.555)[6] == 0.00117
 
 def test_get_cd0_oswald():
     '''TODO: create the test when the function is finalized!'''
