@@ -19,6 +19,7 @@
 
 # Author: Aidan Jungo
 
+import os
 import sys
 
 import numpy as np
@@ -34,6 +35,8 @@ from cpacspy.cpacspy import CPACS
 
 CPACS_PATH = 'examples/D150_simple.xml'
 CPACS_TEST_PATH = 'tests/D150_test.xml'
+CSV_IN_FILE = os.path.join('tests','aeromap_test.csv')
+CSV_OUT_FILE = os.path.join('tests','aeromap_test_export.csv')
 
 
 def test_aeromap_class():
@@ -179,6 +182,26 @@ def test_add_damping_derivatives_and_save():
 
     assert aeromap_dampder_test.get('dampingDerivatives_negativeRates_dcmldpStar',alt=15000,mach=0.555)[0] == 0.00111
     assert aeromap_dampder_test.get('dampingDerivatives_negativeRates_dcmldpStar',alt=15000,mach=0.555)[6] == 0.00117
+
+def test_csv():
+    """ Test 'create_aeromap_from_csv' (from cpacspy.py) and 
+    'export_csv' function (with damping derivatives coefficients in the aeroMap) """
+
+    my_cpacs = CPACS(CPACS_PATH)
+    aeromap_dampder_csv = my_cpacs.create_aeromap_from_csv(CSV_IN_FILE)
+    # TODO: maybe save and reopen the CPACS file inbetween the import and export?
+    aeromap_dampder_csv.export_csv(CSV_OUT_FILE)
+    
+    # Check if file has been created
+    with open(CSV_IN_FILE, 'r') as t1, open(CSV_OUT_FILE, 'r') as t2:
+        csv_in = t1.readlines()
+        csv_export = t2.readlines()
+    
+    assert csv_in == csv_export
+
+    # Delete test file from a past run
+    if os.path.exists(CSV_OUT_FILE):
+        os.remove(CSV_OUT_FILE)
 
 def test_get_cd0_oswald():
     '''TODO: create the test when the function is finalized!'''
