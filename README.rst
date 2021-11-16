@@ -58,7 +58,10 @@ To build and install locally
 How to use this package
 =======================
 
-To see how to use this module, check out `/example/cpacspy_use.py <https://github.com/cfsengineering/cpacspy/blob/main/examples/cpacspy_use.py>`_
+To see how to use this module, check out:
+
+- `Python file with examples of useage <https://github.com/cfsengineering/cpacspy/blob/main/examples/cpacspy_use.py>`_
+- `Jupyter Notebook with examples of useage <https://github.com/cfsengineering/cpacspy/blob/main/examples/cpacspy_use.ipynb>`_
 
 
 License

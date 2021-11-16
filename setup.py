@@ -5,7 +5,7 @@ import setuptools
 import os
 
 NAME = 'cpacspy'
-VERSION = '0.0.6'
+VERSION = '0.0.7'
 AUTHOR = 'Aidan Jungo'
 EMAIL = 'aidan.jungo@cfse.ch'
 DESCRIPTION = 'PyPI package to work with CPACS file and AeroMaps'
@@ -16,7 +16,6 @@ REQUIRED = []
 README = 'README.rst'
 PACKAGE_DIR = 'src/'
 LICENSE = 'Apache License 2.0'
-
 
 
 setuptools.setup(
@@ -32,7 +31,7 @@ setuptools.setup(
     license=LICENSE,
     packages=[NAME],
     python_requires=REQUIRES_PYTHON,
-    keywords=['CPACS','aircraft','design','xml','aerodynamics','coefficients'],
+    keywords=['CPACS','aircraft','design','xml','aerodynamics','coefficients','databases'],
     install_requires=REQUIRED,
     # See: https://pypi.org/classifiers/
     classifiers=[
