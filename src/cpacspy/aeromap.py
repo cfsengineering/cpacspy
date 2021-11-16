@@ -235,7 +235,7 @@ class AeroMap:
         aos_list = listify(aos)
         aoa_list = listify(aoa)
 
-        filt = get_filter(self.df,x_param,alt_list,mach_list,aos_list,aoa_list)
+        filt = get_filter(self.df,alt_list,mach_list,aos_list,aoa_list)
         self.df.loc[filt].plot(x=x_param,y=y_param,marker='o')
         plt.show()
 

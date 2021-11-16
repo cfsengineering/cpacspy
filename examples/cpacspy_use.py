@@ -1,7 +1,6 @@
 # Script to show how to use the cpacspy package 
 
 import sys
-
 sys.path.append('../src/')
 
 # Importing cpacspy
@@ -24,7 +23,6 @@ print('Ref point:', f'({cpacs.aircraft.ref_point_x},{cpacs.aircraft.ref_point_y}
 # To choose another reference wing (by default the largest wing is the reference one)
 # cpacs.aircraft.ref_wing_idx = 3 
 
-
 print('Main wing aspect ratio',cpacs.aircraft.wing_ar)
 print('Main wing area',cpacs.aircraft.wing_area)
 print('Main wing span',cpacs.aircraft.wing_span)
@@ -46,8 +44,8 @@ print(one_aeromap.get('angleOfAttack',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 print(one_aeromap.get('cd',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 
 # Plot aeromap
-#one_aeromap.plot('cd','cl',alt=15500,aos=0.0,mach=0.5)
-#one_aeromap.plot('angleOfAttack','cd',alt=15500,aos=0.0,mach=0.5)
+# one_aeromap.plot('cd','cl',alt=15500,aos=0.0,mach=0.5)
+# one_aeromap.plot('angleOfAttack','cd',alt=15500,aos=0.0,mach=0.5)
 
 # Add new values to the aeromap
 simple_aeromap = cpacs.get_aeromap_by_uid('aeromap_test2')
@@ -73,7 +71,6 @@ print(new_aeromap)
 # Save the aeromamp
 new_aeromap.save()
 
-
 # Duplicate an aeromap
 duplicated_aeromap = cpacs.duplicate_aeromap('my_new_aeromap', 'my_duplicated_aeromap')
 duplicated_aeromap.add_values(mach=0.666,alt=10000,aos=0.0,aoa=2.4,cd=0.001,cl=1.1,cs=0.22,cmd=0.22)
@@ -92,6 +89,34 @@ imported_aeromap = cpacs.create_aeromap_from_csv('aeromap.csv','imported_aeromap
 imported_aeromap.description = 'This aeromap has been imported from a CSV file'
 imported_aeromap.save()
 
+# AeroMap with Damping Derivatives coefficients
+aeromap_dd = cpacs.duplicate_aeromap('imported_aeromap','aeromap_dd')
+aeromap_dd.description = 'Aeromap with damping derivatives coefficients'
+
+# Add damping derivatives coefficients to the aeromap
+# Coefficients must be one of the following: 'cd', 'cl', 'cs', 'cmd', 'cml', 'cms'
+# Axis must be one of the following: 'dp', 'dq', 'dr'
+# The sign of the rate will determine if the coefficient are stored in /positiveRate or /negativeRate
+aeromap_dd.add_damping_derivatives(alt=15000,mach=0.555,aos=0.0,aoa=0.0,coef='cd',axis='dp',value=0.001,rate=-1.0)
+
+# Same in a loop
+for i in range(11):
+    aeromap_dd.add_damping_derivatives(alt=15000,mach=0.555,aos=0.0,aoa=i+1,coef='cd',axis='dp',value=0.001*i+0.002,rate=-1.0)
+aeromap_dd.save()
+
+# Get damping derivatives coefficients
+print(aeromap_dd.get_damping_derivatives(alt=15000,mach=0.555,coef='cd',axis='dp',rates='neg'))
+print(aeromap_dd.get_damping_derivatives(alt=15000,mach=0.555,aoa=[4.0,6.0,8.0],coef='cd',axis='dp',rates='neg'))
+
+# Also works with the simple "get" function, but the "coef name" is a bit more complicated
+print(aeromap_dd.get('dampingDerivatives_negativeRates_dcddpStar',aoa=[4.0,6.0,8.0]))
+
+# Damping derivatives coefficients can alos be plotted
+# aeromap_dd.plot('angleOfAttack','dampingDerivatives_negativeRates_dcddpStar',alt=15000,aos=0.0,mach=0.555)
+
+
+## Analyses
+
 # CD0 and oswald factor
 aspect_ratio = cpacs.aircraft.wing_ar
 cd0,e = one_aeromap.get_cd0_oswald(aspect_ratio,alt=15500.0,aos=0.0,mach=0.5)
@@ -101,23 +126,10 @@ one_aeromap.calculate_forces(cpacs.aircraft)
 print(one_aeromap.get('cd',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 print(one_aeromap.get('drag',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 
-import random
-# Test add damping derivative coef
 
-for index, row in one_aeromap.df.iterrows():
-    if row['altitude']== 15500.0:
-                continue
-    for axis in ['dp','dq','dr']:
-        for coef in ['cd','cl','cs','cmd','cml','cms']:
-            one_aeromap.add_damping_derivatives(alt=row['altitude'],mach=row['machNumber'],aos=row['angleOfSideslip'],aoa=row['angleOfAttack'],coef=coef,axis=axis,value=random.randrange(1,1000)/1000)
-            one_aeromap.add_damping_derivatives(alt=row['altitude'],mach=row['machNumber'],aos=row['angleOfSideslip'],aoa=row['angleOfAttack'],coef=coef,axis=axis,rate=1.5,value=random.randrange(1,1000)/1000)
-
-print(one_aeromap.df.columns)
-print(one_aeromap.df)
-print(one_aeromap.get('dampingDerivatives_negativeRates_dcddrStar',alt=0.0,mach=0.1,aos=0.0,aoa=-6.0))
-print(one_aeromap.get_damping_derivatives('cd','dr','neg',alt=0.0,mach=0.1,aos=0.0,aoa=-6.0))
-one_aeromap.export_csv('aeromap_with_damping_derivatives.csv')
-one_aeromap.save()
+## Save
 
 # Save all the change in a CPACS file
 cpacs.save_cpacs('D150_simple_updated_aeromap.xml',overwrite=True)
+
+
