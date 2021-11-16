@@ -27,6 +27,12 @@ REF_XPATH  = '/cpacs/vehicles/aircraft/model/reference'
 PARAMS = ['altitude','machNumber','angleOfSideslip','angleOfAttack']
 COEFS = ['cd','cl','cs','cmd','cml','cms']
 PARAMS_COEFS = PARAMS + COEFS
+DAMPING_COEFS = ['dcddpStar', 'dcddqStar', 'dcddrStar',
+                 'dcldpStar', 'dcldqStar', 'dcldrStar', 
+                 'dcmddpStar', 'dcmddqStar', 'dcmddrStar', 
+                 'dcmldpStar', 'dcmldqStar', 'dcmldrStar', 
+                 'dcmsdpStar', 'dcmsdqStar', 'dcmsdrStar', 
+                 'dcsdpStar', 'dcsdqStar', 'dcsdrStar']  
 
 
 def listify(value):
@@ -39,7 +45,4 @@ def listify(value):
         value = []
 
     return value
-
-
-
-        
+ 

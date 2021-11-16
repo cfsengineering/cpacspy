@@ -19,6 +19,8 @@
 
 # Author: Aidan Jungo
 
+import numpy as np
+
 import tigl3.configuration
 import tixi3.tixi3wrapper as tixi3wrapper
 import tigl3.tigl3wrapper as tigl3wrapper
@@ -348,8 +350,9 @@ def get_float_vector(tixi, xpath):
 
     if float_vector_str.endswith(';'):
         float_vector_str = float_vector_str[:-1]
+    
     float_vector_list = float_vector_str.split(';')
-    float_vector = [float(elem) for elem in float_vector_list]
+    float_vector = [np.nan if (elem == 'nan' or elem == 'NaN') else float(elem) for elem in float_vector_list]
 
     return float_vector
 
@@ -399,7 +402,7 @@ def add_string_vector(tixi, xpath, vector):
         xpath (str): XPath of the vector to add
         vector (list): Vector of string to add
     """
-
+    
     # Strip trailing '/' (has no meaning here)
     if xpath.endswith('/'):
         xpath = xpath[:-1]

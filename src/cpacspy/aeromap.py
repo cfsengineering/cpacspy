@@ -29,13 +29,13 @@ from ambiance import Atmosphere
 
 from cpacspy.cpacsfunctions import (add_float_vector, create_branch,
                                     get_float_vector, get_xpath_parent)
-from cpacspy.utils import (AEROPERFORMANCE_XPATH, COEFS, PARAMS, PARAMS_COEFS, listify)
+from cpacspy.utils import (AEROPERFORMANCE_XPATH, COEFS, PARAMS, PARAMS_COEFS, DAMPING_COEFS, listify)
 
 
-def get_filter(df,list_of,alt_list,mach_list,aos_list,aoa_list):
+def get_filter(df,alt_list,mach_list,aos_list,aoa_list):
     """ Get a dataframe filter for a set of parameters lists. """
 
-    filt = df[list_of] ==  df[list_of]
+    filt = pd.Series(True, index=df.index)
 
     if alt_list:
         filt &= df['altitude'].isin(alt_list)
@@ -91,22 +91,41 @@ class AeroMap:
             if self.tixi.checkElement(atm_model_xpath):
                 self.atmospheric_model = self.tixi.getTextElement(atm_model_xpath)
 
-            self.get_param_and_coef()
+            self.get_param_and_coef_from_cpacs()
 
-    def get_param_and_coef(self):
-        """ Get the parameters and coefficients from the CPACS file."""
+    def get_param_and_coef_from_cpacs(self):
+        """ Get the parameters and coefficients from the aeroMap of a CPACS file."""
 
         param_dict = {}
 
-        for param in PARAMS_COEFS:
+        # Get parameters
+        for param in PARAMS:
             param_xpath = self.xpath + f'/{param}'
 
             if self.tixi.checkElement(param_xpath):
                 param_dict[param] = get_float_vector(self.tixi,param_xpath)
-
             else:
-                if param in PARAMS:
-                    raise ValueError(f'No values has been found for "{param}" in "{self.uid}" aeroMap!')
+                raise ValueError(f'No values has been found for "{param}" in "{self.uid}" aeroMap!')
+
+        # Get coefficients
+        for coef in COEFS:
+            coef_xpath = self.xpath + f'/{coef}'
+
+            if self.tixi.checkElement(coef_xpath):
+                param_dict[coef] = get_float_vector(self.tixi,coef_xpath)
+
+        # Get damping derivatives coefficients
+        for rates in ['negativeRates','positiveRates']:
+            for damping_coef in DAMPING_COEFS:
+                
+                col_name = f'dampingDerivatives_{rates}_{damping_coef}'
+                damping_coef_xpath = self.xpath + f'/dampingDerivatives/{rates}/{damping_coef}'
+
+                if self.tixi.checkElement(damping_coef_xpath):
+                    param_dict[col_name] = get_float_vector(self.tixi,damping_coef_xpath)
+
+        # Get incrementMaps coefficients
+        # TODO
         
         df_param  =  pd.DataFrame(param_dict)
         self.df = pd.concat([self.df, df_param], axis=0)
@@ -119,9 +138,43 @@ class AeroMap:
         aos_list = listify(aos)
         aoa_list = listify(aoa)
 
-        filt = get_filter(self.df,list_of,alt_list,mach_list,aos_list,aoa_list)
+        filt = get_filter(self.df,alt_list,mach_list,aos_list,aoa_list)
         
         return self.df.loc[filt,list_of].to_numpy()
+    
+    def get_damping_derivatives(self,coef,axis,rates,alt=None,mach=None,aos=None,aoa=None):
+        """ Get damping derivatives coefficients as a numpy vector with other parameters as filter (optional).
+        
+        Args:
+            coef (str): Coefficient to get ['cl','cd','cm','cml','cmd','cms']
+            axis (str): Axis to get ['dp','dq','dr']
+            rates (str): Rates to get ['pos','neg']
+            alt (float, optional): Altitude
+            mach (float, optional): Mach number
+            aos (float, optional): Angle of sideslip
+            aoa (float, optional): Angle of attack
+
+        """
+
+        if coef not in COEFS:
+            raise ValueError(f'{coef} is not a valid coefficient! \n Must be one of the following: {",".join(COEFS)}')
+
+        if axis not in ['dp','dq','dr']:
+            raise ValueError(f'{axis} is not a valid axis! \n Must be one of the following: {"dp","dq","dr"}')
+
+        if rates in ['posivitive','pos','p']:
+            rates_name = 'positiveRates'
+        elif rates in ['negative','neg','n']:
+            rates_name = 'negativeRates'
+        else:
+            raise ValueError(f'Invalid rates "{rates}"! \nMust be written as: \n("posivitive","pos","p" or "+") for positiveRates or \n("negative","neg","n" or "-") for negativeRates')
+
+        col_name = 'dampingDerivatives_' + rates_name + '_d' + coef + axis + 'Star'
+
+        if not col_name in self.df.columns:
+            raise ValueError(f'Damping derivative for {coef} coefficient on {axis} axis with {rates_name} has not been found!')
+        
+        return self.get(col_name,alt=alt,aos=aos,mach=mach,aoa=aoa)
 
     def add_values(self,alt,mach,aos,aoa,cd=np.nan,cl=np.nan,cs=np.nan,cmd=np.nan,cml=np.nan,cms=np.nan): 
         """ Add a row in an Aeromap dataframe."""
@@ -137,6 +190,43 @@ class AeroMap:
         # Add the new row
         self.df = self.df.append(new_row, ignore_index=True)
 
+    def add_damping_derivatives(self,alt,mach,aos,aoa,coef,axis,value,rate=-1.0):
+        """ Add a damping derivative coeficient for an existing set of alt,mach,aos,aoa
+            
+        Args:
+            alt (float): Altitude
+            mach (float): Mach number
+            aos (float): Angle of sideslip
+            aoa (float): Angle of attack
+            coef (str) : equivalent aero coefficient (cd,cl,cs,cmd,cml,cms)
+            axis (str) : axis of rotation (dp,dq,dr)
+            value (float) : value of the coeficient
+            rate (float, optional): Rotation rate. Defaults to -1.0.
+        
+        """
+  
+        damping_coef = 'd' + coef + axis + 'Star'
+
+        if damping_coef not in DAMPING_COEFS:
+            raise ValueError(f'Damping coeficient "{damping_coef}" is not valid!')
+
+        if rate < 0:
+            col_name = 'dampingDerivatives_negativeRates_' + damping_coef
+        elif rate > 0:
+            col_name = 'dampingDerivatives_positiveRates_' + damping_coef
+        else:
+            raise ValueError(f'Rotation rate "{rate}" is not valid!')
+
+        # Check if this set of parameters exists
+        filter = get_filter(self.df,[alt],[mach],[aos],[aoa])
+        if not filter.any():
+            raise ValueError(f'Parameters for alt={alt}, mach={mach}, aos={aos}, aoa={aoa} do not exist!')
+
+        self.df.loc[(self.df['altitude']==alt) & 
+                    (self.df['machNumber']==mach) & 
+                    (self.df['angleOfSideslip']==aos) & 
+                    (self.df['angleOfAttack']==aoa),[col_name]] = value
+
     def plot(self,x_param,y_param,alt=None,mach=None,aos=None,aoa=None):
         """ Plot 'x_param' vs 'y_param' with filtered parameters passed as float or string. """
 
@@ -145,7 +235,7 @@ class AeroMap:
         aos_list = listify(aos)
         aoa_list = listify(aoa)
 
-        filt = get_filter(self.df,x_param,alt_list,mach_list,aos_list,aoa_list)
+        filt = get_filter(self.df,alt_list,mach_list,aos_list,aoa_list)
         self.df.loc[filt].plot(x=x_param,y=y_param,marker='o')
         plt.show()
 
@@ -173,20 +263,35 @@ class AeroMap:
                     create_branch(self.tixi,param_xpath)
                     add_float_vector(self.tixi,param_xpath,self.df[param].tolist())
                 else:
-                    raise ValueError('All the 4 parametres (alt,mach,aos,aoa) must be define to save an aeroMap!')
+                    raise ValueError('All the 4 parametres (alt,mach,aos,aoa) must not contains NaN value to be saved in an aeroMap!')
             else:
                 raise ValueError('All the 4 parametres (alt,mach,aos,aoa) must be define to save an aeroMap!')
 
         # Create and fill coefficients fields
         for coef in COEFS:
             if coef in self.df:
-                if not self.df[coef].isnull().values.any():
+                if not self.df[coef].isnull().values.all():
                     coef_xpath = self.xpath + '/' + coef
                     create_branch(self.tixi,coef_xpath)
                     add_float_vector(self.tixi,coef_xpath,self.df[coef].tolist())
                 else:
-                    print(f'Warning: {coef} coeffiecient from "{self.uid}" aeroMap cannot be written in the CPACS file becuase it contains NaN!')
-                       
+                    print(f'Warning: {coef} coeffiecient from "{self.uid}" aeroMap will not be written in the CPACS file becuase it contains only NaN!')
+
+        # Create and fill damping derivatives fields
+        for rates in ['negativeRates','positiveRates']:
+            for damping_coef in DAMPING_COEFS:
+                col_name = 'dampingDerivatives_' + rates + '_' + damping_coef
+                if col_name in self.df:
+                    if not self.df[col_name].isnull().values.all():
+                        damping_coef_xpath = self.xpath + f'/dampingDerivatives/{rates}/{damping_coef}'
+                        create_branch(self.tixi,damping_coef_xpath)
+                        add_float_vector(self.tixi,damping_coef_xpath,self.df[col_name].tolist())
+                    else:
+                        print(f'Warning: {damping_coef} coeffiecient from "{self.uid}" aeroMap will not be written in the CPACS file becuase it contains onlz NaN!')
+
+        # Create and fill incrementMap fields
+        # TODO
+    
         # Create and fill the '/name' field
         name_xpath = get_xpath_parent(self.xpath) + '/name'
         create_branch(self.tixi,name_xpath)
@@ -206,7 +311,7 @@ class AeroMap:
     def export_csv(self, csv_path):
         """ Export the AeroMap as a CSV file. """
 
-        self.df.to_csv(csv_path, na_rep='NaN', index=False)
+        self.df.to_csv(csv_path, na_rep='NaN', index=False, float_format='%g')
 
     def get_cd0_oswald(self,ar,alt=None,mach=None,aos=None,plot=False):
         """ Calculate and return CD0 and Oswald factor. """
@@ -253,7 +358,6 @@ class AeroMap:
 
         return cd0,e
 
-
     def calculate_forces(self,aircraft):  
         """ Calculate forces and momement from coefficients """
 
@@ -277,7 +381,6 @@ class AeroMap:
                                                                           * x[coef], axis=1)
             else:
                 print(f'Warning: {COEF2MOMENT_DICT[coef]} will not be calculated because there is no {coef} coefficient in the aeroMap!')
-
 
     def __str__(self): 
 
