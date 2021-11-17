@@ -176,6 +176,17 @@ class AeroMap:
         
         return self.get(col_name,alt=alt,aos=aos,mach=mach,aoa=aoa)
 
+    def add_coefficients(self,alt,mach,aos,aoa,cd=np.nan,cl=np.nan,cs=np.nan,cmd=np.nan,cml=np.nan,cms=np.nan):
+        """ Add coefficients to existing set of parmeter """
+        # Check if parameter are already in the dataframe
+        
+        filt = get_filter(self.df,[alt],[mach],[aos],[aoa])
+
+        if filter:
+            self.df.loc[filt,['cd','cl','cs','cmd','cml','cms']] = [cd,cl,cs,cmd,cml,cms]
+        else:
+            raise ValueError(f'No values has been found for {alt}, {mach}, {aos}, {aoa} in "{self.uid}" aeroMap!')
+
     def add_values(self,alt,mach,aos,aoa,cd=np.nan,cl=np.nan,cs=np.nan,cmd=np.nan,cml=np.nan,cms=np.nan): 
         """ Add a row in an Aeromap dataframe."""
 
