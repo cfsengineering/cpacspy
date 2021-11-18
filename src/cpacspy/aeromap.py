@@ -131,7 +131,16 @@ class AeroMap:
         self.df = pd.concat([self.df, df_param], axis=0)
 
     def get(self,list_of,alt=None,mach=None,aos=None,aoa=None):
-        """ Get parameter or coefficient as a numpy vector with other parameters as filter (optional)."""
+        """ Get parameter or coefficient as a numpy vector with other parameters as filter (optional).
+        
+        Args:
+            list_of (str): Parameter or coefficient to get.
+            alt (list, optional): List of altitudes to filter. Defaults to None.
+            mach (list, optional): List of Mach numbers to filter. Defaults to None.
+            aos (list, optional): List of angle of sideslip to filter. Defaults to None.
+            aoa (list, optional): List of angle of attack to filter. Defaults to None.
+
+        """
 
         alt_list = listify(alt)
         mach_list = listify(mach)
@@ -176,19 +185,27 @@ class AeroMap:
         
         return self.get(col_name,alt=alt,aos=aos,mach=mach,aoa=aoa)
 
-    def add_coefficients(self,alt,mach,aos,aoa,cd=np.nan,cl=np.nan,cs=np.nan,cmd=np.nan,cml=np.nan,cms=np.nan):
-        """ Add coefficients to existing set of parmeter """
-        # Check if parameter are already in the dataframe
+    def add_row(self,alt,mach,aos,aoa,cd=np.nan,cl=np.nan,cs=np.nan,cmd=np.nan,cml=np.nan,cms=np.nan): 
+        """ Add a row in an Aeromap dataframe.
         
+        Args:
+            alt (float): Altitude
+            mach (float): Mach number
+            aos (float): Angle of sideslip
+            aoa (float): Angle of attack
+            cd (float, optional): Coefficient of drag
+            cl (float, optional): Coefficient of lift
+            cs (float, optional): Coefficient of side force
+            cmd (float, optional): Coefficient of moment due to drag
+            cml (float, optional): Coefficient of moment due to lift
+            cms (float, optional): Coefficient of moment due to side force
+
+        """
+
+        # Check if the parameter already exists
         filt = get_filter(self.df,[alt],[mach],[aos],[aoa])
-
-        if filter:
-            self.df.loc[filt,['cd','cl','cs','cmd','cml','cms']] = [cd,cl,cs,cmd,cml,cms]
-        else:
-            raise ValueError(f'No values has been found for {alt}, {mach}, {aos}, {aoa} in "{self.uid}" aeroMap!')
-
-    def add_values(self,alt,mach,aos,aoa,cd=np.nan,cl=np.nan,cs=np.nan,cmd=np.nan,cml=np.nan,cms=np.nan): 
-        """ Add a row in an Aeromap dataframe."""
+        if not self.df.loc[filt].empty:
+            raise ValueError(f'Row with alt={alt}, mach={mach}, aos={aos}, aoa={aoa} already exists!')
 
         new_row = {'altitude': alt, 'machNumber': mach, 'angleOfSideslip': aos, 'angleOfAttack': aoa,
                    'cd': cd, 'cl': cl, 'cs': cs, 'cmd': cmd, 'cml': cml, 'cms': cms}
@@ -201,8 +218,35 @@ class AeroMap:
         # Add the new row
         self.df = self.df.append(new_row, ignore_index=True)
 
+    def add_coefficients(self,alt,mach,aos,aoa,cd=np.nan,cl=np.nan,cs=np.nan,cmd=np.nan,cml=np.nan,cms=np.nan):
+        """ Add coefficients to existing set of parmeter. 
+        
+        Args:
+            alt (float): Altitude
+            mach (float): Mach number
+            aos (float): Angle of sideslip
+            aoa (float): Angle of attack
+            cd (float, optional): Coefficient of drag
+            cl (float, optional): Coefficient of lift
+            cs (float, optional): Coefficient of side force
+            cmd (float, optional): Coefficient of moment due to drag
+            cml (float, optional): Coefficient of moment due to lift
+            cms (float, optional): Coefficient of moment due to side force
+
+        """
+
+        # Check if parameter are already in the dataframe
+        filt = get_filter(self.df,[alt],[mach],[aos],[aoa])
+
+        print(filt)
+
+        if filt.empty or filt.any() == False:
+            raise ValueError(f'No values has been found for {alt}, {mach}, {aos}, {aoa} in "{self.uid}" aeroMap!')
+
+        self.df.loc[filt,['cd','cl','cs','cmd','cml','cms']] = [cd,cl,cs,cmd,cml,cms]
+
     def add_damping_derivatives(self,alt,mach,aos,aoa,coef,axis,value,rate=-1.0):
-        """ Add a damping derivative coeficient for an existing set of alt,mach,aos,aoa
+        """ Add a damping derivative coeficient for an existing set of alt,mach,aos,aoa.
             
         Args:
             alt (float): Altitude

@@ -49,7 +49,7 @@ print(one_aeromap.get('cd',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 
 # Add new values to the aeromap
 simple_aeromap = cpacs.get_aeromap_by_uid('aeromap_test2')
-simple_aeromap.add_values(mach=0.555,alt=15000,aos=0.0,aoa=2.4,cd=0.001,cl=1.1,cs=0.22,cmd=0.22)
+simple_aeromap.add_row(mach=0.555,alt=15000,aos=0.0,aoa=2.4,cd=0.001,cl=1.1,cs=0.22,cmd=0.22)
 simple_aeromap.save()
 
 
@@ -63,7 +63,7 @@ new_aeromap.description = 'Test of creation of a new aeromap'
 
 # Fill the aeromap with parameter and coefficients
 for i in range(12):
-    new_aeromap.add_values(mach=0.555,alt=15000,aos=0.0,aoa=i,cd=0.001*i*i,cl=0.1*i,cs=0.0,cmd=0.0,cml=1.1,cms=0.0)
+    new_aeromap.add_row(mach=0.555,alt=15000,aos=0.0,aoa=i,cd=0.001*i*i,cl=0.1*i,cs=0.0,cmd=0.0,cml=1.1,cms=0.0)
 
 # Print the aeromap
 print(new_aeromap)
@@ -73,7 +73,7 @@ new_aeromap.save()
 
 # Duplicate an aeromap
 duplicated_aeromap = cpacs.duplicate_aeromap('my_new_aeromap', 'my_duplicated_aeromap')
-duplicated_aeromap.add_values(mach=0.666,alt=10000,aos=0.0,aoa=2.4,cd=0.001,cl=1.1,cs=0.22,cmd=0.22)
+duplicated_aeromap.add_row(mach=0.666,alt=10000,aos=0.0,aoa=2.4,cd=0.001,cl=1.1,cs=0.22,cmd=0.22)
 
 # Modfiy aerocoef
 print(duplicated_aeromap.get('cd'))

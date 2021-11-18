@@ -5134,12 +5134,29 @@
                     <dcmsdrStar mapType="vector">0.00111;0.00112;0.00113;0.00114;0.00115;0.00116;0.00117;0.00118;0.00119;0.0012;0.00121;0.00122;0.00123</dcmsdrStar>
                     <dcsdpStar mapType="vector">0.00111;0.00112;0.00113;0.00114;0.00115;0.00116;0.00117;0.00118;0.00119;0.0012;0.00121;0.00122;0.00123</dcsdpStar>
                     <dcsdqStar mapType="vector">0.00111;0.00112;0.00113;0.00114;0.00115;0.00116;0.00117;0.00118;0.00119;0.0012;0.00121;0.00122;0.00123</dcsdqStar>
-                    <dcsdrStar mapType="vector">0.0555;nan;nan;nan;nan;nan;nan;nan;nan;nan;nan;nan;nan</dcsdrStar>
                   </positiveRates>
                 </dampingDerivatives>
               </aeroPerformanceMap>
               <name>aeromap_test_dampder</name>
               <description>AeroMap to test function related to damping derivatives coefficients function, errrors in the aeroMap are the folloing: missing dcsdrStar for positiveRates, only nan for dcsdrStar negativeRates</description>
+              <boundaryConditions>
+                <atmosphericModel>ISA</atmosphericModel>
+              </boundaryConditions>
+            </aeroMap>
+            <aeroMap uID="aeromap_test3">
+              <aeroPerformanceMap>
+                <altitude mapType="vector">10000;10000;10000</altitude>
+                <machNumber mapType="vector">0.3;0.3;0.3</machNumber>
+                <angleOfSideslip mapType="vector">0;0;0</angleOfSideslip>
+                <angleOfAttack mapType="vector">2;3;4</angleOfAttack>
+                <cl mapType="vector">0.5;0.6;0.7</cl>
+                <cs mapType="vector">0.5;0.6;nan</cs>
+                <cmd mapType="vector">0.5;0.6;nan</cmd>
+                <cml mapType="vector">0.5;0.6;nan</cml>
+                <cms mapType="vector">0.555;0.666;nan</cms>
+              </aeroPerformanceMap>
+              <name>aeromap_new_name</name>
+              <description>This is a new description</description>
               <boundaryConditions>
                 <atmosphericModel>ISA</atmosphericModel>
               </boundaryConditions>
