@@ -10,7 +10,7 @@ dependencies:
   - python=3.7
   - pytest
   - setuptools
-  - tigl3=3.2.1
+  - tigl3=3.2.2
   - tixi3=3.1.1
   - wheel
  
