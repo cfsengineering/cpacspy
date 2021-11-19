@@ -40,12 +40,12 @@ def test_main_attrib():
     """ Test main attributes of the CPACS class """
 
     # Load the CPACS file and all AeroMap in it
-    my_cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(CPACS_PATH)
 
-    assert my_cpacs.ac_name == 'D150'
+    assert cpacs.ac_name == 'D150'
 
-    #assert my_cpacs.aeromap == []
-    assert my_cpacs.nb_aeromaps == 4
+    #assert cpacs.aeromap == []
+    assert cpacs.nb_aeromaps == 4
 
     # Raise error for an invalid CPACS path
     #with pytest.raises(Tixi3Exception):
@@ -54,98 +54,98 @@ def test_main_attrib():
 
 def test_get_aeromap_uid_list():
 
-    my_cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(CPACS_PATH)
 
     # Get the list of aeromap uid on the CPACS file
-    assert my_cpacs.get_aeromap_uid_list() == ['aeromap_test1','aeromap_test2','extended_aeromap','aeromap_test_dampder']
+    assert cpacs.get_aeromap_uid_list() == ['aeromap_test1','aeromap_test2','extended_aeromap','aeromap_test_dampder']
 
 
 def test_get_aeromap_by_uid():
 
-    my_cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(CPACS_PATH)
 
     # Raise error aeromap did not exist
     with pytest.raises(ValueError):
-        my_cpacs.get_aeromap_by_uid('not_an_aeromap')
+        cpacs.get_aeromap_by_uid('not_an_aeromap')
 
     # Get aeromap from its uid
-    assert my_cpacs.get_aeromap_by_uid('aeromap_test1').uid == 'aeromap_test1'
+    assert cpacs.get_aeromap_by_uid('aeromap_test1').uid == 'aeromap_test1'
 
 
 def test_create_aeromap():
 
-    my_cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(CPACS_PATH)
 
     # Raise error when uid contains sapce
     with pytest.raises(ValueError):
-        my_cpacs.create_aeromap('not valid uid')
+        cpacs.create_aeromap('not valid uid')
 
     # Raise error when uid already exist
     with pytest.raises(ValueError):
-        my_cpacs.create_aeromap('aeromap_test1')
+        cpacs.create_aeromap('aeromap_test1')
 
     # Create a new aeromap
-    my_cpacs.create_aeromap('new_aeromap')
-    assert my_cpacs.get_aeromap_by_uid('new_aeromap').uid == 'new_aeromap'
-    assert my_cpacs.nb_aeromaps == 5
+    cpacs.create_aeromap('new_aeromap')
+    assert cpacs.get_aeromap_by_uid('new_aeromap').uid == 'new_aeromap'
+    assert cpacs.nb_aeromaps == 5
 
 
 def test_create_aeromap_from_csv():
 
-    my_cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(CPACS_PATH)
 
     # Raise error when uid already exist
     with pytest.raises(ValueError):
-        my_cpacs.create_aeromap_from_csv('/not/exiting/path.csv')
+        cpacs.create_aeromap_from_csv('/not/exiting/path.csv')
 
     # Create a new aeromap from a CSV file
-    my_cpacs.create_aeromap_from_csv(CSV_PATH)
-    assert my_cpacs.get_aeromap_by_uid('aeromap').uid == 'aeromap'
-    assert my_cpacs.nb_aeromaps == 5
+    cpacs.create_aeromap_from_csv(CSV_PATH)
+    assert cpacs.get_aeromap_by_uid('aeromap').uid == 'aeromap'
+    assert cpacs.nb_aeromaps == 5
 
 
 def test_duplicate_aeromap():
 
-    my_cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(CPACS_PATH)
 
     # Raise error when aeromap to duplicate did not exist
     with pytest.raises(ValueError):
-        my_cpacs.duplicate_aeromap('not_existing_aeromap','duplicated_aeromap')
+        cpacs.duplicate_aeromap('not_existing_aeromap','duplicated_aeromap')
 
     # Raise error when uid already exist
     with pytest.raises(ValueError):
-        my_cpacs.duplicate_aeromap('aeromap_test1','aeromap_test2')
+        cpacs.duplicate_aeromap('aeromap_test1','aeromap_test2')
 
     # Duplicate an aeroomap
-    my_cpacs.duplicate_aeromap('aeromap_test1','duplicated_aeromap')
-    assert my_cpacs.get_aeromap_by_uid('duplicated_aeromap').uid == 'duplicated_aeromap'
-    assert my_cpacs.nb_aeromaps == 5
+    cpacs.duplicate_aeromap('aeromap_test1','duplicated_aeromap')
+    assert cpacs.get_aeromap_by_uid('duplicated_aeromap').uid == 'duplicated_aeromap'
+    assert cpacs.nb_aeromaps == 5
 
 def test_delete_aeromap():
     
-    my_cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(CPACS_PATH)
 
     # Test if raise error when not valid name
     with pytest.raises(ValueError):
-        my_cpacs.delete_aeromap('aeromap with spaces')
+        cpacs.delete_aeromap('aeromap with spaces')
 
     # Test if raise error when aeromap to delete did not exist
     with pytest.raises(ValueError):
-        my_cpacs.delete_aeromap('not_existing_aeromap')
+        cpacs.delete_aeromap('not_existing_aeromap')
 
     # Test if aeromap is deleted
-    assert my_cpacs.get_aeromap_uid_list() == ['aeromap_test1','aeromap_test2','extended_aeromap','aeromap_test_dampder']
-    my_cpacs.delete_aeromap('aeromap_test1')
-    assert my_cpacs.get_aeromap_uid_list() == ['aeromap_test2','extended_aeromap','aeromap_test_dampder']
-    assert my_cpacs.nb_aeromaps == 3
+    assert cpacs.get_aeromap_uid_list() == ['aeromap_test1','aeromap_test2','extended_aeromap','aeromap_test_dampder']
+    cpacs.delete_aeromap('aeromap_test1')
+    assert cpacs.get_aeromap_uid_list() == ['aeromap_test2','extended_aeromap','aeromap_test_dampder']
+    assert cpacs.nb_aeromaps == 3
 
     # Test to delete all aeromaps
     for aeromap_uid in ['aeromap_test2','extended_aeromap','aeromap_test_dampder']:
         print(aeromap_uid)
-        my_cpacs.delete_aeromap(aeromap_uid)
+        cpacs.delete_aeromap(aeromap_uid)
     
-    assert my_cpacs.get_aeromap_uid_list() == []
-    assert my_cpacs.nb_aeromaps == 0
+    assert cpacs.get_aeromap_uid_list() == []
+    assert cpacs.nb_aeromaps == 0
 
 
 def test_save_cpacs():
@@ -153,11 +153,11 @@ def test_save_cpacs():
     test_path = 'tests/output.xml'
     test_path_1 = 'tests/output_1.xml'
 
-    my_cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(CPACS_PATH)
 
     # Raise error when tring to save a not xml file
     with pytest.raises(ValueError):
-        my_cpacs.save_cpacs('tests/output.txt')
+        cpacs.save_cpacs('tests/output.txt')
 
     # Delete test file from a past run (could be still there if an error occurs)
     if os.path.exists(test_path):
@@ -167,11 +167,11 @@ def test_save_cpacs():
         os.remove(test_path_1.xml)
 
     # Save CPACS file 
-    my_cpacs.save_cpacs(test_path,True)
+    cpacs.save_cpacs(test_path,True)
     assert os.path.exists(test_path)
 
     # Save CPACS file with already existing name (no overwrite)
-    my_cpacs.save_cpacs(test_path,False)
+    cpacs.save_cpacs(test_path,False)
     assert os.path.exists(test_path)
     
     # Delete test file

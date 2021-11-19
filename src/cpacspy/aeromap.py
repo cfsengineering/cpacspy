@@ -238,8 +238,6 @@ class AeroMap:
         # Check if parameter are already in the dataframe
         filt = get_filter(self.df,[alt],[mach],[aos],[aoa])
 
-        print(filt)
-
         if filt.empty or filt.any() == False:
             raise ValueError(f'No values has been found for {alt}, {mach}, {aos}, {aoa} in "{self.uid}" aeroMap!')
 
