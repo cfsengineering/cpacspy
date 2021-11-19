@@ -24,7 +24,7 @@ import pandas as pd
 
 from cpacspy.aeromap import AeroMap
 from cpacspy.aircraft import Aircraft
-from cpacspy.cpacsfunctions import open_tigl, open_tixi
+from cpacspy.cpacsfunctions import open_tigl, open_tixi, get_xpath_parent
 from cpacspy.utils import AEROPERFORMANCE_XPATH
 
 
@@ -45,14 +45,15 @@ class CPACS:
         # Aircraft data
         self.aircraft = Aircraft(self.tixi,self.tigl)
 
-        # AeroMaps
-        self.aeromaps = []
-        self.nb_aeromaps = 0
+        # Load aeroMaps
         self.load_all_aeromaps()
 
     def load_all_aeromaps(self):
         """ Load all the aeromaps present in the CPACS file as object. """
 
+        self.nb_aeromaps = 0
+        self.aeromaps = []
+        
         for aeromap_uid in self.get_aeromap_uid_list():
             aeromap = AeroMap(self.tixi,aeromap_uid)
             self.aeromaps.append(aeromap)
@@ -137,6 +138,24 @@ class CPACS:
         self.nb_aeromaps += 1
 
         return am_duplicated
+
+    def delete_aeromap(self,uid):
+        """ Delete an aeromap from its uid. """
+
+        # Check if uid is valid
+        if ' ' in uid:
+            raise ValueError('AeroMap uid should not contain any space!')
+
+        if uid not in self.get_aeromap_uid_list():
+            raise ValueError(f'uid "{uid}"" does not exit! The aeroMap canno be deleted!')
+        
+        # Remove the aeromap  from the CPACS file
+        aeromap = self.get_aeromap_by_uid(uid)
+        xpath = get_xpath_parent(aeromap.xpath,level=1)
+        self.tixi.removeElement(xpath)
+        
+        # Reload the aeromaps to take into account the changes in the CPACS file
+        self.load_all_aeromaps()
 
     def save_cpacs(self,cpacs_file,overwrite=False):
         """ Save a CPACS file from the TIXI object at a chosen path. """

@@ -121,6 +121,32 @@ def test_duplicate_aeromap():
     assert my_cpacs.get_aeromap_by_uid('duplicated_aeromap').uid == 'duplicated_aeromap'
     assert my_cpacs.nb_aeromaps == 5
 
+def test_delete_aeromap():
+    
+    my_cpacs = CPACS(CPACS_PATH)
+
+    # Test if raise error when not valid name
+    with pytest.raises(ValueError):
+        my_cpacs.delete_aeromap('aeromap with spaces')
+
+    # Test if raise error when aeromap to delete did not exist
+    with pytest.raises(ValueError):
+        my_cpacs.delete_aeromap('not_existing_aeromap')
+
+    # Test if aeromap is deleted
+    assert my_cpacs.get_aeromap_uid_list() == ['aeromap_test1','aeromap_test2','extended_aeromap','aeromap_test_dampder']
+    my_cpacs.delete_aeromap('aeromap_test1')
+    assert my_cpacs.get_aeromap_uid_list() == ['aeromap_test2','extended_aeromap','aeromap_test_dampder']
+    assert my_cpacs.nb_aeromaps == 3
+
+    # Test to delete all aeromaps
+    for aeromap_uid in ['aeromap_test2','extended_aeromap','aeromap_test_dampder']:
+        print(aeromap_uid)
+        my_cpacs.delete_aeromap(aeromap_uid)
+    
+    assert my_cpacs.get_aeromap_uid_list() == []
+    assert my_cpacs.nb_aeromaps == 0
+
 
 def test_save_cpacs():
 

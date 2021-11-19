@@ -71,6 +71,10 @@ print(new_aeromap)
 # Save the aeromamp
 new_aeromap.save()
 
+# Delete the aeromap
+cpacs.delete_aeromap('aeromap_test1')
+print(cpacs.get_aeromap_uid_list())
+
 # Duplicate an aeromap
 duplicated_aeromap = cpacs.duplicate_aeromap('my_new_aeromap', 'my_duplicated_aeromap')
 duplicated_aeromap.add_row(mach=0.666,alt=10000,aos=0.0,aoa=2.4,cd=0.001,cl=1.1,cs=0.22,cmd=0.22)
