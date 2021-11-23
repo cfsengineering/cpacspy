@@ -216,7 +216,27 @@ class AeroMap:
                 self.df[col] = np.nan
 
         # Add the new row
-        self.df = self.df.append(new_row, ignore_index=True)
+        self.df = self.df.append(new_row, ignore_index=True)              
+
+    def remove_row(self,alt,mach,aos,aoa): 
+        """ Remove a row in an Aeromap dataframe for a set of parameters.
+        
+        Args:
+            alt (float): Altitude
+            mach (float): Mach number
+            aos (float): Angle of sideslip
+            aoa (float): Angle of attack
+
+        """
+
+        # Check if the parameter exists
+        filt = get_filter(self.df,[alt],[mach],[aos],[aoa])
+
+        if filt.empty or filt.any() == False:
+            raise ValueError(f'No values has been found for {alt}, {mach}, {aos}, {aoa} in "{self.uid}" aeroMap!')
+
+        # Remove the row
+        self.df = self.df.drop(self.df.loc[filt].index)
 
     def add_coefficients(self,alt,mach,aos,aoa,cd=np.nan,cl=np.nan,cs=np.nan,cmd=np.nan,cml=np.nan,cms=np.nan):
         """ Add coefficients to existing set of parmeter. 

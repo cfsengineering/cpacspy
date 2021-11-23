@@ -50,6 +50,9 @@ print(one_aeromap.get('cd',alt=15500.0,aos=0.0,mach=[0.3,0.4,0.5]))
 # Add new values to the aeromap
 simple_aeromap = cpacs.get_aeromap_by_uid('aeromap_test2')
 simple_aeromap.add_row(mach=0.555,alt=15000,aos=0.0,aoa=2.4,cd=0.001,cl=1.1,cs=0.22,cmd=0.22)
+
+# Remove a row from the aeromap (from its parameters values)
+simple_aeromap.remove_row(mach=0.555,alt=15000,aos=0.0,aoa=2.4)
 simple_aeromap.save()
 
 

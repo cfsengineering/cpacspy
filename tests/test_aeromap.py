@@ -129,6 +129,26 @@ def test_add_row():
         aeromap_1.add_row(alt=11000.0,mach=0.44, aos=0.0, aoa=0.0)    
 
 
+def test_remove_row():
+    """ Test the function 'remove_row'. """
+
+    # Load the CPACS file and 'aeromap_test1'
+    cpacs = CPACS(CPACS_PATH)
+    aeromap_2 = cpacs.get_aeromap_by_uid('aeromap_test2')
+
+    # Test if missing parameters raises ValeError
+    with pytest.raises(ValueError):
+        aeromap_2.remove_row(alt=1111.0,mach=0.2,aos=0.0,aoa=0.0)
+
+    aeromap_2.remove_row(alt=0.0,mach=0.2,aos=0.0,aoa=0.0)
+    aeromap_2.remove_row(alt=11000.0,mach=0.4,aos=2.0,aoa=2.0)
+    aeromap_2.save()
+
+    assert aeromap_2.df['angleOfAttack'].tolist()[0] == 2.0
+    assert aeromap_2.df['angleOfAttack'].tolist()[-1] == 6.0
+    assert len(aeromap_2.get('cd')) == 3
+
+
 def test_add_coefficients():
     """ Test the function 'add_coefficients'. """
 
