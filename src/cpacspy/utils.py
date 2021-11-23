@@ -21,28 +21,27 @@
 
 # XPATH
 AEROPERFORMANCE_XPATH = '/cpacs/vehicles/aircraft/model/analyses/aeroPerformance'
-REF_XPATH  = '/cpacs/vehicles/aircraft/model/reference'
+REF_XPATH = '/cpacs/vehicles/aircraft/model/reference'
 
 # Lists
-PARAMS = ['altitude','machNumber','angleOfSideslip','angleOfAttack']
-COEFS = ['cd','cl','cs','cmd','cml','cms']
+PARAMS = ['altitude', 'machNumber', 'angleOfSideslip', 'angleOfAttack']
+COEFS = ['cd', 'cl', 'cs', 'cmd', 'cml', 'cms']
 PARAMS_COEFS = PARAMS + COEFS
 DAMPING_COEFS = ['dcddpStar', 'dcddqStar', 'dcddrStar',
-                 'dcldpStar', 'dcldqStar', 'dcldrStar', 
-                 'dcmddpStar', 'dcmddqStar', 'dcmddrStar', 
-                 'dcmldpStar', 'dcmldqStar', 'dcmldrStar', 
-                 'dcmsdpStar', 'dcmsdqStar', 'dcmsdrStar', 
-                 'dcsdpStar', 'dcsdqStar', 'dcsdrStar']  
+                 'dcldpStar', 'dcldqStar', 'dcldrStar',
+                 'dcmddpStar', 'dcmddqStar', 'dcmddrStar',
+                 'dcmldpStar', 'dcmldqStar', 'dcmldrStar',
+                 'dcmsdpStar', 'dcmsdqStar', 'dcmsdrStar',
+                 'dcsdpStar', 'dcsdqStar', 'dcsdrStar']
 
 
 def listify(value):
     """If variable, return a list of 1 value, if already a list don't change a list. """
 
     if value is not None:
-        if not isinstance(value,list):
+        if not isinstance(value, list):
             value = [value]
     else:
         value = []
 
     return value
- 

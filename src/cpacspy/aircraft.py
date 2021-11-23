@@ -25,28 +25,28 @@ from cpacspy.utils import REF_XPATH
 
 class Aircraft:
 
-    def __init__(self,tixi,tigl):
+    def __init__(self, tixi, tigl):
         """ Aircraft class to store references values and other information about the aircraft
 
         Args:
             tixi (object): TIXI object open from a CPACS file
         """
-        
+
         self.tixi = tixi
         self.tigl = tigl
 
         # Reference values
-        self.ref_lenght = get_value_or_default(self.tixi,REF_XPATH + '/length',1)
-        self.ref_area = get_value_or_default(self.tixi,REF_XPATH + '/area',1)
-        self.ref_point_x = get_value_or_default(self.tixi,REF_XPATH + '/point/x',0)
-        self.ref_point_y = get_value_or_default(self.tixi,REF_XPATH + '/point/y',0)
-        self.ref_point_z = get_value_or_default(self.tixi,REF_XPATH + '/point/z',0)
+        self.ref_lenght = get_value_or_default(self.tixi, REF_XPATH + '/length', 1)
+        self.ref_area = get_value_or_default(self.tixi, REF_XPATH + '/area', 1)
+        self.ref_point_x = get_value_or_default(self.tixi, REF_XPATH + '/point/x', 0)
+        self.ref_point_y = get_value_or_default(self.tixi, REF_XPATH + '/point/y', 0)
+        self.ref_point_z = get_value_or_default(self.tixi, REF_XPATH + '/point/z', 0)
 
         # Aircraft specific values (extract with TiGL)
         self.configuration = get_tigl_configuration(self.tigl)
-        self.ref_wing_idx = self.get_main_wing_idx() # By default the reference wing is the largest one
-  
-    # When self.ref_wing_idx is change:  
+        self.ref_wing_idx = self.get_main_wing_idx()  # By default reference wing is the largest
+
+    # When self.ref_wing_idx is change:
     # TODO: change it by uid also
     @property
     def ref_wing_idx(self):
@@ -66,7 +66,7 @@ class Aircraft:
         Args:
             self (object)
         """
-        
+
         wing_area_max = 0
         wing_idx = None
 
@@ -79,10 +79,10 @@ class Aircraft:
 
         return wing_idx
 
-    def __str__(self): 
+    def __str__(self):
 
         text_line = []
-        text_line.append('\nAircraft data --------------------------------------------------------------------------------------')
+        text_line.append('\nAircraft data -------------------------------------------------------')
         text_line.append(' ')
         text_line.append(f'Reference lengh: \t{self.ref_lenght} [m]')
         text_line.append(f'Reference area: \t{self.ref_area} [m^2]')
@@ -93,5 +93,5 @@ class Aircraft:
         text_line.append(f'Wing area: \t\t{self.wing_area} [m^2]')
         text_line.append(f'Wing AR: \t\t{self.wing_ar} [-]')
         text_line.append(' ')
-        text_line.append('----------------------------------------------------------------------------------------------------\n')
+        text_line.append('---------------------------------------------------------------------\n')
         return ('\n').join(text_line)

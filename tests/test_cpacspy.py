@@ -20,15 +20,10 @@
 # Author: Aidan Jungo
 
 import os
-import sys
 
 import pytest
 from pytest import approx
 
-from tixi3.tixi3wrapper import Tixi3Exception
-from tigl3.tigl3wrapper import Tigl3Exception
-
-sys.path.append('../src/')
 from cpacspy.cpacspy import CPACS
 
 CPACS_PATH = 'examples/D150_simple.xml'
@@ -43,13 +38,11 @@ def test_main_attrib():
     cpacs = CPACS(CPACS_PATH)
 
     assert cpacs.ac_name == 'D150'
-
-    #assert cpacs.aeromap == []
     assert cpacs.nb_aeromaps == 4
 
     # Raise error for an invalid CPACS path
-    #with pytest.raises(Tixi3Exception):
-     #   tixi_handle = open_tixi('invalid_CPACS_path')
+    # with pytest.raises(Tixi3Exception):
+    # tixi_handle = open_tixi('invalid_CPACS_path')
 
 
 def test_get_aeromap_uid_list():
@@ -57,7 +50,7 @@ def test_get_aeromap_uid_list():
     cpacs = CPACS(CPACS_PATH)
 
     # Get the list of aeromap uid on the CPACS file
-    assert cpacs.get_aeromap_uid_list() == ['aeromap_test1','aeromap_test2','extended_aeromap','aeromap_test_dampder']
+    assert cpacs.get_aeromap_uid_list() == ['aeromap_test1', 'aeromap_test2', 'extended_aeromap', 'aeromap_test_dampder']
 
 
 def test_get_aeromap_by_uid():
@@ -110,19 +103,20 @@ def test_duplicate_aeromap():
 
     # Raise error when aeromap to duplicate did not exist
     with pytest.raises(ValueError):
-        cpacs.duplicate_aeromap('not_existing_aeromap','duplicated_aeromap')
+        cpacs.duplicate_aeromap('not_existing_aeromap', 'duplicated_aeromap')
 
     # Raise error when uid already exist
     with pytest.raises(ValueError):
-        cpacs.duplicate_aeromap('aeromap_test1','aeromap_test2')
+        cpacs.duplicate_aeromap('aeromap_test1', 'aeromap_test2')
 
     # Duplicate an aeroomap
-    cpacs.duplicate_aeromap('aeromap_test1','duplicated_aeromap')
+    cpacs.duplicate_aeromap('aeromap_test1', 'duplicated_aeromap')
     assert cpacs.get_aeromap_by_uid('duplicated_aeromap').uid == 'duplicated_aeromap'
     assert cpacs.nb_aeromaps == 5
 
+
 def test_delete_aeromap():
-    
+
     cpacs = CPACS(CPACS_PATH)
 
     # Test if raise error when not valid name
@@ -134,16 +128,16 @@ def test_delete_aeromap():
         cpacs.delete_aeromap('not_existing_aeromap')
 
     # Test if aeromap is deleted
-    assert cpacs.get_aeromap_uid_list() == ['aeromap_test1','aeromap_test2','extended_aeromap','aeromap_test_dampder']
+    assert cpacs.get_aeromap_uid_list() == ['aeromap_test1', 'aeromap_test2', 'extended_aeromap', 'aeromap_test_dampder']
     cpacs.delete_aeromap('aeromap_test1')
-    assert cpacs.get_aeromap_uid_list() == ['aeromap_test2','extended_aeromap','aeromap_test_dampder']
+    assert cpacs.get_aeromap_uid_list() == ['aeromap_test2', 'extended_aeromap', 'aeromap_test_dampder']
     assert cpacs.nb_aeromaps == 3
 
     # Test to delete all aeromaps
-    for aeromap_uid in ['aeromap_test2','extended_aeromap','aeromap_test_dampder']:
+    for aeromap_uid in ['aeromap_test2', 'extended_aeromap', 'aeromap_test_dampder']:
         print(aeromap_uid)
         cpacs.delete_aeromap(aeromap_uid)
-    
+
     assert cpacs.get_aeromap_uid_list() == []
     assert cpacs.nb_aeromaps == 0
 
@@ -166,14 +160,14 @@ def test_save_cpacs():
     if os.path.exists(test_path_1):
         os.remove(test_path_1.xml)
 
-    # Save CPACS file 
-    cpacs.save_cpacs(test_path,True)
+    # Save CPACS file
+    cpacs.save_cpacs(test_path, True)
     assert os.path.exists(test_path)
 
     # Save CPACS file with already existing name (no overwrite)
-    cpacs.save_cpacs(test_path,False)
+    cpacs.save_cpacs(test_path, False)
     assert os.path.exists(test_path)
-    
+
     # Delete test file
     if os.path.exists(test_path):
         os.remove(test_path)

@@ -43,7 +43,7 @@ class CPACS:
             self.ac_name = self.tixi.getTextElement(ac_name_xpath)
 
         # Aircraft data
-        self.aircraft = Aircraft(self.tixi,self.tigl)
+        self.aircraft = Aircraft(self.tixi, self.tigl)
 
         # Load aeroMaps
         self.load_all_aeromaps()
@@ -53,9 +53,9 @@ class CPACS:
 
         self.nb_aeromaps = 0
         self.aeromaps = []
-        
+
         for aeromap_uid in self.get_aeromap_uid_list():
-            aeromap = AeroMap(self.tixi,aeromap_uid)
+            aeromap = AeroMap(self.tixi, aeromap_uid)
             self.aeromaps.append(aeromap)
             self.nb_aeromaps += 1
 
@@ -87,21 +87,21 @@ class CPACS:
 
         raise ValueError(f'No aeromap with "{uid}" as uid as been found!')
 
-    def create_aeromap(self,uid):
+    def create_aeromap(self, uid):
         """ Create a new aeromap object. """
 
         if ' ' in uid:
             raise ValueError('AeroMap uid should not contain any space!')
 
         if uid not in self.get_aeromap_uid_list():
-            new_aeromap = AeroMap(self.tixi,uid,create_new=True)
+            new_aeromap = AeroMap(self.tixi, uid, create_new=True)
             self.aeromaps.append(new_aeromap)
             self.nb_aeromaps += 1
             return new_aeromap
         else:
             raise ValueError('This uid already exit!')
 
-    def create_aeromap_from_csv(self,csv_path,uid=None):
+    def create_aeromap_from_csv(self, csv_path, uid=None):
         """ Create a new aeromap object from a CSV file. """
 
         if not uid:
@@ -112,7 +112,7 @@ class CPACS:
             raise ValueError(f'CSV file not found at {os.path.abspath(csv_path)}')
 
         new_aeromap = self.create_aeromap(uid)
-        new_aeromap.df = pd.read_csv(csv_path,keep_default_na=False)
+        new_aeromap.df = pd.read_csv(csv_path, keep_default_na=False)
 
         return new_aeromap
 
@@ -120,7 +120,7 @@ class CPACS:
         """ Duplicate an aeromap and retrun the new aeromap object. """
 
         # Check uid's
-        if not uid_base in self.get_aeromap_uid_list():
+        if uid_base not in self.get_aeromap_uid_list():
             raise ValueError('The AeroMap to duplicate does not exit!')
 
         if uid_duplicate in self.get_aeromap_uid_list():
@@ -128,7 +128,7 @@ class CPACS:
 
         # Get AeroMap and duplicate
         am_base = self.get_aeromap_by_uid(uid_base)
-        am_duplicated = AeroMap(self.tixi,uid_duplicate,create_new=True)
+        am_duplicated = AeroMap(self.tixi, uid_duplicate, create_new=True)
 
         # Copy data
         am_duplicated.df = am_base.df
@@ -139,7 +139,7 @@ class CPACS:
 
         return am_duplicated
 
-    def delete_aeromap(self,uid):
+    def delete_aeromap(self, uid):
         """ Delete an aeromap from its uid. """
 
         # Check if uid is valid
@@ -148,16 +148,16 @@ class CPACS:
 
         if uid not in self.get_aeromap_uid_list():
             raise ValueError(f'uid "{uid}"" does not exit! The aeroMap canno be deleted!')
-        
+
         # Remove the aeromap  from the CPACS file
         aeromap = self.get_aeromap_by_uid(uid)
-        xpath = get_xpath_parent(aeromap.xpath,level=1)
+        xpath = get_xpath_parent(aeromap.xpath, level=1)
         self.tixi.removeElement(xpath)
-        
+
         # Reload the aeromaps to take into account the changes in the CPACS file
         self.load_all_aeromaps()
 
-    def save_cpacs(self,cpacs_file,overwrite=False):
+    def save_cpacs(self, cpacs_file, overwrite=False):
         """ Save a CPACS file from the TIXI object at a chosen path. """
 
         # Check for .xml file
@@ -169,7 +169,7 @@ class CPACS:
             find_name = False
             i = 1
             while not find_name:
-                cpacs_file_new_name = cpacs_file.split('.xml')[0] + f'_{str(i)}.xml' 
+                cpacs_file_new_name = cpacs_file.split('.xml')[0] + f'_{str(i)}.xml'
                 if not os.path.exists(cpacs_file_new_name):
                     find_name = True
                     cpacs_file = cpacs_file_new_name
@@ -178,10 +178,10 @@ class CPACS:
 
         self.tixi.save(cpacs_file)
 
-    def __str__(self): 
+    def __str__(self):
 
         text_line = []
-        text_line.append('\nCPACS file -----------------------------------------------------------------------------------------')
+        text_line.append('\nCPACS file ----------------------------------------------------------')
         text_line.append(' ')
         text_line.append(f'Aircraft name : {self.ac_name}')
         text_line.append(f'CPACS file path: {self.cpacs_file}')
@@ -190,7 +190,7 @@ class CPACS:
         for aeromap_uid in self.get_aeromap_uid_list():
             text_line.append('  ' + aeromap_uid)
         text_line.append(' ')
-        text_line.append('----------------------------------------------------------------------------------------------------\n')
+        text_line.append('---------------------------------------------------------------------\n')
 
         return ('\n').join(text_line)
 

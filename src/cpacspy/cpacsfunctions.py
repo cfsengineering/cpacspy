@@ -21,11 +21,24 @@
 
 import numpy as np
 
-import tigl3.configuration
-import tixi3.tixi3wrapper as tixi3wrapper
-import tigl3.tigl3wrapper as tigl3wrapper
-from tixi3.tixi3wrapper import Tixi3Exception
-from tigl3.tigl3wrapper import Tigl3Exception
+try:
+    import tixi3.tixi3wrapper as tixi3wrapper
+    # from tixi3.tixi3wrapper import Tixi3Exception
+
+except ImportError:
+    TIXI_INSTALLED = False
+else:
+    TIXI_INSTALLED = True
+
+try:
+    import tigl3.configuration
+    import tigl3.tigl3wrapper as tigl3wrapper
+    # from tigl3.tigl3wrapper import Tigl3Exception
+
+except ImportError:
+    TIGL_INSTALLED = False
+else:
+    TIGL_INSTALLED = True
 
 
 def open_tixi(cpacs_path):
@@ -41,6 +54,14 @@ def open_tixi(cpacs_path):
     Returns::
         tixi_handle (handles): TIXI Handle of the CPACS file
     """
+
+    if not TIXI_INSTALLED:
+        err_msg = """
+        Unable to import Tixi. Please make sure Tixi is accessible to Python.
+        Please refer to the documentation to check supported versions of Tixi.
+        """
+        print(err_msg)
+        raise ModuleNotFoundError(err_msg)
 
     tixi_handle = tixi3wrapper.Tixi3()
     tixi_handle.open(cpacs_path)
@@ -64,7 +85,15 @@ def open_tigl(tixi_handle):
         tigl_handle (handles): TIGL Handle of the CPACS file
     """
 
-    # Get model uid, requierd to open TiGL handle in case there is also a rotorcraft in the CPACS file
+    if not TIGL_INSTALLED:
+        err_msg = """
+        Unable to import Tigl. Please make sure Tigl is accessible to Python.
+        Please refer to the documentation to check supported versions of Tigl.
+        """
+        print(err_msg)
+        raise ModuleNotFoundError(err_msg)
+
+    # Get model uid to open TiGL handle (in case there is also a rotorcraft in the CPACS file)
     model_xpath = '/cpacs/vehicles/aircraft/model'
     if tixi_handle.checkAttribute(model_xpath, 'uID'):
         model_uid = tixi_handle.getTextAttribute(model_xpath, 'uID')
@@ -81,14 +110,15 @@ def open_tigl(tixi_handle):
 
 def get_tigl_configuration(tigl):
     """ Get the TiGL aircraft configuration manager. """
-    
+
     # Get the configuration manager
-    mgr =  tigl3.configuration.CCPACSConfigurationManager_get_instance()
+    mgr = tigl3.configuration.CCPACSConfigurationManager_get_instance()
     aircraft = mgr.get_configuration(tigl._handle.value)
-    
+
     return aircraft
 
 
+# TODO: test and improve this function
 def get_value(tixi, xpath):
     """ Check first if the the xpath exist and a value is store
     at this place. Then, it gets and returns this value. If the value or the
@@ -112,7 +142,7 @@ def get_value(tixi, xpath):
         value = None
 
     if value:
-        try: # check if it is a 'float'
+        try:  # check if it is a 'float'
             is_float = isinstance(float(value), float)
             value = float(value)
         except:
@@ -120,9 +150,9 @@ def get_value(tixi, xpath):
     else:
         # check if the path exist
         if tixi.checkElement(xpath):
-            raise ValueError('No value has been found at ' + xpath)
+            raise ValueError(f'No value has been found at {xpath}')
         else:
-            raise ValueError(xpath + ' cannot be found in the CPACS file')
+            raise ValueError(f'{xpath} cannot be found in the CPACS file')
 
     # Special return for boolean
     if value == 'True':
@@ -132,12 +162,13 @@ def get_value(tixi, xpath):
 
     return value
 
+
 def copy_branch(tixi, xpath_from, xpath_to):
     """ Function to copy a CPACS branch.
 
     Function 'copy_branch' copy the branch (with sub-branches) from
     'xpath_from' to 'xpath_to' by using recursion. The new branch should
-    be identical (uiD, attribute, etc). 
+    be identical (uiD, attribute, etc).
 
     Source :
         * TIXI functions: http://tixi.sourceforge.net/Doc/index.html
@@ -174,14 +205,11 @@ def copy_branch(tixi, xpath_from, xpath_to):
         else:
             # If child are named child (e.g. wings/wing)
             if all(x == child_list[0] for x in child_list):
-                namedchild_nb = tixi.getNamedChildrenCount(xpath_from,
-                                                           child_list[0])
+                namedchild_nb = tixi.getNamedChildrenCount(xpath_from, child_list[0])
 
                 for i in range(namedchild_nb):
-                    new_xpath_from = xpath_from + "/" + child_list[0] \
-                                     + '[' + str(i+1) + ']'
-                    new_xpath_to = xpath_to + "/" + child_list[0] \
-                                   + '[' + str(i+1) + ']'
+                    new_xpath_from = xpath_from + "/" + child_list[0] + '[' + str(i+1) + ']'
+                    new_xpath_to = xpath_to + "/" + child_list[0] + '[' + str(i+1) + ']'
                     tixi.createElement(xpath_to, child_list[0])
 
                     # Call the function itself for recursion
@@ -210,6 +238,7 @@ def copy_branch(tixi, xpath_from, xpath_to):
             except:
                 last_attrib = 1
 
+
 def get_uid(tixi, xpath):
     """ Function to get uID from a specific XPath.
 
@@ -225,7 +254,6 @@ def get_uid(tixi, xpath):
     Returns:
         uid (str): uid to add at xpath
     """
-
 
     if not tixi.checkElement(xpath):
         raise ValueError(xpath + ' XPath does not exist!')
@@ -264,7 +292,8 @@ def add_uid(tixi, xpath, uid):
             uid_new = uid + str(i)
             print('UID already existing changed to: ' + uid_new)
 
-def get_value_or_default(tixi,xpath,default_value):
+
+def get_value_or_default(tixi, xpath, default_value):
     """ Do the same than the function 'get_value'
     but if no value is found at this xpath it returns the default value and add
     it at the xpath. If the xpath does not exist, it is created.
@@ -293,7 +322,7 @@ def get_value_or_default(tixi,xpath,default_value):
 
         xpath_parent = '/'.join(str(m) for m in xpath.split("/")[:-1])
         value_name = xpath.split("/")[-1]
-        create_branch(tixi,xpath_parent,False)
+        create_branch(tixi, xpath_parent, False)
 
         try:
             is_int = isinstance(float(default_value), int)
@@ -310,22 +339,21 @@ def get_value_or_default(tixi,xpath,default_value):
         except:
             is_bool = False
 
-            
         if is_bool:
-           tixi.addTextElement(xpath_parent,value_name,str(value))
+            tixi.addTextElement(xpath_parent, value_name, str(value))
         elif is_float or is_int:
             value = float(default_value)
-            tixi.addDoubleElement(xpath_parent,value_name,value,'%g')
+            tixi.addDoubleElement(xpath_parent, value_name, value, '%g')
         else:
             value = str(value)
-            tixi.addTextElement(xpath_parent,value_name,value)
+            tixi.addTextElement(xpath_parent, value_name, value)
     else:
         # Special return for boolean
         if value == 'True':
             return True
         elif value == 'False':
             return False
-        elif isinstance(value,bool):
+        elif isinstance(value, bool):
             return value
 
     return value
@@ -350,15 +378,16 @@ def get_float_vector(tixi, xpath):
 
     if float_vector_str.endswith(';'):
         float_vector_str = float_vector_str[:-1]
-    
+
     float_vector_list = float_vector_str.split(';')
-    float_vector = [np.nan if (elem == 'nan' or elem == 'NaN') else float(elem) for elem in float_vector_list]
+    float_vector = [np.nan if (elem == 'nan' or elem == 'NaN')
+                    else float(elem) for elem in float_vector_list]
 
     return float_vector
 
 
 def add_float_vector(tixi, xpath, vector):
-    """ Add a vector (composed by float) at the given XPath, 
+    """ Add a vector (composed by float) at the given XPath,
     if the node does not exist, it will be created. Values will be
     overwritten if paths exists.
 
@@ -377,7 +406,7 @@ def add_float_vector(tixi, xpath, vector):
     xpath_parent = xpath[:-(len(xpath_child_name)+1)]
 
     if not tixi.checkElement(xpath_parent):
-        create_branch(tixi,xpath_parent)
+        create_branch(tixi, xpath_parent)
 
     vector = [float(v) for v in vector]
 
@@ -385,7 +414,7 @@ def add_float_vector(tixi, xpath, vector):
         tixi.updateFloatVector(xpath, vector, len(vector), format='%g')
         tixi.addTextAttribute(xpath, 'mapType', 'vector')
     else:
-        tixi.addFloatVector(xpath_parent, xpath_child_name, vector, \
+        tixi.addFloatVector(xpath_parent, xpath_child_name, vector,
                             len(vector), format='%g')
         tixi.addTextAttribute(xpath, 'mapType', 'vector')
 
@@ -402,7 +431,7 @@ def add_string_vector(tixi, xpath, vector):
         xpath (str): XPath of the vector to add
         vector (list): Vector of string to add
     """
-    
+
     # Strip trailing '/' (has no meaning here)
     if xpath.endswith('/'):
         xpath = xpath[:-1]
@@ -414,12 +443,13 @@ def add_string_vector(tixi, xpath, vector):
     vector_str = ";".join([str(elem) for elem in vector])
 
     if not tixi.checkElement(xpath_parent):
-        create_branch(tixi,xpath_parent)
+        create_branch(tixi, xpath_parent)
 
     if tixi.checkElement(xpath):
         tixi.updateTextElement(xpath, vector_str)
     else:
-        tixi.addTextElement(xpath_parent,xpath_child_name,vector_str)
+        tixi.addTextElement(xpath_parent, xpath_child_name, vector_str)
+
 
 def get_string_vector(tixi, xpath):
     """ Get a vector (of string) at given CPACS xpath
@@ -447,7 +477,8 @@ def get_string_vector(tixi, xpath):
 
     return string_vector
 
-def get_xpath_parent(xpath,level=1):
+
+def get_xpath_parent(xpath, level=1):
     """ Get the parent xpath at any level, 1 is parent just above the input xpath.
 
     Args:
@@ -468,8 +499,8 @@ def get_xpath_parent(xpath,level=1):
 
 
 def create_branch(tixi, xpath, add_child=False):
-    """ Create a branch in the tixi handle and also all the missing parent nodes. 
-    Be careful, the xpath must be unique until the last element, it means, 
+    """ Create a branch in the tixi handle and also all the missing parent nodes.
+    Be careful, the xpath must be unique until the last element, it means,
     if several element exist, its index must be precised (index start at 1).
     e.g.: '/cpacs/vehicles/aircraft/model/wings/wing[2]/name'
 
@@ -501,7 +532,6 @@ def create_branch(tixi, xpath, add_child=False):
         if tixi.checkElement(xpath_partial):
             if child == xpath_split[-1] and add_child:
                 namedchild_nb = tixi.getNamedChildrenCount(xpath_parent, child)
-                tixi.createElementAtIndex (xpath_parent,child,namedchild_nb+1)
+                tixi.createElementAtIndex(xpath_parent, child, namedchild_nb+1)
         else:
             tixi.createElement(xpath_parent, child)
-            

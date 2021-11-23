@@ -19,12 +19,9 @@
 
 # Author: Aidan Jungo
 
-import sys
-
 import pytest
 from pytest import approx
 
-sys.path.append('../src/')
 from cpacspy.utils import listify
 
 
@@ -34,11 +31,4 @@ def test_listify():
     assert listify(0.0) == [0.0]
     assert listify(5) == [5]
     assert listify([5]) == [5]
-    assert listify([0.0,2.0,4.0]) == [0.0,2.0,4.0]
-
-
-
-
-
-
-    
+    assert listify([0.0, 2.0, 4.0]) == [0.0, 2.0, 4.0]
