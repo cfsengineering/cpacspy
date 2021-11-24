@@ -118,51 +118,6 @@ def get_tigl_configuration(tigl):
     return aircraft
 
 
-# TODO: test and improve this function
-def get_value(tixi, xpath):
-    """ Check first if the the xpath exist and a value is store
-    at this place. Then, it gets and returns this value. If the value or the
-    xpath does not exist it raise an error and return 'None'.
-
-    Source :
-        * TIXI functions: http://tixi.sourceforge.net/Doc/index.html
-
-    Args:
-        tixi_handle (handles): TIXI Handle of the CPACS file
-        xpath (str): xpath of the value to get
-
-    Returns:
-         value (float or str): Value found at xpath
-    """
-
-    # Try to get the a value at xpath
-    try:
-        value = tixi.getTextElement(xpath)
-    except:
-        value = None
-
-    if value:
-        try:  # check if it is a 'float'
-            is_float = isinstance(float(value), float)
-            value = float(value)
-        except:
-            pass
-    else:
-        # check if the path exist
-        if tixi.checkElement(xpath):
-            raise ValueError(f'No value has been found at {xpath}')
-        else:
-            raise ValueError(f'{xpath} cannot be found in the CPACS file')
-
-    # Special return for boolean
-    if value == 'True':
-        return True
-    elif value == 'False':
-        return False
-
-    return value
-
-
 def copy_branch(tixi, xpath_from, xpath_to):
     """ Function to copy a CPACS branch.
 
@@ -293,10 +248,12 @@ def add_uid(tixi, xpath, uid):
             print('UID already existing changed to: ' + uid_new)
 
 
-def get_value_or_default(tixi, xpath, default_value):
-    """ Do the same than the function 'get_value'
-    but if no value is found at this xpath it returns the default value and add
-    it at the xpath. If the xpath does not exist, it is created.
+def get_value(tixi, xpath):
+    """ Check first if the the xpath exist and that a value is stored
+    at this place. Returns this value. It returns a:
+    - float value if the value can be read as a float
+    - boolean if the value is 'True'/'False',
+    - otherwise a string
 
     Source :
         * TIXI functions: http://tixi.sourceforge.net/Doc/index.html
@@ -304,58 +261,98 @@ def get_value_or_default(tixi, xpath, default_value):
     Args:
         tixi_handle (handles): TIXI Handle of the CPACS file
         xpath (str): xpath of the value to get
-        default_value (str, float or int): Default value
+
+    Returns:
+         value (float, bool, str): Value found at xpath
+    """
+
+    if not tixi.checkElement(xpath):
+        raise ValueError(f'{xpath} cannot be found in the CPACS file')
+
+    value = tixi.getTextElement(xpath)
+
+    if not value:
+        raise ValueError(f'No value has been found at {xpath}')
+
+    # Check if the value should be return as boolean
+    if value == 'True':
+        return True
+    elif value == 'False':
+        return False
+
+    # Check if the value should be return as float
+    try:
+        float(value)
+        return float(value)
+    except ValueError:
+        pass
+
+    # Otherwise, return the value as a string
+    return value
+
+
+def get_value_or_default(tixi, xpath, default_value):
+    """ Do the same than the function 'get_value' but if no value is found
+    at the xpath it returns the default value and add it in the CPACS file
+    at the xpath. If the xpath does not exist, it is created.
+
+    Source :
+        * TIXI functions: http://tixi.sourceforge.net/Doc/index.html
+
+    Args:
+        tixi (handles): TIXI Handle of the CPACS file
+        xpath (str): xpath of the value to get
+        default_value (str, bool, float or int): Default value
 
     Returns:
         tixi (handles): Modified TIXI Handle (with added default value)
-        value (str, float or int): Value found at xpath
+        default_value (str, bool, float or int): Value found at xpath
     """
 
-    value = None
+    # Try to get the value in the CPACS file
     try:
-        value = get_value(tixi, xpath)
-    except:
+        return get_value(tixi, xpath)
+    except ValueError:
         pass
 
-    if value is None:
+    # Prepare to write the default value in the CPACS file
+    xpath_parent = get_xpath_parent(xpath, 1)
+    create_branch(tixi, xpath_parent, False)
+    value_name = xpath.split("/")[-1]
+
+    is_bool = False
+    is_float = False
+
+    # Check if the default_value could be float
+    try:
+        value = float(default_value)
+        is_float = True
+    except ValueError:
+        pass
+
+    # Copy the default value (in case it is a string)
+    if not is_float:
         value = default_value
 
-        xpath_parent = '/'.join(str(m) for m in xpath.split("/")[:-1])
-        value_name = xpath.split("/")[-1]
-        create_branch(tixi, xpath_parent, False)
-
-        try:
-            is_int = isinstance(float(default_value), int)
-        except:
-            is_int = False
-
-        try:
-            is_float = isinstance(float(default_value), float)
-        except:
-            is_float = False
-
-        try:
-            is_bool = isinstance(default_value, bool)
-        except:
-            is_bool = False
-
-        if is_bool:
-            tixi.addTextElement(xpath_parent, value_name, str(value))
-        elif is_float or is_int:
-            value = float(default_value)
-            tixi.addDoubleElement(xpath_parent, value_name, value, '%g')
+    # Check if the value should be return as boolean
+    if isinstance(default_value, bool):
+        is_bool = True
+        if default_value:
+            value = True
         else:
-            value = str(value)
-            tixi.addTextElement(xpath_parent, value_name, value)
-    else:
-        # Special return for boolean
-        if value == 'True':
-            return True
-        elif value == 'False':
-            return False
-        elif isinstance(value, bool):
-            return value
+            value = False
 
+    # Write the default value in the CPACS file as a float
+    if is_float and not is_bool:
+        tixi.addDoubleElement(xpath_parent, value_name, value, '%g')
+        return value
+
+    print(default_value)
+    print(value)
+    # Write the default value in the CPACS file as a string (also for booleans)
+    tixi.addTextElement(xpath_parent, value_name, str(value))
+
+    # Return the value as a string
     return value
 
 

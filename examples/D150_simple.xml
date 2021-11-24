@@ -5283,6 +5283,10 @@
   <toolspecific>
     <pytest>
       <anInteger>6</anInteger>
+      <aSciFloat>123.E3</aSciFloat>
+      <aNaN>NaN</aNaN>
+      <anan>nan</anan>
+      <aInf>-Inf</aInf>
       <aTrueBoolean>True</aTrueBoolean>
       <aFalseBoolean>False</aFalseBoolean>
       <aCorrectFloatVector mapType="vector">1;0.95;0.9;0.8;0.7;0.6;</aCorrectFloatVector>

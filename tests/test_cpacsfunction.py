@@ -20,7 +20,8 @@
 # Author: Aidan Jungo
 
 import pytest
-from pytest import approx
+import numpy as np
+
 # from tigl3.tigl3wrapper import Tigl3Exception
 from tixi3.tixi3wrapper import Tixi3Exception
 
@@ -78,53 +79,84 @@ def test_get_value():
     with pytest.raises(ValueError):
         get_value(tixi, xpath)
 
-    # Return Float
+    # Test if return None if no value has been found at xpath
+    xpath = '/cpacs/toolspecific/pytest'
+    with pytest.raises(ValueError):
+        get_value(tixi, xpath)
+
+    # Test different types of float/Nan/Inf
     xpath = '/cpacs/vehicles/aircraft/model/reference/area'
     assert get_value(tixi, xpath) == 122.4
+    assert isinstance(get_value(tixi, xpath), float)
 
-    # Return String
-    xpath = '/cpacs/header/name'
-    assert get_value(tixi, xpath) == 'D150'
+    xpath = '/cpacs/toolspecific/pytest/aSciFloat'
+    assert get_value(tixi, xpath) == 123000.0
+    assert isinstance(get_value(tixi, xpath), float)
+
+    xpath = '/cpacs/toolspecific/pytest/aNaN'
+    assert np.isnan(get_value(tixi, xpath))
+    assert isinstance(get_value(tixi, xpath), float)
+
+    xpath = '/cpacs/toolspecific/pytest/anan'
+    assert np.isnan(get_value(tixi, xpath))
+    assert isinstance(get_value(tixi, xpath), float)
+
+    xpath = '/cpacs/toolspecific/pytest/aInf'
+    assert get_value(tixi, xpath) == float('-inf')
+    assert isinstance(get_value(tixi, xpath), float)
 
     # Return Boolean
     xpath = '/cpacs/toolspecific/pytest/aTrueBoolean'
     assert get_value(tixi, xpath)
-
+    assert isinstance(get_value(tixi, xpath), bool)
     xpath = '/cpacs/toolspecific/pytest/aFalseBoolean'
     assert not get_value(tixi, xpath)
+    assert isinstance(get_value(tixi, xpath), bool)
+
+    # Return String
+    xpath = '/cpacs/header/name'
+    assert get_value(tixi, xpath) == 'D150'
+    assert isinstance(get_value(tixi, xpath), str)
 
 
 def test_get_value_or_default():
 
     tixi = open_tixi(CPACS_PATH)
 
-    # Return default string value for a non existing path
+    # Same test as 'get_value' function (just main ones)
+    xpath = '/cpacs/vehicles/aircraft/model/reference/area'
+    value = get_value_or_default(tixi, xpath, 133.5)
+    assert value == 122.4
+    assert isinstance(value, float)
+    xpath = '/cpacs/toolspecific/pytest/aTrueBoolean'
+    value = get_value_or_default(tixi, xpath, False)
+    assert value
+    assert isinstance(value, bool)
+    xpath = '/cpacs/header/name'
+    value = get_value_or_default(tixi, xpath, 'D150')
+    assert value == 'D150'
+    assert isinstance(value, str)
+
+    # Check if the default string value is return and the saved in the CPACS file
     xpath = '/cpacs/toolspecific/pytest/notExistingPathString'
     assert get_value_or_default(tixi, xpath, 'test') == 'test'
+    assert get_value(tixi, xpath) == 'test'
 
     # Return default float value for a non existing path
     xpath = '/cpacs/toolspecific/pytest/notExistingPathFloat'
     assert get_value_or_default(tixi, xpath, 10.01) == 10.01
-
-    # Return default integer value for a non existing path
-    xpath = '/cpacs/toolspecific/pytest/notExistingPathInt'
-    assert get_value_or_default(tixi, xpath, 10) == 10
+    assert get_value(tixi, xpath) == 10.01
 
     # Return default boolean for a non existing path
-    xpath = '/cpacs/toolspecific/pytest/notExistingPathBool'
+    xpath = '/cpacs/toolspecific/pytest/notExistingPathBoolTrue'
     assert get_value_or_default(tixi, xpath, True)
+    assert get_value(tixi, xpath)
+    assert isinstance(get_value(tixi, xpath), bool)
 
-    # Return Float
-    xpath = '/cpacs/vehicles/aircraft/model/reference/area'
-    assert get_value_or_default(tixi, xpath, 0.0) == 122.4
-
-    # Return String
-    xpath = '/cpacs/header/name'
-    assert get_value_or_default(tixi, xpath, 'DefaultSring') == 'D150'
-
-    # Return Boolean
-    xpath = '/cpacs/toolspecific/pytest/aTrueBoolean'
-    assert get_value_or_default(tixi, xpath, False)
+    xpath = '/cpacs/toolspecific/pytest/notExistingPathBoolFalse'
+    assert not get_value_or_default(tixi, xpath, False)
+    assert not get_value(tixi, xpath)
+    assert isinstance(get_value(tixi, xpath), bool)
 
 
 def test_get_float_vector():
