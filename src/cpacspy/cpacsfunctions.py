@@ -1,28 +1,31 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""
+!/usr/bin/env python3
+-*- coding: utf-8 -*-
 
-# ----------------------------------------------------------------------
-# Copyright 2021 CFS Engineering
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ----------------------------------------------------------------------
+----------------------------------------------------------------------
+Copyright 2021 CFS Engineering
 
-# Author: Aidan Jungo
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+----------------------------------------------------------------------
+
+Author: Aidan Jungo
+
+"""
 
 import numpy as np
 
 try:
-    import tixi3.tixi3wrapper as tixi3wrapper
+    from tixi3 import tixi3wrapper
     # from tixi3.tixi3wrapper import Tixi3Exception
 
 except ImportError:
@@ -32,7 +35,7 @@ else:
 
 try:
     import tigl3.configuration
-    import tigl3.tigl3wrapper as tigl3wrapper
+    from tigl3 import tigl3wrapper
     # from tigl3.tigl3wrapper import Tigl3Exception
 
 except ImportError:
@@ -145,8 +148,6 @@ def copy_branch(tixi, xpath_from, xpath_to):
     child_nb = tixi.getNumberOfChilds(xpath_from)
 
     if child_nb:
-        xpath_to_split = xpath_to.split("/")
-        xpath_to_parent = '/'.join(str(m) for m in xpath_to_split[:-1])
 
         child_list = []
         for i in range(child_nb):
@@ -377,7 +378,7 @@ def get_float_vector(tixi, xpath):
         float_vector_str = float_vector_str[:-1]
 
     float_vector_list = float_vector_str.split(';')
-    float_vector = [np.nan if (elem == 'nan' or elem == 'NaN')
+    float_vector = [np.nan if elem in ('nan', 'NaN')
                     else float(elem) for elem in float_vector_list]
 
     return float_vector
