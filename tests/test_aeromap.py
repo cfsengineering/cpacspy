@@ -35,7 +35,7 @@ from pytest import approx
 from cpacspy.cpacspy import CPACS
 
 CPACS_PATH = 'examples/D150_simple.xml'
-CPACS_TEST_PATH = 'tests/D150_test.xml'
+CPACS_TEST_PATH = 'tests/D150_test_tmp.xml'
 CSV_IN_FILE = os.path.join('tests', 'aeromap_test.csv')
 CSV_OUT_FILE = os.path.join('tests', 'aeromap_test_export.csv')
 

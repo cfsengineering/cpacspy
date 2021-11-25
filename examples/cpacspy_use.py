@@ -142,4 +142,4 @@ print(one_aeromap.get('drag', alt=15500.0, aos=0.0, mach=[0.3, 0.4, 0.5]))
 ## Save
 
 # Save all the change in a CPACS file
-cpacs.save_cpacs('D150_simple_updated_aeromap.xml', overwrite=True)
+cpacs.save_cpacs('D150_simple_updated_aeromap_tmp.xml', overwrite=True)
