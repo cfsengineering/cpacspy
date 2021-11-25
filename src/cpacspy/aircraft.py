@@ -75,11 +75,11 @@ class Aircraft:
         wing_idx = None
 
         for i_wing in range(self.configuration.get_wing_count()):
-            wing_area = self.configuration.get_wing(i_wing+1).get_surface_area()
+            wing_area = self.configuration.get_wing(i_wing + 1).get_surface_area()
 
             if wing_area > wing_area_max:
                 wing_area_max = wing_area
-                wing_idx = i_wing+1
+                wing_idx = i_wing + 1
 
         return wing_idx
 

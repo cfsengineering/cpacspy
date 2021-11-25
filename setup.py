@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import setuptools
-import os
 
 NAME = 'cpacspy'
 VERSION = '0.0.7'
@@ -31,7 +30,7 @@ setuptools.setup(
     license=LICENSE,
     packages=[NAME],
     python_requires=REQUIRES_PYTHON,
-    keywords=['CPACS','aircraft','design','xml','aerodynamics','coefficients','databases'],
+    keywords=['CPACS', 'aircraft', 'design', 'xml', 'aerodynamics', 'coefficients', 'databases'],
     install_requires=REQUIRED,
     # See: https://pypi.org/classifiers/
     classifiers=[

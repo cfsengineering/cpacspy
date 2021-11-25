@@ -156,7 +156,8 @@ class AeroMap:
         return self.df.loc[filt, list_of].to_numpy()
 
     def get_damping_derivatives(self, coef, axis, rates, alt=None, mach=None, aos=None, aoa=None):
-        """ Get damping derivatives coefficients as a numpy vector with other parameters as filter (optional).
+        """ Get damping derivatives coefficients as a numpy vector with other parameters as
+        filter (optional).
 
         Args:
             coef (str): Coefficient to get ['cl','cd','cm','cml','cmd','cms']
@@ -170,17 +171,22 @@ class AeroMap:
         """
 
         if coef not in COEFS:
-            raise ValueError(f'{coef} is not a valid coefficient! \n Must be one of the following: {",".join(COEFS)}')
+            raise ValueError(f'{coef} is not a valid coefficient! \n \
+                Must be one of the following: {",".join(COEFS)}')
 
         if axis not in ['dp', 'dq', 'dr']:
-            raise ValueError(f'{axis} is not a valid axis! \n Must be one of the following: {"dp","dq","dr"}')
+            raise ValueError(f'{axis} is not a valid axis! \n \
+                Must be one of the following: {"dp","dq","dr"}')
 
         if rates in ['posivitive', 'pos', 'p']:
             rates_name = 'positiveRates'
         elif rates in ['negative', 'neg', 'n']:
             rates_name = 'negativeRates'
         else:
-            raise ValueError(f'Invalid rates "{rates}"! \nMust be written as: \n("posivitive","pos","p" or "+") for positiveRates or \n("negative","neg","n" or "-") for negativeRates')
+            raise ValueError(f'Invalid rates "{rates}"! \n \
+                             Must be written as: \n \
+                                 ("posivitive","pos","p" or "+") for positiveRates or \n \
+                                     ("negative","neg","n" or "-") for negativeRates')
 
         col_name = f'dampingDerivatives_{rates_name}_d{coef}{axis}Star'
 
@@ -189,7 +195,8 @@ class AeroMap:
 
         return self.get(col_name, alt=alt, mach=mach, aos=aos, aoa=aoa)
 
-    def add_row(self, alt, mach, aos, aoa, cd=np.nan, cl=np.nan, cs=np.nan, cmd=np.nan, cml=np.nan, cms=np.nan):
+    def add_row(self, alt, mach, aos, aoa,
+                cd=np.nan, cl=np.nan, cs=np.nan, cmd=np.nan, cml=np.nan, cms=np.nan):
         """ Add a row in an Aeromap dataframe.
 
         Args:
@@ -211,8 +218,16 @@ class AeroMap:
         if not self.df.loc[filt].empty:
             raise ValueError(f'Row with alt={alt}, mach={mach}, aos={aos}, aoa={aoa} already exists!')
 
-        new_row = {'altitude': alt, 'machNumber': mach, 'angleOfSideslip': aos, 'angleOfAttack': aoa,
-                   'cd': cd, 'cl': cl, 'cs': cs, 'cmd': cmd, 'cml': cml, 'cms': cms}
+        new_row = {'altitude': alt,
+                   'machNumber': mach,
+                   'angleOfSideslip': aos,
+                   'angleOfAttack': aoa,
+                   'cd': cd,
+                   'cl': cl,
+                   'cs': cs,
+                   'cmd': cmd,
+                   'cml': cml,
+                   'cms': cms}
 
         # Check if all colomn already exist
         for col in new_row:
@@ -323,10 +338,10 @@ class AeroMap:
         if not self.xpath:
             if self.tixi.checkElement(AEROPERFORMANCE_XPATH):
                 child_nb = self.tixi.getNumberOfChilds(AEROPERFORMANCE_XPATH)
-                self.tixi.createElementAtIndex(AEROPERFORMANCE_XPATH, 'aeroMap', child_nb+1)
+                self.tixi.createElementAtIndex(AEROPERFORMANCE_XPATH, 'aeroMap', child_nb + 1)
                 self.xpath = AEROPERFORMANCE_XPATH + f'/aeroMap[{child_nb+1}]/aeroPerformanceMap'
             else:
-                create_branch(self.tixi, AEROPERFORMANCE_XPATH+'/aeroMap')
+                create_branch(self.tixi, AEROPERFORMANCE_XPATH + '/aeroMap')
                 self.xpath = AEROPERFORMANCE_XPATH + '/aeroMap/aeroPerformanceMap'
 
             self.tixi.uIDSetToXPath(get_xpath_parent(self.xpath), self.uid)
@@ -419,7 +434,7 @@ class AeroMap:
 
         # Calculate CD0 and Oswald factor e
         k, cd0 = coef
-        e = 1 / (k*ar*math.pi)
+        e = 1 / (k * ar * math.pi)
 
         print('---------------------------------------------')
         print(f'For alt={alt}m, Mach={mach}, AoS={aos}deg:')

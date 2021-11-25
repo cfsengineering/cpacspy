@@ -107,7 +107,7 @@ def open_tigl(tixi_handle):
     tigl_handle.open(tixi_handle, model_uid)
 
     tigl_handle.logSetVerbosity(1)  # 1 - only error, 2 - error and warnings
-
+    
     return tigl_handle
 
 
@@ -151,7 +151,7 @@ def copy_branch(tixi, xpath_from, xpath_to):
 
         child_list = []
         for i in range(child_nb):
-            child_list.append(tixi.getChildNodeName(xpath_from, i+1))
+            child_list.append(tixi.getChildNodeName(xpath_from, i + 1))
 
         # If it is a text Element --> no child
         if "#" in child_list[0]:
@@ -401,7 +401,7 @@ def add_float_vector(tixi, xpath, vector):
 
     # Get the field name and the parent CPACS path
     xpath_child_name = xpath.split("/")[-1]
-    xpath_parent = xpath[:-(len(xpath_child_name)+1)]
+    xpath_parent = xpath[:-(len(xpath_child_name) + 1)]
 
     if not tixi.checkElement(xpath_parent):
         create_branch(tixi, xpath_parent)
@@ -436,7 +436,7 @@ def add_string_vector(tixi, xpath, vector):
 
     # Get the field name and the parent CPACS path
     xpath_child_name = xpath.split("/")[-1]
-    xpath_parent = xpath[:-(len(xpath_child_name)+1)]
+    xpath_parent = xpath[:-(len(xpath_child_name) + 1)]
 
     vector_str = ";".join([str(elem) for elem in vector])
 
@@ -530,6 +530,6 @@ def create_branch(tixi, xpath, add_child=False):
         if tixi.checkElement(xpath_partial):
             if child == xpath_split[-1] and add_child:
                 namedchild_nb = tixi.getNamedChildrenCount(xpath_parent, child)
-                tixi.createElementAtIndex(xpath_parent, child, namedchild_nb+1)
+                tixi.createElementAtIndex(xpath_parent, child, namedchild_nb + 1)
         else:
             tixi.createElement(xpath_parent, child)
