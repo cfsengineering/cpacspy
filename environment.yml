@@ -3,12 +3,14 @@ channels:
   - dlr-sc
   - defaults
 dependencies:
+  - flake8
   - matplotlib
   - numpy
   - pandas
   - pip
   - python=3.7
   - pytest
+  - pytest-cov
   - setuptools
   - tigl3=3.2.2
   - tixi3=3.1.1
