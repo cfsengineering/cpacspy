@@ -90,7 +90,8 @@ class Aircraft:
         text_line.append(' ')
         text_line.append(f'Reference lengh: \t{self.ref_lenght} [m]')
         text_line.append(f'Reference area: \t{self.ref_area} [m^2]')
-        text_line.append(f'Reference point: \t({self.ref_point_x},{self.ref_point_y},{self.ref_point_z}) [m]')
+        text_line.append(
+            f'Reference point: \t({self.ref_point_x},{self.ref_point_y},{self.ref_point_z}) [m]')
         text_line.append(' ')
         text_line.append(f'Reference wing index: \t{self._ref_wing_idx}')
         text_line.append(f'Wing span: \t\t{self.wing_span} [m]')

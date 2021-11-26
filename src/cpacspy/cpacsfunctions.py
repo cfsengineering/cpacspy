@@ -26,7 +26,7 @@ import numpy as np
 
 try:
     from tixi3 import tixi3wrapper
-    # from tixi3.tixi3wrapper import Tixi3Exception
+    from tixi3.tixi3wrapper import Tixi3Exception
 
 except ImportError:
     TIXI_INSTALLED = False
@@ -107,7 +107,7 @@ def open_tigl(tixi_handle):
     tigl_handle.open(tixi_handle, model_uid)
 
     tigl_handle.logSetVerbosity(1)  # 1 - only error, 2 - error and warnings
-    
+
     return tigl_handle
 
 
@@ -164,8 +164,8 @@ def copy_branch(tixi, xpath_from, xpath_to):
                 namedchild_nb = tixi.getNamedChildrenCount(xpath_from, child_list[0])
 
                 for i in range(namedchild_nb):
-                    new_xpath_from = xpath_from + "/" + child_list[0] + '[' + str(i+1) + ']'
-                    new_xpath_to = xpath_to + "/" + child_list[0] + '[' + str(i+1) + ']'
+                    new_xpath_from = xpath_from + "/" + child_list[0] + '[' + str(i + 1) + ']'
+                    new_xpath_to = xpath_to + "/" + child_list[0] + '[' + str(i + 1) + ']'
                     tixi.createElement(xpath_to, child_list[0])
 
                     # Call the function itself for recursion
@@ -191,7 +191,7 @@ def copy_branch(tixi, xpath_from, xpath_to):
                 attrib_text = tixi.getTextAttribute(xpath_from, attrib_name)
                 tixi.addTextAttribute(xpath_to, attrib_name, attrib_text)
                 attrib_index = attrib_index + 1
-            except:
+            except Tixi3Exception:
                 last_attrib = 1
 
 
@@ -490,7 +490,7 @@ def get_xpath_parent(xpath, level=1):
     if not xpath.startswith('/'):
         raise ValueError('"get_xpath_parent" must recieve an xpath as argument!')
 
-    if len(xpath.split('/'))-1 <= level:
+    if len(xpath.split('/')) - 1 <= level:
         raise ValueError('No parent available at this level')
 
     return '/'.join(xpath.split('/')[:-level])
@@ -522,11 +522,11 @@ def create_branch(tixi, xpath, add_child=False):
     xpath_split = xpath.split("/")
     xpath_count = len(xpath_split)
 
-    for i in range(xpath_count-1):
+    for i in range(xpath_count - 1):
         xpath_index = i + 2
         xpath_partial = '/'.join(str(m) for m in xpath_split[0:xpath_index])
-        xpath_parent = '/'.join(str(m) for m in xpath_split[0:xpath_index-1])
-        child = xpath_split[(xpath_index-1)]
+        xpath_parent = '/'.join(str(m) for m in xpath_split[0:xpath_index - 1])
+        child = xpath_split[(xpath_index - 1)]
         if tixi.checkElement(xpath_partial):
             if child == xpath_split[-1] and add_child:
                 namedchild_nb = tixi.getNamedChildrenCount(xpath_parent, child)

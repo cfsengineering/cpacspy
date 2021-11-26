@@ -74,7 +74,7 @@ class CPACS:
         aeromap_count = self.tixi.getNamedChildrenCount(AEROPERFORMANCE_XPATH, 'aeroMap')
         if aeromap_count:
             for i in range(aeromap_count):
-                aeromap_xpath = AEROPERFORMANCE_XPATH + '/aeroMap[' + str(i+1) + ']'
+                aeromap_xpath = AEROPERFORMANCE_XPATH + '/aeroMap[' + str(i + 1) + ']'
                 aeromap_uid = self.tixi.getTextAttribute(aeromap_xpath, 'uID')
                 uid_list.append(aeromap_uid)
         else:
