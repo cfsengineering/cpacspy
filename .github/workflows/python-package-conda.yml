@@ -32,7 +32,7 @@ jobs:
         pip install -e .
 
     - name: Run flake8
-        run: flake8 --max-line-length 99
+      run: flake8
 
     - name: Run pytest
       run: pytest -v --cov=.
