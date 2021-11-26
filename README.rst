@@ -6,6 +6,10 @@
     :target: https://github.com/cfsengineering/cpacspy/actions/workflows/python-package-conda.yml
     :alt: Pytest status
 
+.. image:: https://codecov.io/gh/cfsengineering/cpacspy/branch/main/graph/badge.svg?token=PFRCEGRL4N
+    :target: https://codecov.io/gh/cfsengineering/cpacspy
+    :alt: Codecov
+
 .. image:: https://img.shields.io/badge/license-Apache%202-blue.svg
     :target: https://github.com/cfsengineering/cpacspy/blob/main/LICENSE.txt
     :alt: License
@@ -29,7 +33,7 @@ You need to have `TIXI <https://github.com/DLR-SC/tixi>`_ and `TIGL <https://git
 
 - Install Miniconda: https://docs.conda.io/en/latest/miniconda.html
 
-- Clone this repository and create a Conda environment with the following command:
+- Clone this repository and create a Conda environment with the following commands:
 
 .. code-block:: bash
 
