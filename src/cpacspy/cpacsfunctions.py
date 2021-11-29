@@ -348,8 +348,6 @@ def get_value_or_default(tixi, xpath, default_value):
         tixi.addDoubleElement(xpath_parent, value_name, value, '%g')
         return value
 
-    print(default_value)
-    print(value)
     # Write the default value in the CPACS file as a string (also for booleans)
     tixi.addTextElement(xpath_parent, value_name, str(value))
 
