@@ -19,6 +19,8 @@ print('Ref point:', f'({cpacs.aircraft.ref_point_x}, \
 # Wing specific values
 # To choose another reference wing (by default the largest wing is the reference one)
 # cpacs.aircraft.ref_wing_idx = 3
+# or with uid
+# cpacs.aircraft.ref_wing_uid = 'Wing3V'
 
 print('Main wing aspect ratio', cpacs.aircraft.wing_ar)
 print('Main wing area', cpacs.aircraft.wing_area)

@@ -33,7 +33,8 @@ class Aircraft:
         """ Aircraft class to store references values and other information about the aircraft
 
         Args:
-            tixi (object): TIXI object open from a CPACS file
+            tixi (object): TIXI object open from the CPACS file
+            tigl (object): TIGL object open from the CPACS file
         """
 
         self.tixi = tixi
@@ -50,8 +51,6 @@ class Aircraft:
         self.configuration = get_tigl_configuration(self.tigl)
         self.ref_wing_idx = self.get_main_wing_idx()  # By default reference wing is the largest
 
-    # When self.ref_wing_idx is change:
-    # TODO: change it by uid also
     @property
     def ref_wing_idx(self):
         return self._ref_wing_idx
@@ -60,9 +59,25 @@ class Aircraft:
     def ref_wing_idx(self, new_idx):
         self._ref_wing_idx = new_idx
 
+        self._ref_wing_uid = self.configuration.get_wing(self._ref_wing_idx).get_uid()
+
         self.wing_span = self.configuration.get_wing(self._ref_wing_idx).get_wingspan()
         self.wing_area = self.configuration.get_wing(self._ref_wing_idx).get_surface_area()
         self.wing_ar = self.configuration.get_wing(self._ref_wing_idx).get_aspect_ratio()
+
+    @property
+    def ref_wing_uid(self):
+        return self._ref_wing_uid
+
+    @ref_wing_uid.setter
+    def ref_wing_uid(self, uid):
+        self._ref_wing_uid = uid
+
+        self._ref_wing_idx = self.configuration.get_wing_index(uid)
+
+        self.wing_span = self.configuration.get_wing(self._ref_wing_uid).get_wingspan()
+        self.wing_area = self.configuration.get_wing(self._ref_wing_uid).get_surface_area()
+        self.wing_ar = self.configuration.get_wing(self._ref_wing_uid).get_aspect_ratio()
 
     def get_main_wing_idx(self):
         """ Find the larest wing index
