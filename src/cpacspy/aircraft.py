@@ -61,7 +61,11 @@ class Aircraft:
 
         self._ref_wing_uid = self.configuration.get_wing(self._ref_wing_idx).get_uid()
 
-        self.wing_span = self.configuration.get_wing(self._ref_wing_idx).get_wingspan()
+        sym = 1
+        if self.configuration.get_wing(self._ref_wing_idx).get_symmetry():
+            sym = 2
+
+        self.wing_span = self.configuration.get_wing(self._ref_wing_idx).get_wing_half_span() * sym
         self.wing_area = self.configuration.get_wing(self._ref_wing_idx).get_surface_area()
         self.wing_ar = self.configuration.get_wing(self._ref_wing_idx).get_aspect_ratio()
 
@@ -75,7 +79,11 @@ class Aircraft:
 
         self._ref_wing_idx = self.configuration.get_wing_index(uid)
 
-        self.wing_span = self.configuration.get_wing(self._ref_wing_uid).get_wingspan()
+        sym = 1
+        if self.configuration.get_wing(self._ref_wing_idx).get_symmetry():
+            sym = 2
+
+        self.wing_span = self.configuration.get_wing(self._ref_wing_uid).get_wing_half_span() * sym
         self.wing_area = self.configuration.get_wing(self._ref_wing_uid).get_surface_area()
         self.wing_ar = self.configuration.get_wing(self._ref_wing_uid).get_aspect_ratio()
 
