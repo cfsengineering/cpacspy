@@ -1,8 +1,10 @@
 name: cpacspy_env
+
 channels:
   - dlr-sc
   - defaults
 dependencies:
+  
   - flake8
   - matplotlib
   - numpy
@@ -12,8 +14,9 @@ dependencies:
   - pytest
   - pytest-cov
   - setuptools
-  - tigl3=3.2.2
-  - tixi3=3.1.1
+  # - tigl3=3.2.2
+  - cpacscreator=0.1
+  - tixi3=3.0.3
   - wheel
  
   - pip:
