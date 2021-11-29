@@ -23,11 +23,12 @@ Author: Aidan Jungo
 """
 
 import os
-
 import numpy as np
 
 import pytest
 from pytest import approx
+
+from unittest.mock import patch 
 
 # from tixi3.tixi3wrapper import Tixi3Exception
 # from tigl3.tigl3wrapper import Tigl3Exception
@@ -63,6 +64,10 @@ def test_aeromap_class():
     # No field in the aeromap
     assert 'dampingDerivatives_positiveRates_dcsdrStar' not in aeromap_dampder.df.columns
 
+    assert aeromap_1.__str__()
+    assert 'AeroMap xpath:' in aeromap_1.__str__()
+    assert 'Number of states:' in aeromap_1.__str__()
+    assert 'Parameters and coefficients:' in aeromap_1.__str__()
 
 def test_get():
 
@@ -90,7 +95,7 @@ def test_get_damping_derivatives():
 
     # Test if wrong damping derivatives rate raises ValueError
     with pytest.raises(ValueError):
-        aeromap_dampder.get_damping_derivatives('cl', 'dd', 'should_be_pos_or_neg')
+        aeromap_dampder.get_damping_derivatives('cl', 'dp', 'should_be_pos_or_neg')
 
     # Test all possible keyword for rates
     for rate in ['posivitive', 'pos', 'p', 'negative', 'neg', 'n']:
@@ -216,6 +221,16 @@ def test_add_damping_derivatives_and_save():
 
     assert aeromap_dampder_test.get('dampingDerivatives_negativeRates_dcmldpStar', alt=15000, mach=0.555)[0] == 0.00111
     assert aeromap_dampder_test.get('dampingDerivatives_negativeRates_dcmldpStar', alt=15000, mach=0.555)[6] == 0.00117
+
+
+@patch("matplotlib.pyplot.show")
+def test_plot(mock_show):
+    """ Test 'plot' function. """
+    
+    cpacs = CPACS(CPACS_PATH)
+    aeromap_1 = cpacs.get_aeromap_by_uid('aeromap_test1')
+
+    aeromap_1.plot('cl','angleOfAttack')
 
 
 def test_save():
