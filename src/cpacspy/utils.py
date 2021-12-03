@@ -23,12 +23,12 @@ Author: Aidan Jungo
 """
 
 # XPATH
-AEROPERFORMANCE_XPATH = '/cpacs/vehicles/aircraft/model/analyses/aeroPerformance'
-REF_XPATH = '/cpacs/vehicles/aircraft/model/reference'
+AEROPERFORMANCE_XPATH = "/cpacs/vehicles/aircraft/model/analyses/aeroPerformance"
+REF_XPATH = "/cpacs/vehicles/aircraft/model/reference"
 
 # Lists
-PARAMS = ['altitude', 'machNumber', 'angleOfSideslip', 'angleOfAttack']
-COEFS = ['cd', 'cl', 'cs', 'cmd', 'cml', 'cms']
+PARAMS = ["altitude", "machNumber", "angleOfSideslip", "angleOfAttack"]
+COEFS = ["cd", "cl", "cs", "cmd", "cml", "cms"]
 PARAMS_COEFS = PARAMS + COEFS
 DAMPING_COEFS = ['dcddpStar', 'dcddqStar', 'dcddrStar',
                  'dcldpStar', 'dcldqStar', 'dcldrStar',

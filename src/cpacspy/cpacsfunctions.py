@@ -36,6 +36,7 @@ else:
 try:
     import tigl3.configuration
     from tigl3 import tigl3wrapper
+
     # from tigl3.tigl3wrapper import Tigl3Exception
 
 except ImportError:
@@ -69,7 +70,7 @@ def open_tixi(cpacs_path):
     tixi_handle = tixi3wrapper.Tixi3()
     tixi_handle.open(cpacs_path)
 
-    print(f'TIXI handle has been created for {cpacs_path}.')
+    print(f"TIXI handle has been created for {cpacs_path}.")
 
     return tixi_handle
 
@@ -97,11 +98,11 @@ def open_tigl(tixi_handle):
         raise ModuleNotFoundError(err_msg)
 
     # Get model uid to open TiGL handle (in case there is also a rotorcraft in the CPACS file)
-    model_xpath = '/cpacs/vehicles/aircraft/model'
-    if tixi_handle.checkAttribute(model_xpath, 'uID'):
-        model_uid = tixi_handle.getTextAttribute(model_xpath, 'uID')
+    model_xpath = "/cpacs/vehicles/aircraft/model"
+    if tixi_handle.checkAttribute(model_xpath, "uID"):
+        model_uid = tixi_handle.getTextAttribute(model_xpath, "uID")
     else:
-        model_uid = ''
+        model_uid = ""
 
     tigl_handle = tigl3wrapper.Tigl3()
     tigl_handle.open(tixi_handle, model_uid)
@@ -141,9 +142,9 @@ def copy_branch(tixi, xpath_from, xpath_to):
     """
 
     if not tixi.checkElement(xpath_from):
-        raise ValueError(xpath_from + ' XPath does not exist!')
+        raise ValueError(xpath_from + " XPath does not exist!")
     if not tixi.checkElement(xpath_to):
-        raise ValueError(xpath_to + ' XPath does not exist!')
+        raise ValueError(xpath_to + " XPath does not exist!")
 
     child_nb = tixi.getNumberOfChilds(xpath_from)
 
@@ -164,8 +165,8 @@ def copy_branch(tixi, xpath_from, xpath_to):
                 namedchild_nb = tixi.getNamedChildrenCount(xpath_from, child_list[0])
 
                 for i in range(namedchild_nb):
-                    new_xpath_from = xpath_from + "/" + child_list[0] + '[' + str(i + 1) + ']'
-                    new_xpath_to = xpath_to + "/" + child_list[0] + '[' + str(i + 1) + ']'
+                    new_xpath_from = xpath_from + "/" + child_list[0] + "[" + str(i + 1) + "]"
+                    new_xpath_to = xpath_to + "/" + child_list[0] + "[" + str(i + 1) + "]"
                     tixi.createElement(xpath_to, child_list[0])
 
                     # Call the function itself for recursion
@@ -212,10 +213,10 @@ def get_uid(tixi, xpath):
     """
 
     if not tixi.checkElement(xpath):
-        raise ValueError(xpath + ' XPath does not exist!')
+        raise ValueError(xpath + " XPath does not exist!")
 
-    if tixi.checkAttribute(xpath, 'uID'):
-        uid = tixi.getTextAttribute(xpath, 'uID')
+    if tixi.checkAttribute(xpath, "uID"):
+        uid = tixi.getTextAttribute(xpath, "uID")
         return uid
     else:
         raise ValueError("No uID found for: " + xpath)
@@ -246,7 +247,7 @@ def add_uid(tixi, xpath, uid):
         else:
             i = i + 1
             uid_new = uid + str(i)
-            print('UID already existing changed to: ' + uid_new)
+            print("UID already existing changed to: " + uid_new)
 
 
 def get_value(tixi, xpath):
@@ -268,17 +269,17 @@ def get_value(tixi, xpath):
     """
 
     if not tixi.checkElement(xpath):
-        raise ValueError(f'{xpath} cannot be found in the CPACS file')
+        raise ValueError(f"{xpath} cannot be found in the CPACS file")
 
     value = tixi.getTextElement(xpath)
 
     if not value:
-        raise ValueError(f'No value has been found at {xpath}')
+        raise ValueError(f"No value has been found at {xpath}")
 
     # Check if the value should be return as boolean
-    if value == 'True':
+    if value == "True":
         return True
-    elif value == 'False':
+    elif value == "False":
         return False
 
     # Check if the value should be return as float
@@ -345,7 +346,7 @@ def get_value_or_default(tixi, xpath, default_value):
 
     # Write the default value in the CPACS file as a float
     if is_float and not is_bool:
-        tixi.addDoubleElement(xpath_parent, value_name, value, '%g')
+        tixi.addDoubleElement(xpath_parent, value_name, value, "%g")
         return value
 
     # Write the default value in the CPACS file as a string (also for booleans)
@@ -365,19 +366,20 @@ def get_float_vector(tixi, xpath):
     """
 
     if not tixi.checkElement(xpath):
-        raise ValueError(xpath + ' path does not exist!')
+        raise ValueError(xpath + " path does not exist!")
 
     float_vector_str = tixi.getTextElement(xpath)
 
-    if float_vector_str == '':
-        raise ValueError('No value has been fournd at ' + xpath)
+    if float_vector_str == "":
+        raise ValueError("No value has been fournd at " + xpath)
 
-    if float_vector_str.endswith(';'):
+    if float_vector_str.endswith(";"):
         float_vector_str = float_vector_str[:-1]
 
-    float_vector_list = float_vector_str.split(';')
-    float_vector = [np.nan if elem in ('nan', 'NaN')
-                    else float(elem) for elem in float_vector_list]
+    float_vector_list = float_vector_str.split(";")
+    float_vector = [
+        np.nan if elem in ("nan", "NaN") else float(elem) for elem in float_vector_list
+    ]
 
     return float_vector
 
@@ -394,12 +396,12 @@ def add_float_vector(tixi, xpath, vector):
     """
 
     # Strip trailing '/' (has no meaning here)
-    if xpath.endswith('/'):
+    if xpath.endswith("/"):
         xpath = xpath[:-1]
 
     # Get the field name and the parent CPACS path
     xpath_child_name = xpath.split("/")[-1]
-    xpath_parent = xpath[:-(len(xpath_child_name) + 1)]
+    xpath_parent = xpath[: -(len(xpath_child_name) + 1)]
 
     if not tixi.checkElement(xpath_parent):
         create_branch(tixi, xpath_parent)
@@ -407,12 +409,11 @@ def add_float_vector(tixi, xpath, vector):
     vector = [float(v) for v in vector]
 
     if tixi.checkElement(xpath):
-        tixi.updateFloatVector(xpath, vector, len(vector), format='%g')
-        tixi.addTextAttribute(xpath, 'mapType', 'vector')
+        tixi.updateFloatVector(xpath, vector, len(vector), format="%g")
+        tixi.addTextAttribute(xpath, "mapType", "vector")
     else:
-        tixi.addFloatVector(xpath_parent, xpath_child_name, vector,
-                            len(vector), format='%g')
-        tixi.addTextAttribute(xpath, 'mapType', 'vector')
+        tixi.addFloatVector(xpath_parent, xpath_child_name, vector, len(vector), format="%g")
+        tixi.addTextAttribute(xpath, "mapType", "vector")
 
 
 def add_string_vector(tixi, xpath, vector):
@@ -429,12 +430,12 @@ def add_string_vector(tixi, xpath, vector):
     """
 
     # Strip trailing '/' (has no meaning here)
-    if xpath.endswith('/'):
+    if xpath.endswith("/"):
         xpath = xpath[:-1]
 
     # Get the field name and the parent CPACS path
     xpath_child_name = xpath.split("/")[-1]
-    xpath_parent = xpath[:-(len(xpath_child_name) + 1)]
+    xpath_parent = xpath[: -(len(xpath_child_name) + 1)]
 
     vector_str = ";".join([str(elem) for elem in vector])
 
@@ -459,16 +460,16 @@ def get_string_vector(tixi, xpath):
     """
 
     if not tixi.checkElement(xpath):
-        raise ValueError(xpath + ' path does not exist!')
+        raise ValueError(xpath + " path does not exist!")
 
     string_vector_str = tixi.getTextElement(xpath)
 
-    if string_vector_str == '':
-        raise ValueError('No value has been fournd at ' + xpath)
+    if string_vector_str == "":
+        raise ValueError("No value has been fournd at " + xpath)
 
-    if string_vector_str.endswith(';'):
+    if string_vector_str.endswith(";"):
         string_vector_str = string_vector_str[:-1]
-    string_vector_list = string_vector_str.split(';')
+    string_vector_list = string_vector_str.split(";")
     string_vector = [str(elem) for elem in string_vector_list]
 
     return string_vector
@@ -485,13 +486,13 @@ def get_xpath_parent(xpath, level=1):
         str: Parent xpath
     """
 
-    if not xpath.startswith('/'):
+    if not xpath.startswith("/"):
         raise ValueError('"get_xpath_parent" must recieve an xpath as argument!')
 
-    if len(xpath.split('/')) - 1 <= level:
-        raise ValueError('No parent available at this level')
+    if len(xpath.split("/")) - 1 <= level:
+        raise ValueError("No parent available at this level")
 
-    return '/'.join(xpath.split('/')[:-level])
+    return "/".join(xpath.split("/")[:-level])
 
 
 def create_branch(tixi, xpath, add_child=False):
@@ -522,8 +523,8 @@ def create_branch(tixi, xpath, add_child=False):
 
     for i in range(xpath_count - 1):
         xpath_index = i + 2
-        xpath_partial = '/'.join(str(m) for m in xpath_split[0:xpath_index])
-        xpath_parent = '/'.join(str(m) for m in xpath_split[0:xpath_index - 1])
+        xpath_partial = "/".join(str(m) for m in xpath_split[0:xpath_index])
+        xpath_parent = "/".join(str(m) for m in xpath_split[0:xpath_index - 1])
         child = xpath_split[(xpath_index - 1)]
         if tixi.checkElement(xpath_partial):
             if child == xpath_split[-1] and add_child:
