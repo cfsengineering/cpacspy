@@ -26,7 +26,7 @@ from pytest import approx
 
 from cpacspy.cpacspy import CPACS
 
-CPACS_PATH = 'examples/D150_simple.xml'
+CPACS_PATH = "examples/D150_simple.xml"
 
 
 def test_main_attrib():
@@ -43,21 +43,21 @@ def test_main_attrib():
     assert cpacs.aircraft.ref_point_z == 0
 
     # Check value for wing index 1 (default)
-    assert cpacs.aircraft.ref_wing_uid == 'Wing1'
+    assert cpacs.aircraft.ref_wing_uid == "Wing1"
     assert cpacs.aircraft.wing_span == approx(33.91, rel=1e-2)
     assert cpacs.aircraft.wing_area == approx(130.5, rel=1e-2)
     assert cpacs.aircraft.wing_ar == approx(9.402, rel=1e-2)
 
     # Check value for wing index 3
     cpacs.aircraft.ref_wing_idx = 2
-    assert cpacs.aircraft.ref_wing_uid == 'Wing2H'
+    assert cpacs.aircraft.ref_wing_uid == "Wing2H"
     assert cpacs.aircraft.wing_span == approx(12.45, rel=1e-2)
     assert cpacs.aircraft.wing_area == approx(32.76, rel=1e-2)
     assert cpacs.aircraft.wing_ar == approx(5.00, rel=1e-2)
 
     # Check value for wing index 3
     cpacs.aircraft.ref_wing_idx = 3
-    assert cpacs.aircraft.ref_wing_uid == 'Wing3V'
+    assert cpacs.aircraft.ref_wing_uid == "Wing3V"
     assert cpacs.aircraft.wing_span == approx(5.87, rel=1e-2)
     assert cpacs.aircraft.wing_area == approx(46.59, rel=1e-2)
     assert cpacs.aircraft.wing_ar == approx(3.21, rel=1e-2)
@@ -66,10 +66,10 @@ def test_main_attrib():
     assert cpacs.aircraft.get_main_wing_idx() == 1
 
     # Change ref wing with uid
-    cpacs.aircraft.ref_wing_uid = 'Wing2H'
+    cpacs.aircraft.ref_wing_uid = "Wing2H"
     assert cpacs.aircraft.ref_wing_idx == 2
 
-    cpacs.aircraft.ref_wing_uid = 'Wing3V'
+    cpacs.aircraft.ref_wing_uid = "Wing3V"
     assert cpacs.aircraft.ref_wing_idx == 3
 
     # Check __str__ method

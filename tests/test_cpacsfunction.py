@@ -27,14 +27,24 @@ import numpy as np
 # from tigl3.tigl3wrapper import Tigl3Exception
 from tixi3.tixi3wrapper import Tixi3Exception
 
-from cpacspy.cpacsfunctions import (add_float_vector, add_string_vector,
-                                    add_uid, copy_branch, create_branch,
-                                    get_float_vector, get_string_vector,
-                                    get_tigl_configuration, get_uid, get_value,
-                                    get_value_or_default, get_xpath_parent,
-                                    open_tigl, open_tixi)
+from cpacspy.cpacsfunctions import (
+    add_float_vector,
+    add_string_vector,
+    add_uid,
+    copy_branch,
+    create_branch,
+    get_float_vector,
+    get_string_vector,
+    get_tigl_configuration,
+    get_uid,
+    get_value,
+    get_value_or_default,
+    get_xpath_parent,
+    open_tigl,
+    open_tixi,
+)
 
-CPACS_PATH = 'examples/D150_simple.xml'
+CPACS_PATH = "examples/D150_simple.xml"
 
 
 def test_open_tixi():
@@ -48,7 +58,7 @@ def test_open_tixi():
 
     # Raise error for an invalid CPACS path
     with pytest.raises(Tixi3Exception):
-        tixi_handle = open_tixi('invalid_CPACS_path')
+        tixi_handle = open_tixi("invalid_CPACS_path")
 
 
 def test_open_tigl():
@@ -62,7 +72,7 @@ def test_open_tigl():
 
     # Raise error for an invalid TIXI handles
     with pytest.raises(AttributeError):
-        tixi_handle = open_tigl('invalid_TIGL_handle')
+        tixi_handle = open_tigl("invalid_TIGL_handle")
 
 
 def test_get_tigl_configuration():
@@ -77,47 +87,47 @@ def test_get_value():
     tixi = open_tixi(CPACS_PATH)
 
     # Raise ValueError with not existing xpath
-    xpath = '/cpacs/toolspecific/pytest/notARealPath'
+    xpath = "/cpacs/toolspecific/pytest/notARealPath"
     with pytest.raises(ValueError):
         get_value(tixi, xpath)
 
     # Test if return None if no value has been found at xpath
-    xpath = '/cpacs/toolspecific/pytest'
+    xpath = "/cpacs/toolspecific/pytest"
     with pytest.raises(ValueError):
         get_value(tixi, xpath)
 
     # Test different types of float/Nan/Inf
-    xpath = '/cpacs/vehicles/aircraft/model/reference/area'
+    xpath = "/cpacs/vehicles/aircraft/model/reference/area"
     assert get_value(tixi, xpath) == 122.4
     assert isinstance(get_value(tixi, xpath), float)
 
-    xpath = '/cpacs/toolspecific/pytest/aSciFloat'
+    xpath = "/cpacs/toolspecific/pytest/aSciFloat"
     assert get_value(tixi, xpath) == 123000.0
     assert isinstance(get_value(tixi, xpath), float)
 
-    xpath = '/cpacs/toolspecific/pytest/aNaN'
+    xpath = "/cpacs/toolspecific/pytest/aNaN"
     assert np.isnan(get_value(tixi, xpath))
     assert isinstance(get_value(tixi, xpath), float)
 
-    xpath = '/cpacs/toolspecific/pytest/anan'
+    xpath = "/cpacs/toolspecific/pytest/anan"
     assert np.isnan(get_value(tixi, xpath))
     assert isinstance(get_value(tixi, xpath), float)
 
-    xpath = '/cpacs/toolspecific/pytest/aInf'
-    assert get_value(tixi, xpath) == float('-inf')
+    xpath = "/cpacs/toolspecific/pytest/aInf"
+    assert get_value(tixi, xpath) == float("-inf")
     assert isinstance(get_value(tixi, xpath), float)
 
     # Return Boolean
-    xpath = '/cpacs/toolspecific/pytest/aTrueBoolean'
+    xpath = "/cpacs/toolspecific/pytest/aTrueBoolean"
     assert get_value(tixi, xpath)
     assert isinstance(get_value(tixi, xpath), bool)
-    xpath = '/cpacs/toolspecific/pytest/aFalseBoolean'
+    xpath = "/cpacs/toolspecific/pytest/aFalseBoolean"
     assert not get_value(tixi, xpath)
     assert isinstance(get_value(tixi, xpath), bool)
 
     # Return String
-    xpath = '/cpacs/header/name'
-    assert get_value(tixi, xpath) == 'D150'
+    xpath = "/cpacs/header/name"
+    assert get_value(tixi, xpath) == "D150"
     assert isinstance(get_value(tixi, xpath), str)
 
 
@@ -126,36 +136,36 @@ def test_get_value_or_default():
     tixi = open_tixi(CPACS_PATH)
 
     # Same test as 'get_value' function (just main ones)
-    xpath = '/cpacs/vehicles/aircraft/model/reference/area'
+    xpath = "/cpacs/vehicles/aircraft/model/reference/area"
     value = get_value_or_default(tixi, xpath, 133.5)
     assert value == 122.4
     assert isinstance(value, float)
-    xpath = '/cpacs/toolspecific/pytest/aTrueBoolean'
+    xpath = "/cpacs/toolspecific/pytest/aTrueBoolean"
     value = get_value_or_default(tixi, xpath, False)
     assert value
     assert isinstance(value, bool)
-    xpath = '/cpacs/header/name'
-    value = get_value_or_default(tixi, xpath, 'D150')
-    assert value == 'D150'
+    xpath = "/cpacs/header/name"
+    value = get_value_or_default(tixi, xpath, "D150")
+    assert value == "D150"
     assert isinstance(value, str)
 
     # Check if the default string value is return and the saved in the CPACS file
-    xpath = '/cpacs/toolspecific/pytest/notExistingPathString'
-    assert get_value_or_default(tixi, xpath, 'test') == 'test'
-    assert get_value(tixi, xpath) == 'test'
+    xpath = "/cpacs/toolspecific/pytest/notExistingPathString"
+    assert get_value_or_default(tixi, xpath, "test") == "test"
+    assert get_value(tixi, xpath) == "test"
 
     # Return default float value for a non existing path
-    xpath = '/cpacs/toolspecific/pytest/notExistingPathFloat'
+    xpath = "/cpacs/toolspecific/pytest/notExistingPathFloat"
     assert get_value_or_default(tixi, xpath, 10.01) == 10.01
     assert get_value(tixi, xpath) == 10.01
 
     # Return default boolean for a non existing path
-    xpath = '/cpacs/toolspecific/pytest/notExistingPathBoolTrue'
+    xpath = "/cpacs/toolspecific/pytest/notExistingPathBoolTrue"
     assert get_value_or_default(tixi, xpath, True)
     assert get_value(tixi, xpath)
     assert isinstance(get_value(tixi, xpath), bool)
 
-    xpath = '/cpacs/toolspecific/pytest/notExistingPathBoolFalse'
+    xpath = "/cpacs/toolspecific/pytest/notExistingPathBoolFalse"
     assert not get_value_or_default(tixi, xpath, False)
     assert not get_value(tixi, xpath)
     assert isinstance(get_value(tixi, xpath), bool)
@@ -166,71 +176,71 @@ def test_get_float_vector():
     tixi = open_tixi(CPACS_PATH)
 
     # Raise ValueError with not existing xpath
-    xpath = '/cpacs/toolspecific/pytest/notARealPath'
+    xpath = "/cpacs/toolspecific/pytest/notARealPath"
     with pytest.raises(ValueError):
         get_float_vector(tixi, xpath)
 
     # Raise ValueError when not value has been found at xpath
-    xpath = '/cpacs/toolspecific/pytest'
+    xpath = "/cpacs/toolspecific/pytest"
     with pytest.raises(ValueError):
         get_float_vector(tixi, xpath)
 
     # Return a correct float vector
-    xpath = '/cpacs/toolspecific/pytest/aCorrectFloatVector'
+    xpath = "/cpacs/toolspecific/pytest/aCorrectFloatVector"
     get_float_vector(tixi, xpath) == [1, 0.95, 0.9, 0.8, 0.7, 0.6]
 
 
 def test_add_float_vector():
 
     tixi = open_tixi(CPACS_PATH)
-    xpath = '/cpacs/toolspecific/pytest/addedFloatVector'
+    xpath = "/cpacs/toolspecific/pytest/addedFloatVector"
     vector = [0.1, 0.2, 0.3]
     add_float_vector(tixi, xpath, vector)
 
     # Check if the float vector has been added
-    assert tixi.getTextElement(xpath) == '0.1;0.2;0.3'
+    assert tixi.getTextElement(xpath) == "0.1;0.2;0.3"
 
 
 def test_get_xpath_parent():
 
-    xpath = '/cpacs/vehicles/aircraft/model/analyses/aeroPerformance/aeroMap[3]/aeroPerformanceMap'
+    xpath = "/cpacs/vehicles/aircraft/model/analyses/aeroPerformance/aeroMap[3]/aeroPerformanceMap"
 
     # Not an xpath
     with pytest.raises(ValueError):
-        get_xpath_parent('NotAnXpath')
+        get_xpath_parent("NotAnXpath")
 
     # Not existing parent
     with pytest.raises(ValueError):
         get_xpath_parent(xpath, 8)
 
     # Get the first parent xpath
-    parent_xpath = '/cpacs/vehicles/aircraft/model/analyses/aeroPerformance/aeroMap[3]'
+    parent_xpath = "/cpacs/vehicles/aircraft/model/analyses/aeroPerformance/aeroMap[3]"
     assert get_xpath_parent(xpath) == parent_xpath
 
     # Get the furthest parent xpath
-    assert get_xpath_parent(xpath, 7) == '/cpacs'
+    assert get_xpath_parent(xpath, 7) == "/cpacs"
 
     # Get another parent xpath
-    assert get_xpath_parent(xpath, 5) == '/cpacs/vehicles/aircraft'
+    assert get_xpath_parent(xpath, 5) == "/cpacs/vehicles/aircraft"
 
 
 def test_create_branch():
 
     tixi = open_tixi(CPACS_PATH)
-    xpath = '/cpacs/toolspecific/pytest/newBranch'
+    xpath = "/cpacs/toolspecific/pytest/newBranch"
     create_branch(tixi, xpath)
 
     # Check if the new branch exist
     assert tixi.checkElement(xpath)
 
     # Test adding named child branch
-    xpath = '/cpacs/toolspecific/pytest/newBranch/namedChild'
+    xpath = "/cpacs/toolspecific/pytest/newBranch/namedChild"
     create_branch(tixi, xpath)
     create_branch(tixi, xpath, True)
     create_branch(tixi, xpath, True)
 
     # Check if the new branch exist
-    assert tixi.checkElement(xpath + '[3]')
+    assert tixi.checkElement(xpath + "[3]")
 
 
 def test_copy_branch():
@@ -239,23 +249,23 @@ def test_copy_branch():
     tixi = open_tixi(CPACS_PATH)
 
     # Create a new 'header' branch and copy the original 'header' into it
-    xpath_new = '/cpacs/header'
-    xpath_from = '/cpacs/header[1]'
-    xpath_to = '/cpacs/header[2]'
+    xpath_new = "/cpacs/header"
+    xpath_from = "/cpacs/header[1]"
+    xpath_to = "/cpacs/header[2]"
     create_branch(tixi, xpath_new, True)
     copy_branch(tixi, xpath_from, xpath_to)
 
     # Check if a specific element has been copied
-    xpath_elem_from = '/cpacs/header[1]/updates/update[1]/timestamp'
-    xpath_elem_to = '/cpacs/header[2]/updates/update[1]/timestamp'
+    xpath_elem_from = "/cpacs/header[1]/updates/update[1]/timestamp"
+    xpath_elem_to = "/cpacs/header[2]/updates/update[1]/timestamp"
     elem_from = tixi.getTextElement(xpath_elem_from)
     elem_to = tixi.getTextElement(xpath_elem_to)
 
     assert elem_from == elem_to
 
     # Check if a specific attribute has been copied
-    attrib_text_from = tixi.getTextAttribute(xpath_elem_from, 'uID')
-    attrib_text_to = tixi.getTextAttribute(xpath_elem_to, 'uID')
+    attrib_text_from = tixi.getTextAttribute(xpath_elem_from, "uID")
+    attrib_text_to = tixi.getTextAttribute(xpath_elem_to, "uID")
 
     assert attrib_text_from == attrib_text_to
 
@@ -264,22 +274,22 @@ def test_add_string_vector():
     """ Test the function 'add_sting_vector'"""
 
     tixi = open_tixi(CPACS_PATH)
-    xpath = '/cpacs/toolspecific/CEASIOMpy/testVector/'
+    xpath = "/cpacs/toolspecific/CEASIOMpy/testVector/"
 
     # Add a new vector
-    string_vector = ['aaa', 'bbb', 'ccc']
+    string_vector = ["aaa", "bbb", "ccc"]
     add_string_vector(tixi, xpath, string_vector)
     added_sting_vector_str = tixi.getTextElement(xpath)
-    added_sting_vector = added_sting_vector_str.split(';')
+    added_sting_vector = added_sting_vector_str.split(";")
     added_sting_vector = [str(elem) for elem in added_sting_vector]
 
     assert added_sting_vector == string_vector
 
     # Update a vector
-    string_vector = ['abc', '123', 'test-01']
+    string_vector = ["abc", "123", "test-01"]
     add_string_vector(tixi, xpath, string_vector)
     added_sting_vector_str = tixi.getTextElement(xpath)
-    added_sting_vector = added_sting_vector_str.split(';')
+    added_sting_vector = added_sting_vector_str.split(";")
     added_sting_vector = [str(elem) for elem in added_sting_vector]
 
     assert added_sting_vector == string_vector
@@ -289,10 +299,10 @@ def test_get_string_vector():
     """ Test the function 'get_string_vector'"""
 
     tixi = open_tixi(CPACS_PATH)
-    xpath = '/cpacs/toolspecific/CEASIOMpy/testVector'
+    xpath = "/cpacs/toolspecific/CEASIOMpy/testVector"
 
     # Add a new vector
-    string_vector = ['aaa', 'zzz']
+    string_vector = ["aaa", "zzz"]
     add_string_vector(tixi, xpath, string_vector)
 
     # Get a string vector
@@ -301,12 +311,12 @@ def test_get_string_vector():
     assert string_vector_get == string_vector
 
     # Raise an error when the XPath is wrong
-    wrong_xpath = '/cpacs/toolspecific/CEASIOMpy/testVectorWrong'
+    wrong_xpath = "/cpacs/toolspecific/CEASIOMpy/testVectorWrong"
     with pytest.raises(ValueError):
         get_string_vector(tixi, wrong_xpath)
 
     # Raise an error when no value at XPath
-    no_value_xpath = '/cpacs/toolspecific/CEASIOMpy'
+    no_value_xpath = "/cpacs/toolspecific/CEASIOMpy"
     with pytest.raises(ValueError):
         get_string_vector(tixi, no_value_xpath)
 
@@ -317,19 +327,19 @@ def test_get_uid():
     tixi = open_tixi(CPACS_PATH)
 
     # Check if a false xpath raises ValueError
-    xpath = '/cpacs/vehicles/aircraft/MYmodel'
+    xpath = "/cpacs/vehicles/aircraft/MYmodel"
     with pytest.raises(ValueError):
         get_uid(tixi, xpath)
 
     # Check if a no uid at xpath raises ValueError
-    xpath = '/cpacs/vehicles/aircraft'
+    xpath = "/cpacs/vehicles/aircraft"
     with pytest.raises(ValueError):
         get_uid(tixi, xpath)
 
     # Check if it get correctly the uid
-    xpath = '/cpacs/vehicles/aircraft/model'
+    xpath = "/cpacs/vehicles/aircraft/model"
     uid = get_uid(tixi, xpath)
-    assert uid == 'D150_VAMP'
+    assert uid == "D150_VAMP"
 
 
 def test_add_uid():
@@ -338,25 +348,25 @@ def test_add_uid():
     tixi = open_tixi(CPACS_PATH)
 
     # Update UID
-    xpath = '/cpacs/vehicles/aircraft/model'
-    new_uid = 'New_aircrat_name'
+    xpath = "/cpacs/vehicles/aircraft/model"
+    new_uid = "New_aircrat_name"
     add_uid(tixi, xpath, new_uid)
-    updated_uid = tixi.getTextAttribute(xpath, 'uID')
+    updated_uid = tixi.getTextAttribute(xpath, "uID")
 
     assert updated_uid == new_uid
 
     # Add UID
-    xpath = '/cpacs/vehicles/aircraft/model/name'
-    new_uid = 'nameUID'
+    xpath = "/cpacs/vehicles/aircraft/model/name"
+    new_uid = "nameUID"
     add_uid(tixi, xpath, new_uid)
-    added_uid = tixi.getTextAttribute(xpath, 'uID')
+    added_uid = tixi.getTextAttribute(xpath, "uID")
 
     assert added_uid == new_uid
 
     # Add existing UID (should add "1" at the end of the UID)
-    xpath = '/cpacs/vehicles/aircraft/model/name'
-    new_uid = 'Fuselage1'
+    xpath = "/cpacs/vehicles/aircraft/model/name"
+    new_uid = "Fuselage1"
     add_uid(tixi, xpath, new_uid)
-    added_uid = tixi.getTextAttribute(xpath, 'uID')
+    added_uid = tixi.getTextAttribute(xpath, "uID")
 
-    assert added_uid == 'Fuselage11'
+    assert added_uid == "Fuselage11"
