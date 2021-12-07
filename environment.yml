@@ -3,22 +3,27 @@ name: cpacspy_env
 channels:
   - dlr-sc
   - defaults
+
 dependencies:
   
-  - black
-  - flake8
-  - matplotlib
+  - python=3.7
   - numpy
   - pandas
   - pip
-  - python=3.7
-  - pytest
-  - pytest-cov
   - setuptools
+  - wheel
+  - matplotlib
+  - plotly
+  - ipywidgets>=7.6
   # - tigl3=3.2.2
   - cpacscreator=0.1
   - tixi3=3.0.3
-  - wheel
- 
+
+  # CI and test
+  - black
+  - flake8
+  - pytest
+  - pytest-cov
+  
   - pip:
     - ambiance

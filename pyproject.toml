@@ -1,0 +1,10 @@
+[tool.black]
+line-length = 99
+target-version = ['py37', 'py38']
+extend-exclude = '''
+/(
+  # The following are specific to Black, you probably don't want those.
+  | build/
+  | dist/
+)/
+'''
