@@ -14,6 +14,9 @@
     :target: https://github.com/cfsengineering/cpacspy/blob/main/LICENSE.txt
     :alt: License
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+    :alt: Black code style
 
 .. figure:: /logo/logo_white_bg.png
     :width: 300 px

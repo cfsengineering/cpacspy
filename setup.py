@@ -3,18 +3,18 @@
 
 import setuptools
 
-NAME = 'cpacspy'
-VERSION = '0.0.8'
-AUTHOR = 'Aidan Jungo'
-EMAIL = 'aidan.jungo@cfse.ch'
-DESCRIPTION = 'PyPI package to work with CPACS file and AeroMaps'
-LONG_DESCRIPTION = 'Python package to read, write and analyse CPACS AeroPerformanceMaps. You need to have TIXI and TIGL install on your computer to use this package.'
-URL = ''
-REQUIRES_PYTHON = '>=3.6.0'
+NAME = "cpacspy"
+VERSION = "0.0.8"
+AUTHOR = "Aidan Jungo"
+EMAIL = "aidan.jungo@cfse.ch"
+DESCRIPTION = "PyPI package to work with CPACS file and AeroMaps"
+LONG_DESCRIPTION = "Python package to read, write and analyse CPACS AeroPerformanceMaps. You need to have TIXI and TIGL install on your computer to use this package."
+URL = ""
+REQUIRES_PYTHON = ">=3.6.0"
 REQUIRED = []
-README = 'README.rst'
-PACKAGE_DIR = 'src/'
-LICENSE = 'Apache License 2.0'
+README = "README.rst"
+PACKAGE_DIR = "src/"
+LICENSE = "Apache License 2.0"
 
 
 setuptools.setup(
@@ -26,18 +26,18 @@ setuptools.setup(
     long_description=LONG_DESCRIPTION,
     url=URL,
     include_package_data=True,
-    package_dir={'': PACKAGE_DIR},
+    package_dir={"": PACKAGE_DIR},
     license=LICENSE,
     packages=[NAME],
     python_requires=REQUIRES_PYTHON,
-    keywords=['CPACS', 'aircraft', 'design', 'xml', 'aerodynamics', 'coefficients', 'databases'],
+    keywords=["CPACS", "aircraft", "design", "xml", "aerodynamics", "coefficients", "databases"],
     install_requires=REQUIRED,
     # See: https://pypi.org/classifiers/
     classifiers=[
         "Programming Language :: Python :: 3",
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",

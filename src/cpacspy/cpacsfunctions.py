@@ -524,7 +524,7 @@ def create_branch(tixi, xpath, add_child=False):
     for i in range(xpath_count - 1):
         xpath_index = i + 2
         xpath_partial = "/".join(str(m) for m in xpath_split[0:xpath_index])
-        xpath_parent = "/".join(str(m) for m in xpath_split[0:xpath_index - 1])
+        xpath_parent = "/".join(str(m) for m in xpath_split[0 : xpath_index - 1])
         child = xpath_split[(xpath_index - 1)]
         if tixi.checkElement(xpath_partial):
             if child == xpath_split[-1] and add_child:
