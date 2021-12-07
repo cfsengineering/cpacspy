@@ -24,6 +24,7 @@ Author: Aidan Jungo
 
 import os
 import pandas as pd
+import plotly.express as px
 
 from cpacspy.aeromap import AeroMap
 from cpacspy.aircraft import Aircraft
@@ -181,6 +182,15 @@ class CPACS:
                     i += 1
 
         self.tixi.save(cpacs_file)
+
+    def interactive_plot(self):
+        """ Interactive plot of aeromap with plotly. """
+
+        df = self.aeromaps[3].df
+        fig = px.line(
+            df, x="angleOfAttack", y="cd", title="Test plot coef", color="machNumber", markers=True
+        )
+        fig.show()
 
     def __str__(self):
 
