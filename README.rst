@@ -52,15 +52,6 @@ You need to have `TIXI <https://github.com/DLR-SC/tixi>`_ and `TIGL <https://git
    $ pip install cpacspy
 
 
-To build and install locally
-============================
-
-.. code-block:: bash
-
-   $ cd cpacspy
-   $ python -m build
-   $ pip install --user .
-
 
 How to use this package
 =======================
@@ -69,6 +60,36 @@ To see how to use this module, check out:
 
 - `Python file with examples of useage <https://github.com/cfsengineering/cpacspy/blob/main/examples/cpacspy_use.py>`_
 - `Jupyter Notebook with examples of useage <https://github.com/cfsengineering/cpacspy/blob/main/examples/cpacspy_use.ipynb>`_
+
+
+For developers
+==============
+
+To build and install locally
+----------------------------
+
+.. code-block:: bash
+
+   $ cd cpacspy
+   $ python -m build
+   $ pip install --user .
+
+
+To run the CI locally
+---------------------
+
+.. code-block:: bash
+
+   $ cd cpacspy
+   $ ./run_ci.sh
+
+
+It should run:
+
+- Black
+- Flake8
+- Pytest
+- Codecov
 
 
 License
