@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# To run the CI localy:
+# >> ./run_ci.sh
+
 echo -e "\n######### Running CI #########"
 
 echo -e "\n## Running Black ## \n"
