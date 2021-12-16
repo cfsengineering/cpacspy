@@ -24,12 +24,13 @@ Author: Aidan Jungo
 
 import os
 import pandas as pd
-import plotly.express as px
 
 from cpacspy.aeromap import AeroMap
 from cpacspy.aircraft import Aircraft
 from cpacspy.cpacsfunctions import open_tigl, open_tixi, get_xpath_parent
 from cpacspy.utils import AEROPERFORMANCE_XPATH
+
+from cpacspy.interactive import open_interactive
 
 
 class CPACS:
@@ -184,13 +185,10 @@ class CPACS:
         self.tixi.save(cpacs_file)
 
     def interactive_plot(self):
-        """ Interactive plot of aeromap with plotly. """
+        """ Interactive plot of aeromap with streamlit. """
 
-        df = self.aeromaps[3].df
-        fig = px.line(
-            df, x="angleOfAttack", y="cd", title="Test plot coef", color="machNumber", markers=True
-        )
-        fig.show()
+        open_interactive(self)
+        
 
     def __str__(self):
 

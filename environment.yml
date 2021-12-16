@@ -7,23 +7,23 @@ channels:
 dependencies:
   
   - python=3.7
-  - numpy
-  - pandas
+  - numpy>=1.21.2
+  - pandas>=1.3.4
   - pip
   - setuptools
   - wheel
-  - matplotlib
-  - plotly
+  - matplotlib>=3.5.0
   - ipywidgets>=7.6
   # - tigl3=3.2.2
   - cpacscreator=0.1
   - tixi3=3.0.3
 
   # CI and test
-  - black
-  - flake8
-  - pytest
-  - pytest-cov
+  - black>=19.10b0
+  - flake8>=3.9.2
+  - pytest>=6.2.5
+  - pytest-cov>=3.0.0
   
   - pip:
     - ambiance
+    - streamlit>=1.2.0 
