@@ -30,8 +30,8 @@ from cpacspy.aircraft import Aircraft
 from cpacspy.cpacsfunctions import open_tigl, open_tixi, get_xpath_parent
 from cpacspy.utils import AEROPERFORMANCE_XPATH
 
-from cpacspy.interactive import open_interactive
-
+import sys
+sys.path.append(".")
 
 class CPACS:
     """ CPACS class """
@@ -183,12 +183,6 @@ class CPACS:
                     i += 1
 
         self.tixi.save(cpacs_file)
-
-    def interactive_plot(self):
-        """ Interactive plot of aeromap with streamlit. """
-
-        open_interactive(self)
-        
 
     def __str__(self):
 
