@@ -26,4 +26,5 @@ dependencies:
   
   - pip:
     - ambiance
-    - streamlit>=1.2.0 
+    - streamlit>=1.2.0
+    - plotly>=5.5.0
