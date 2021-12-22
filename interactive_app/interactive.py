@@ -26,7 +26,6 @@ import os
 import shutil
 import xmltodict
 
-import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 from PIL import Image
@@ -50,18 +49,18 @@ file = st.sidebar.file_uploader("Select a CPACS file")
 aeromap_list = []
 
 if file:
-    
+
     # Remove and recreate the tmp file
     tmp_dir = os.path.join(MODULE_DIR, "tmp")
     shutil.rmtree(tmp_dir, ignore_errors=True)
     os.mkdir(tmp_dir)
-    
+
     # Path of the CPACS file in tmp dir
     if str(file.name).endswith(".xml"):
         st.session_state.cpacs_file = os.path.join(tmp_dir, file.name)
         with open(st.session_state.cpacs_file, "w") as f:
             f.write(xmltodict.unparse(xmltodict.parse(file.read())))
-            
+
         # Load a CPACS file with cpacspy
         cpacs = CPACS(st.session_state.cpacs_file)
 
@@ -73,7 +72,7 @@ if file:
         st.sidebar.error("You must select a CPACS file (*.xml)")
 else:
     st.warning("First, you must select a CPACS file!")
-    
+
 # If aeromap(s) are selected, plot them
 if aeromap_list:
 
@@ -82,7 +81,7 @@ if aeromap_list:
 
     # Option choose axis
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         x_axis = st.selectbox("x", PARAMS_COEFS)
     with col2:
