@@ -22,6 +22,10 @@ Author: Aidan Jungo
 
 """
 
+import os
+import shutil
+import xmltodict
+
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
@@ -30,31 +34,55 @@ from PIL import Image
 from cpacspy.cpacspy import CPACS
 from cpacspy.utils import PARAMS_COEFS
 
+MODULE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
-# Load a CPACS file
-cpacs = CPACS("../examples/D150_simple.xml")
-df_is_loaded = None
 
 # Page setups
 st.set_page_config(page_title="cpacspy interactive plot")
-logo = Image.open("../logo/logo_transparant_bg.png")
+logo = Image.open(MODULE_DIR + "/logo/logo_transparant_bg.png")
 st.sidebar.image(logo)
 st.title("Aeromap plot")
 
-# Get the aeromap from multiselection box
-aeromap_uid_list = cpacs.get_aeromap_uid_list()
-aeromap_selected = st.sidebar.multiselect("Select aeromap", aeromap_uid_list)
-aeromap_list = [cpacs.get_aeromap_by_uid(aeromap_uid) for aeromap_uid in aeromap_selected]
+# CPACS file uplooad
+file = st.sidebar.file_uploader("Select a CPACS file")
 
+
+aeromap_list = []
+
+if file:
+    
+    # Remove and recreate the tmp file
+    tmp_dir = os.path.join(MODULE_DIR, "tmp")
+    shutil.rmtree(tmp_dir, ignore_errors=True)
+    os.mkdir(tmp_dir)
+    
+    # Path of the CPACS file in tmp dir
+    if str(file.name).endswith(".xml"):
+        st.session_state.cpacs_file = os.path.join(tmp_dir, file.name)
+        with open(st.session_state.cpacs_file, "w") as f:
+            f.write(xmltodict.unparse(xmltodict.parse(file.read())))
+            
+        # Load a CPACS file with cpacspy
+        cpacs = CPACS(st.session_state.cpacs_file)
+
+        # Get aeromap(s) selection from multiselection box
+        aeromap_uid_list = cpacs.get_aeromap_uid_list()
+        aeromap_selected = st.sidebar.multiselect("Select aeromap", aeromap_uid_list)
+        aeromap_list = [cpacs.get_aeromap_by_uid(aeromap_uid) for aeromap_uid in aeromap_selected]
+    else:
+        st.sidebar.error("You must select a CPACS file (*.xml)")
+else:
+    st.warning("First, you must select a CPACS file!")
+    
 # If aeromap(s) are selected, plot them
 if aeromap_list:
 
     # temp (TODO: could be improve, how to look into all df)
     df_tmp = aeromap_list[0].df
 
-    # Get the options
+    # Option choose axis
     col1, col2, col3 = st.columns(3)
-
+    
     with col1:
         x_axis = st.selectbox("x", PARAMS_COEFS)
     with col2:
@@ -62,6 +90,7 @@ if aeromap_list:
     with col3:
         st.write(" ")
 
+    # Option filter 1
     with st.expander("Filter 1"):
         f1_col1, f1_col2 = st.columns(2)
 
@@ -72,6 +101,7 @@ if aeromap_list:
             value_list = df_tmp[filter1].unique()
             value_selected = st.multiselect("Filter value:", value_list, value_list[0])
 
+    # Option filter 2
     with st.expander("Filter 2"):
         f2_col1, f2_col2 = st.columns(2)
         with f2_col1:
@@ -81,6 +111,7 @@ if aeromap_list:
             value_list2 = df_tmp[filter2].unique()
             value_selected2 = st.multiselect("Filter2 value:", value_list2, value_list2[0])
 
+    # Plot figure
     fig = go.Figure()
     for aeromap in aeromap_list:
 
