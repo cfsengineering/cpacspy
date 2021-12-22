@@ -149,3 +149,7 @@ tags
 
 # Temporary CPACS files
 *tmp.xml
+
+# Temp dir
+/tmp
+/my_cpacs
