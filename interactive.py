@@ -33,7 +33,7 @@ from PIL import Image
 from cpacspy.cpacspy import CPACS
 from cpacspy.utils import PARAMS_COEFS
 
-MODULE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+MODULE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Page setups
