@@ -51,7 +51,7 @@ aeromap_list = []
 if file:
 
     # Remove and recreate the tmp file
-    tmp_dir = os.path.join(MODULE_DIR, "tmp")
+    tmp_dir = os.path.join(MODULE_DIR, "my_tmp_cpacs")
     shutil.rmtree(tmp_dir, ignore_errors=True)
     os.mkdir(tmp_dir)
 
@@ -130,30 +130,30 @@ if aeromap_list:
         mode="markers+lines",
         hovertemplate="x: %{x:.2f} \ny: %{y:.2f} ",
     )
-    
+
     grid_color = "rgb(188,188,188)"
     axis_color = "rgb(0,0,0)"
     bg_color = "rgb(255,255,255)"
-    
+
     fig.update_layout(
         xaxis=dict(title=x_axis),
         yaxis=dict(title=y_axis),
-        plot_bgcolor=bg_color, 
+        plot_bgcolor=bg_color,
     )
     fig.update_xaxes(
-        showline=True, 
-        linewidth=2, 
+        showline=True,
+        linewidth=2,
         linecolor=axis_color,
         gridcolor=grid_color,
-        zerolinecolor=grid_color
-        )
+        zerolinecolor=grid_color,
+    )
     fig.update_yaxes(
         showline=True,
         linewidth=2,
         linecolor=axis_color,
         gridcolor=grid_color,
-        zerolinecolor=grid_color, 
-        )
+        zerolinecolor=grid_color,
+    )
 
     st.plotly_chart(fig)
 
