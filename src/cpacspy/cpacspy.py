@@ -31,10 +31,12 @@ from cpacspy.cpacsfunctions import open_tigl, open_tixi, get_xpath_parent
 from cpacspy.utils import AEROPERFORMANCE_XPATH
 
 import sys
+
 sys.path.append(".")
 
+
 class CPACS:
-    """ CPACS class """
+    """CPACS class"""
 
     def __init__(self, cpacs_file):
 
@@ -55,7 +57,7 @@ class CPACS:
         self.load_all_aeromaps()
 
     def load_all_aeromaps(self):
-        """ Load all the aeromaps present in the CPACS file as object. """
+        """Load all the aeromaps present in the CPACS file as object."""
 
         self.nb_aeromaps = 0
         self.aeromaps = []
@@ -66,7 +68,7 @@ class CPACS:
             self.nb_aeromaps += 1
 
     def get_aeromap_uid_list(self):
-        """ Get the list of all aeroMap UID. """
+        """Get the list of all aeroMap UID."""
 
         uid_list = []
 
@@ -85,7 +87,7 @@ class CPACS:
         return uid_list
 
     def get_aeromap_by_uid(self, uid):
-        """ Get an aeromap object by its uid. """
+        """Get an aeromap object by its uid."""
 
         for aeromap in self.aeromaps:
             if aeromap.uid == uid:
@@ -94,7 +96,7 @@ class CPACS:
         raise ValueError(f'No aeromap with "{uid}" as uid as been found!')
 
     def create_aeromap(self, uid):
-        """ Create a new aeromap object. """
+        """Create a new aeromap object."""
 
         if " " in uid:
             raise ValueError("AeroMap uid should not contain any space!")
@@ -108,7 +110,7 @@ class CPACS:
             raise ValueError("This uid already exit!")
 
     def create_aeromap_from_csv(self, csv_path, uid=None):
-        """ Create a new aeromap object from a CSV file. """
+        """Create a new aeromap object from a CSV file."""
 
         if not uid:
             _, tail = os.path.split(csv_path)
@@ -123,7 +125,7 @@ class CPACS:
         return new_aeromap
 
     def duplicate_aeromap(self, uid_base, uid_duplicate):
-        """ Duplicate an aeromap and retrun the new aeromap object. """
+        """Duplicate an aeromap and retrun the new aeromap object."""
 
         # Check uid's
         if uid_base not in self.get_aeromap_uid_list():
@@ -146,7 +148,7 @@ class CPACS:
         return am_duplicated
 
     def delete_aeromap(self, uid):
-        """ Delete an aeromap from its uid. """
+        """Delete an aeromap from its uid."""
 
         # Check if uid is valid
         if " " in uid:
@@ -164,7 +166,7 @@ class CPACS:
         self.load_all_aeromaps()
 
     def save_cpacs(self, cpacs_file, overwrite=False):
-        """ Save a CPACS file from the TIXI object at a chosen path. """
+        """Save a CPACS file from the TIXI object at a chosen path."""
 
         # Check for .xml file
         if not cpacs_file.endswith(".xml"):
