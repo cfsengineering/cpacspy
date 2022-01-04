@@ -30,7 +30,7 @@ CPACS_PATH = "examples/D150_simple.xml"
 
 
 def test_main_attrib():
-    """ Test main attributes of the CPACS class """
+    """Test main attributes of the CPACS class"""
 
     # Load the CPACS file and all AeroMap in it
     cpacs = CPACS(CPACS_PATH)

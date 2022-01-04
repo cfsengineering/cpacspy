@@ -27,10 +27,10 @@ from cpacspy.utils import REF_XPATH
 
 
 class Aircraft:
-    """ Aircraft class """
+    """Aircraft class"""
 
     def __init__(self, tixi, tigl):
-        """ Aircraft class to store references values and other information about the aircraft
+        """Aircraft class to store references values and other information about the aircraft
 
         Args:
             tixi (object): TIXI object open from the CPACS file
@@ -88,7 +88,7 @@ class Aircraft:
         self.wing_ar = self.configuration.get_wing(self._ref_wing_uid).get_aspect_ratio()
 
     def get_main_wing_idx(self):
-        """ Find the larest wing index
+        """Find the larest wing index
 
         Args:
             self (object)

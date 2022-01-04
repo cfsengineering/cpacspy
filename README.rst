@@ -56,10 +56,35 @@ You need to have `TIXI <https://github.com/DLR-SC/tixi>`_ and `TIGL <https://git
 How to use this package
 =======================
 
-To see how to use this module, check out:
+As Python package
+-----------------
+
+To see how to use this module, you can check out either:
 
 - `Python file with examples of useage <https://github.com/cfsengineering/cpacspy/blob/main/examples/cpacspy_use.py>`_
 - `Jupyter Notebook with examples of useage <https://github.com/cfsengineering/cpacspy/blob/main/examples/cpacspy_use.ipynb>`_
+
+
+Interactive plot tool
+---------------------
+
+You can use an interactive version of cpacspy to plot and compare aeromap of a CPACS file.
+
+.. figure:: /logo/cpacspy-interactive-plots.png
+    :width: 600 px
+    :align: center
+    :alt: cpacspy-interactive-plots
+
+To run the interactive plot tool locally:
+
+.. code-block:: bash
+
+   $ cd cpacspy
+   $ streamlit run interactive.py
+
+Your default browser should be opened automatically, if not, copy/paste the "Local URL" given in the terminal (should be "http://localhost:8501") into the adress bar of a web browser.
+
+Then you just have to follow the instruction on screen to plot aerodynamics coefficient of an aeromap.
 
 
 For developers

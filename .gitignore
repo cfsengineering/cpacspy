@@ -147,5 +147,7 @@ tags
 # Jupyter Notebook
 *checkpoint.ipynb
 
-# Temporary CPACS files
+# Temporary CPACS files and repo
 *tmp.xml
+my_cpacs/
+my_tmp_cpacs/
