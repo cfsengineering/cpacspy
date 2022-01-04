@@ -8,3 +8,25 @@ extend-exclude = '''
   | dist/
 )/
 '''
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--cov"
+testpaths = [
+    "tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+exclude_lines = [
+  'def __repr__',
+  'def __str__',
+  'if __name__ == "__main__":',
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+

@@ -167,6 +167,7 @@ one_aeromap.calculate_forces(cpacs.aircraft)
 print(one_aeromap.get("cd", alt=15500.0, aos=0.0, mach=[0.3, 0.4, 0.5]))
 print(one_aeromap.get("drag", alt=15500.0, aos=0.0, mach=[0.3, 0.4, 0.5]))
 
+
 ## Save
 
 # Save all the change in a CPACS file
