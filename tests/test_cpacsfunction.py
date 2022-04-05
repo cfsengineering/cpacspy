@@ -43,8 +43,7 @@ from cpacspy.cpacsfunctions import (
     open_tigl,
     open_tixi,
 )
-
-CPACS_PATH = "examples/D150_simple.xml"
+from cpacspy.utils import D150_TESTS_PATH
 
 
 def test_open_tixi():
@@ -52,7 +51,7 @@ def test_open_tixi():
     """Test the function 'open_tixi'"""
 
     # Create TIXI handles for a valid CPACS file
-    tixi_handle = open_tixi(CPACS_PATH)
+    tixi_handle = open_tixi(D150_TESTS_PATH)
 
     assert tixi_handle
 
@@ -65,7 +64,7 @@ def test_open_tigl():
     """Test the function 'open_tigl'"""
 
     # Create TIGL handle for a valid TIXI handles
-    tixi_handle = open_tixi(CPACS_PATH)
+    tixi_handle = open_tixi(D150_TESTS_PATH)
     tigl_handle = open_tigl(tixi_handle)
 
     assert tigl_handle
@@ -77,14 +76,14 @@ def test_open_tigl():
 
 def test_get_tigl_configuration():
 
-    tixi_handle = open_tixi(CPACS_PATH)
+    tixi_handle = open_tixi(D150_TESTS_PATH)
     tigl_handle = open_tigl(tixi_handle)
     assert get_tigl_configuration(tigl_handle)
 
 
 def test_get_value():
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
 
     # Raise ValueError with not existing xpath
     xpath = "/cpacs/toolspecific/pytest/notARealPath"
@@ -133,7 +132,7 @@ def test_get_value():
 
 def test_get_value_or_default():
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
 
     # Same test as 'get_value' function (just main ones)
     xpath = "/cpacs/vehicles/aircraft/model/reference/area"
@@ -173,7 +172,7 @@ def test_get_value_or_default():
 
 def test_get_float_vector():
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
 
     # Raise ValueError with not existing xpath
     xpath = "/cpacs/toolspecific/pytest/notARealPath"
@@ -192,7 +191,7 @@ def test_get_float_vector():
 
 def test_add_float_vector():
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
     xpath = "/cpacs/toolspecific/pytest/addedFloatVector"
     vector = [0.1, 0.2, 0.3]
     add_float_vector(tixi, xpath, vector)
@@ -226,7 +225,7 @@ def test_get_xpath_parent():
 
 def test_create_branch():
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
     xpath = "/cpacs/toolspecific/pytest/newBranch"
     create_branch(tixi, xpath)
 
@@ -246,7 +245,7 @@ def test_create_branch():
 def test_copy_branch():
     """Test the function 'copy_branch'"""
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
 
     # Create a new 'header' branch and copy the original 'header' into it
     xpath_new = "/cpacs/header"
@@ -273,7 +272,7 @@ def test_copy_branch():
 def test_add_string_vector():
     """ Test the function 'add_sting_vector'"""
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
     xpath = "/cpacs/toolspecific/CEASIOMpy/testVector/"
 
     # Add a new vector
@@ -298,7 +297,7 @@ def test_add_string_vector():
 def test_get_string_vector():
     """ Test the function 'get_string_vector'"""
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
     xpath = "/cpacs/toolspecific/CEASIOMpy/testVector"
 
     # Add a new vector
@@ -324,7 +323,7 @@ def test_get_string_vector():
 def test_get_uid():
     """Test the function 'get_uid'"""
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
 
     # Check if a false xpath raises ValueError
     xpath = "/cpacs/vehicles/aircraft/MYmodel"
@@ -345,7 +344,7 @@ def test_get_uid():
 def test_add_uid():
     """Test the function 'add_uid'"""
 
-    tixi = open_tixi(CPACS_PATH)
+    tixi = open_tixi(D150_TESTS_PATH)
 
     # Update UID
     xpath = "/cpacs/vehicles/aircraft/model"

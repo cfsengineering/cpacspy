@@ -24,9 +24,9 @@ Author: Aidan Jungo
 
 import os
 import numpy as np
+from pathlib import Path
 
 import pytest
-from pytest import approx
 
 from unittest.mock import patch
 
@@ -34,17 +34,18 @@ from unittest.mock import patch
 # from tigl3.tigl3wrapper import Tigl3Exception
 
 from cpacspy.cpacspy import CPACS
+from cpacspy.utils import D150_TESTS_PATH, TESTS_PATH
 
-CPACS_PATH = "examples/D150_simple.xml"
-CPACS_TEST_PATH = "tests/D150_test_tmp.xml"
-CSV_IN_FILE = os.path.join("tests", "aeromap_test.csv")
-CSV_OUT_FILE = os.path.join("tests", "aeromap_test_export.csv")
+
+D150_OUTPUT_TESTS_PATH = str(Path(TESTS_PATH, "D150_simple_out.xml"))
+CSV_IN_FILE = Path(TESTS_PATH, "aeromap_test.csv")
+CSV_OUT_FILE = Path(TESTS_PATH, "aeromap_test_export.csv")
 
 
 def test_aeromap_class():
 
     # Load the CPACS file and 'aeromap_test1'
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_1 = cpacs.get_aeromap_by_uid("aeromap_test1")
 
     assert aeromap_1.uid == "aeromap_test1"
@@ -86,7 +87,7 @@ def test_aeromap_class():
 def test_get():
 
     # Load the CPACS file and 'aeromap_test2'
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_2 = cpacs.get_aeromap_by_uid("aeromap_test2")
 
     assert aeromap_2.get("cl", alt=11000.0, mach=0.4) == np.array([1.111])
@@ -96,7 +97,7 @@ def test_get():
 def test_get_damping_derivatives():
 
     # Load the CPACS file and 'aeromap_test_dampder'
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_dampder = cpacs.get_aeromap_by_uid("aeromap_test_dampder")
 
     # Test if wrong damping derivatives coefficients raises ValueError
@@ -138,7 +139,7 @@ def test_add_row():
     """ Test the function 'add_row'. """
 
     # Load the CPACS file and 'aeromap_test1'
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_1 = cpacs.get_aeromap_by_uid("aeromap_test1")
 
     # Test if missing parameters raises TypeError
@@ -170,7 +171,7 @@ def test_remove_row():
     """ Test the function 'remove_row'. """
 
     # Load the CPACS file and 'aeromap_test1'
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_2 = cpacs.get_aeromap_by_uid("aeromap_test2")
 
     # Test if missing parameters raises ValeError
@@ -190,7 +191,7 @@ def test_add_coefficients():
     """ Test the function 'add_coefficients'. """
 
     # Load the CPACS file and 'aeromap_test1'
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_1 = cpacs.get_aeromap_by_uid("aeromap_test1")
 
     # Test if not existing set of parameters raises ValueError
@@ -213,7 +214,7 @@ def test_add_coefficients():
 def test_add_damping_derivatives_and_save():
     """ Test 'add_damping_derivatives' function """
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_dampder = cpacs.get_aeromap_by_uid("aeromap_test_dampder")
 
     # Test if raise Value Error for non-existing damping coefficient
@@ -248,10 +249,10 @@ def test_add_damping_derivatives_and_save():
 
     # Save the modified CPACS file
     aeromap_dampder.save()
-    cpacs.save_cpacs(CPACS_TEST_PATH, overwrite=True)
+    cpacs.save_cpacs(D150_OUTPUT_TESTS_PATH, overwrite=True)
 
     # Check value after it has been saved
-    cpacs_test = CPACS(CPACS_TEST_PATH)
+    cpacs_test = CPACS(D150_OUTPUT_TESTS_PATH)
     aeromap_dampder_test = cpacs_test.get_aeromap_by_uid("aeromap_test_dampder")
 
     assert (
@@ -284,7 +285,7 @@ def test_add_damping_derivatives_and_save():
 def test_plot(mock_show):
     """ Test 'plot' function. """
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_1 = cpacs.get_aeromap_by_uid("aeromap_test1")
 
     aeromap_1.plot("cl", "angleOfAttack")
@@ -294,7 +295,7 @@ def test_save():
     """ Test 'save' function. Some other function must be used test this one. """
 
     # Load the CPACS file and 'aeromap_test2'
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_3 = cpacs.create_aeromap("aeromap_test3")
     aeromap_3.add_row(
         alt=10000, mach=0.3, aoa=2.0, aos=0.0, cl=0.5, cs=0.5, cmd=0.5, cml=0.5, cms=0.555
@@ -317,10 +318,10 @@ def test_save():
 
     # Save the modified CPACS file
     aeromap_3.save()
-    cpacs.save_cpacs(CPACS_TEST_PATH, overwrite=True)
+    cpacs.save_cpacs(D150_OUTPUT_TESTS_PATH, overwrite=True)
 
     # Check value after it has been saved and reopened
-    cpacs_test = CPACS(CPACS_TEST_PATH)
+    cpacs_test = CPACS(D150_OUTPUT_TESTS_PATH)
     aeromap_3_test = cpacs_test.get_aeromap_by_uid("aeromap_test3")
 
     assert (aeromap_3_test.get("cl", alt=10000, mach=0.3) == np.array([0.5, 0.6, 0.7])).all()
@@ -341,7 +342,7 @@ def test_csv():
     """ Test 'create_aeromap_from_csv' (from cpacspy.py) and
     'export_csv' function (with damping derivatives coefficients in the aeroMap) """
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
     aeromap_dampder_csv = cpacs.create_aeromap_from_csv(CSV_IN_FILE)
     # TODO: maybe save and reopen the CPACS file inbetween the import and export?
     aeromap_dampder_csv.export_csv(CSV_OUT_FILE)

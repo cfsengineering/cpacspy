@@ -23,14 +23,13 @@ Author: Aidan Jungo
 """
 
 import os
-
+from pathlib import Path
 import pytest
-from pytest import approx
 
 from cpacspy.cpacspy import CPACS
+from cpacspy.utils import D150_TESTS_PATH, TESTS_PATH
 
-CPACS_PATH = "examples/D150_simple.xml"
-CSV_PATH = "examples/aeromap.csv"
+CSV_PATH = Path(TESTS_PATH, "aeromap_test_2.csv")
 
 
 def test_main_attrib():
@@ -38,7 +37,7 @@ def test_main_attrib():
     """ Test main attributes of the CPACS class """
 
     # Load the CPACS file and all AeroMap in it
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
 
     assert cpacs.ac_name == "D150"
     assert cpacs.nb_aeromaps == 4
@@ -50,7 +49,7 @@ def test_main_attrib():
 
 def test_get_aeromap_uid_list():
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
 
     # Get the list of aeromap uid on the CPACS file
     assert cpacs.get_aeromap_uid_list() == [
@@ -63,7 +62,7 @@ def test_get_aeromap_uid_list():
 
 def test_get_aeromap_by_uid():
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
 
     # Raise error aeromap did not exist
     with pytest.raises(ValueError):
@@ -75,7 +74,7 @@ def test_get_aeromap_by_uid():
 
 def test_create_aeromap():
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
 
     # Raise error when uid contains sapce
     with pytest.raises(ValueError):
@@ -93,7 +92,7 @@ def test_create_aeromap():
 
 def test_create_aeromap_from_csv():
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
 
     # Raise error when uid already exist
     with pytest.raises(ValueError):
@@ -101,13 +100,13 @@ def test_create_aeromap_from_csv():
 
     # Create a new aeromap from a CSV file
     cpacs.create_aeromap_from_csv(CSV_PATH)
-    assert cpacs.get_aeromap_by_uid("aeromap").uid == "aeromap"
+    assert cpacs.get_aeromap_by_uid("aeromap_test_2").uid == "aeromap_test_2"
     assert cpacs.nb_aeromaps == 5
 
 
 def test_duplicate_aeromap():
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
 
     # Raise error when aeromap to duplicate did not exist
     with pytest.raises(ValueError):
@@ -125,7 +124,7 @@ def test_duplicate_aeromap():
 
 def test_delete_aeromap():
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
 
     # Test if raise error when not valid name
     with pytest.raises(ValueError):
@@ -164,7 +163,7 @@ def test_save_cpacs():
     test_path = "tests/output.xml"
     test_path_1 = "tests/output_1.xml"
 
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
 
     # Raise error when tring to save a not xml file
     with pytest.raises(ValueError):
