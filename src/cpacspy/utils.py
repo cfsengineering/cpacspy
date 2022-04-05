@@ -22,6 +22,16 @@ Author: Aidan Jungo
 
 """
 
+from pathlib import Path
+
+
+# PATH
+CPACSPY_LIB = Path(__file__).absolute().parent
+CPACSPY_ROOT = CPACSPY_LIB.parents[1]
+EXAMPLES_PATH = Path(CPACSPY_ROOT, "examples")
+TESTS_PATH = Path(CPACSPY_ROOT, "tests")
+D150_TESTS_PATH = str(Path(TESTS_PATH, "D150_simple.xml"))
+
 # XPATH
 AEROPERFORMANCE_XPATH = "/cpacs/vehicles/aircraft/model/analyses/aeroPerformance"
 REF_XPATH = "/cpacs/vehicles/aircraft/model/reference"
