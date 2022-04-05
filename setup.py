@@ -13,7 +13,7 @@ URL = ""
 REQUIRES_PYTHON = ">=3.6.0"
 REQUIRED = []
 README = "README.rst"
-PACKAGE_DIR = "src/"
+PACKAGE_DIR = "src"
 LICENSE = "Apache License 2.0"
 
 
