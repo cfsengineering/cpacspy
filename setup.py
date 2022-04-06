@@ -4,13 +4,13 @@
 import setuptools
 
 NAME = "cpacspy"
-VERSION = "0.0.8"
+VERSION = "0.0.9"
 AUTHOR = "Aidan Jungo"
 EMAIL = "aidan.jungo@cfse.ch"
 DESCRIPTION = "PyPI package to work with CPACS file and AeroMaps"
 LONG_DESCRIPTION = "Python package to read, write and analyse CPACS AeroPerformanceMaps. You need to have TIXI and TIGL install on your computer to use this package."
 URL = ""
-REQUIRES_PYTHON = ">=3.6.0"
+REQUIRES_PYTHON = ">=3.7.0"
 REQUIRED = []
 README = "README.rst"
 PACKAGE_DIR = "src"
@@ -35,9 +35,9 @@ setuptools.setup(
     # See: https://pypi.org/classifiers/
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
