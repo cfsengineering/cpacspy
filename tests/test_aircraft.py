@@ -21,19 +21,18 @@ limitations under the License.
 Author: Aidan Jungo
 
 """
-import pytest
+
 from pytest import approx
 
 from cpacspy.cpacspy import CPACS
-
-CPACS_PATH = "examples/D150_simple.xml"
+from cpacspy.utils import D150_TESTS_PATH
 
 
 def test_main_attrib():
     """ Test main attributes of the CPACS class """
 
     # Load the CPACS file and all AeroMap in it
-    cpacs = CPACS(CPACS_PATH)
+    cpacs = CPACS(D150_TESTS_PATH)
 
     # Check that reference value are saved
     assert cpacs.aircraft.ref_lenght == 4.193

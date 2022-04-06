@@ -16,10 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.6
+    - name: Set up Python 3.7
       uses: actions/setup-python@v2
       with:
-        python-version: 3.6
+        python-version: 3.7
 
     - name: Add conda to system path
       run: |
@@ -43,3 +43,39 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }} 
         fail_ci_if_error: true
         verbose: true
+
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: anaconda-client-env
+        environment-file: environment.yml
+        auto-update-conda: false
+        python-version: 3.7
+
+    - name: Pip install
+      run: |
+        pip install -e .
+
+    - name: Run flake8
+      run: flake8
+
+    - name: Run pytest
+      run: pytest -v --cov=src\ --cov-report=xml
+
+
+
+
+
+     
