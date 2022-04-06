@@ -14,7 +14,6 @@ dependencies:
   - wheel=0.37.0
   - matplotlib=3.5.0
   - plotly=5.1.0
-  - ipywidgets=7.6.5
   # - tigl3=3.2.2
   - cpacscreator=0.1
   - tixi3=3.0.3
@@ -24,6 +23,7 @@ dependencies:
   - flake8=3.9.2
   - pytest=6.2.5
   - pytest-cov=3.0.0
+  - coverage=5.5
   
   - pip:
     - ambiance
