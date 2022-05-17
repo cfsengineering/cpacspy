@@ -124,7 +124,7 @@ def test_get_damping_derivatives():
         == 0.00118
     )
 
-    # Test if non existing parameter gives a vector of lenght 0
+    # Test if non existing parameter gives a vector of length 0
     assert (
         len(
             aeromap_dampder.get_damping_derivatives(
@@ -136,7 +136,7 @@ def test_get_damping_derivatives():
 
 
 def test_add_row():
-    """ Test the function 'add_row'. """
+    """Test the function 'add_row'."""
 
     # Load the CPACS file and 'aeromap_test1'
     cpacs = CPACS(D150_TESTS_PATH)
@@ -168,7 +168,7 @@ def test_add_row():
 
 
 def test_remove_row():
-    """ Test the function 'remove_row'. """
+    """Test the function 'remove_row'."""
 
     # Load the CPACS file and 'aeromap_test1'
     cpacs = CPACS(D150_TESTS_PATH)
@@ -188,7 +188,7 @@ def test_remove_row():
 
 
 def test_add_coefficients():
-    """ Test the function 'add_coefficients'. """
+    """Test the function 'add_coefficients'."""
 
     # Load the CPACS file and 'aeromap_test1'
     cpacs = CPACS(D150_TESTS_PATH)
@@ -212,7 +212,7 @@ def test_add_coefficients():
 
 
 def test_add_damping_derivatives_and_save():
-    """ Test 'add_damping_derivatives' function """
+    """Test 'add_damping_derivatives' function"""
 
     cpacs = CPACS(D150_TESTS_PATH)
     aeromap_dampder = cpacs.get_aeromap_by_uid("aeromap_test_dampder")
@@ -283,7 +283,7 @@ def test_add_damping_derivatives_and_save():
 
 @patch("matplotlib.pyplot.show")
 def test_plot(mock_show):
-    """ Test 'plot' function. """
+    """Test 'plot' function."""
 
     cpacs = CPACS(D150_TESTS_PATH)
     aeromap_1 = cpacs.get_aeromap_by_uid("aeromap_test1")
@@ -292,7 +292,7 @@ def test_plot(mock_show):
 
 
 def test_save():
-    """ Test 'save' function. Some other function must be used test this one. """
+    """Test 'save' function. Some other function must be used test this one."""
 
     # Load the CPACS file and 'aeromap_test2'
     cpacs = CPACS(D150_TESTS_PATH)
@@ -339,8 +339,8 @@ def test_save():
 
 
 def test_csv():
-    """ Test 'create_aeromap_from_csv' (from cpacspy.py) and
-    'export_csv' function (with damping derivatives coefficients in the aeroMap) """
+    """Test 'create_aeromap_from_csv' (from cpacspy.py) and
+    'export_csv' function (with damping derivatives coefficients in the aeroMap)"""
 
     cpacs = CPACS(D150_TESTS_PATH)
     aeromap_dampder_csv = cpacs.create_aeromap_from_csv(CSV_IN_FILE)

@@ -47,7 +47,7 @@ from cpacspy.utils import (
 
 
 def get_filter(df, alt_list, mach_list, aos_list, aoa_list):
-    """ Get a dataframe filter for a set of parameters lists. """
+    """Get a dataframe filter for a set of parameters lists."""
 
     filt = pd.Series(True, index=df.index)
 
@@ -67,10 +67,10 @@ def get_filter(df, alt_list, mach_list, aos_list, aoa_list):
 
 
 class AeroMap:
-    """ AeroMap class for CPACS AeroMap. """
+    """AeroMap class for CPACS AeroMap."""
 
     def __init__(self, tixi, uid, create_new=False):
-        """ Init aeromap class
+        """Init aeromap class
 
         Args:
             tixi (object): TIXI object open from a CPACS file
@@ -108,7 +108,7 @@ class AeroMap:
             self.get_param_and_coef_from_cpacs()
 
     def get_param_and_coef_from_cpacs(self):
-        """ Get the parameters and coefficients from the aeroMap of a CPACS file."""
+        """Get the parameters and coefficients from the aeroMap of a CPACS file."""
 
         param_dict = {}
 
@@ -145,7 +145,7 @@ class AeroMap:
         self.df = pd.concat([self.df, df_param], axis=0)
 
     def get(self, list_of, alt=None, mach=None, aos=None, aoa=None):
-        """ Get parameter or coefficient as a numpy vector with other parameters as filter (optional).
+        """Get parameter or coefficient as a numpy vector with other parameters as filter (optional).
 
         Args:
             list_of (str): Parameter or coefficient to get.
@@ -166,7 +166,7 @@ class AeroMap:
         return self.df.loc[filt, list_of].to_numpy()
 
     def get_damping_derivatives(self, coef, axis, rates, alt=None, mach=None, aos=None, aoa=None):
-        """ Get damping derivatives coefficients as a numpy vector with other parameters as
+        """Get damping derivatives coefficients as a numpy vector with other parameters as
         filter (optional).
 
         Args:
@@ -227,7 +227,7 @@ class AeroMap:
         cml=np.nan,
         cms=np.nan,
     ):
-        """ Add a row in an Aeromap dataframe.
+        """Add a row in an Aeromap dataframe.
 
         Args:
             alt (float): Altitude
@@ -272,7 +272,7 @@ class AeroMap:
         self.df = self.df.append(new_row, ignore_index=True)
 
     def remove_row(self, alt, mach, aos, aoa):
-        """ Remove a row in an Aeromap dataframe for a set of parameters.
+        """Remove a row in an Aeromap dataframe for a set of parameters.
 
         Args:
             alt (float): Altitude
@@ -307,7 +307,7 @@ class AeroMap:
         cml=np.nan,
         cms=np.nan,
     ):
-        """ Add coefficients to existing set of parmeter.
+        """Add coefficients to existing set of parmeter.
 
         Args:
             alt (float): Altitude
@@ -335,7 +335,7 @@ class AeroMap:
         self.df.loc[filt, ["cd", "cl", "cs", "cmd", "cml", "cms"]] = [cd, cl, cs, cmd, cml, cms]
 
     def add_damping_derivatives(self, alt, mach, aos, aoa, coef, axis, value, rate=-1.0):
-        """ Add a damping derivative coeficient for an existing set of alt,mach,aos,aoa.
+        """Add a damping derivative coeficient for an existing set of alt,mach,aos,aoa.
 
         Args:
             alt (float): Altitude
@@ -378,7 +378,7 @@ class AeroMap:
         ] = value
 
     def plot(self, x_param, y_param, alt=None, mach=None, aos=None, aoa=None):
-        """ Plot 'x_param' vs 'y_param' with filtered parameters passed as float or string. """
+        """Plot 'x_param' vs 'y_param' with filtered parameters passed as float or string."""
 
         alt_list = listify(alt)
         mach_list = listify(mach)
@@ -390,7 +390,7 @@ class AeroMap:
         plt.show()
 
     def save(self):
-        """ Save the AeroMap in the TIXI object. """
+        """Save the AeroMap in the TIXI object."""
 
         # Create and fill the '/aeroPerformanceMap' field
         if not self.xpath:
@@ -470,12 +470,12 @@ class AeroMap:
         self.tixi.updateTextElement(atm_model_xpath, self.atmospheric_model)
 
     def export_csv(self, csv_path):
-        """ Export the AeroMap as a CSV file. """
+        """Export the AeroMap as a CSV file."""
 
         self.df.to_csv(csv_path, na_rep="NaN", index=False, float_format="%g")
 
     def get_cd0_oswald(self, ar, alt=None, mach=None, aos=None, plot=False):
-        """ Calculate and return CD0 and Oswald factor. """
+        """Calculate and return CD0 and Oswald factor."""
 
         # Check for unique angleOfAttack condition
         aoa = self.get("angleOfAttack", alt, mach, aos)
@@ -522,13 +522,13 @@ class AeroMap:
         return cd0, e
 
     def calculate_forces(self, aircraft):
-        """ Calculate forces and momement from coefficients """
+        """Calculate forces and momement from coefficients"""
 
         COEF2FORCE_DICT = {"cd": "drag", "cl": "lift", "cs": "side"}
         COEF2MOMENT_DICT = {"cmd": "md", "cml": "ml", "cms": "ms"}
 
         def coef2force(row, coef):
-            """ Calculate force from coefficient """
+            """Calculate force from coefficient"""
 
             dens = Atmosphere(row["altitude"]).density[0]
             sos = Atmosphere(row["altitude"]).speed_of_sound[0]
@@ -549,7 +549,7 @@ class AeroMap:
         for coef in COEF2MOMENT_DICT:
             if coef in self.df:
                 self.df[COEF2MOMENT_DICT[coef]] = self.df.apply(
-                    lambda row: coef2force(row, coef) * aircraft.ref_lenght, axis=1
+                    lambda row: coef2force(row, coef) * aircraft.ref_length, axis=1
                 )
             else:
                 print(

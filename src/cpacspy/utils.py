@@ -35,6 +35,7 @@ D150_TESTS_PATH = str(Path(TESTS_PATH, "D150_simple.xml"))
 # XPATH
 AEROPERFORMANCE_XPATH = "/cpacs/vehicles/aircraft/model/analyses/aeroPerformance"
 REF_XPATH = "/cpacs/vehicles/aircraft/model/reference"
+AC_NAME_XPATH = "/cpacs/header/name"
 
 # Lists
 PARAMS = ["altitude", "machNumber", "angleOfSideslip", "angleOfAttack"]
@@ -63,7 +64,7 @@ DAMPING_COEFS = [
 
 
 def listify(value):
-    """If variable, return a list of 1 value, if already a list don't change a list. """
+    """If variable, return a list of 1 value, if already a list don't change a list."""
 
     if value is not None:
         if not isinstance(value, list):

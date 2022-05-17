@@ -27,10 +27,10 @@ from cpacspy.utils import REF_XPATH
 
 
 class Aircraft:
-    """ Aircraft class """
+    """Aircraft class"""
 
     def __init__(self, tixi, tigl):
-        """ Aircraft class to store references values and other information about the aircraft
+        """Aircraft class to store references values and other information about the aircraft
 
         Args:
             tixi (object): TIXI object open from the CPACS file
@@ -41,7 +41,7 @@ class Aircraft:
         self.tigl = tigl
 
         # Reference values
-        self.ref_lenght = get_value_or_default(self.tixi, REF_XPATH + "/length", 1)
+        self.ref_length = get_value_or_default(self.tixi, REF_XPATH + "/length", 1)
         self.ref_area = get_value_or_default(self.tixi, REF_XPATH + "/area", 1)
         self.ref_point_x = get_value_or_default(self.tixi, REF_XPATH + "/point/x", 0)
         self.ref_point_y = get_value_or_default(self.tixi, REF_XPATH + "/point/y", 0)
@@ -88,7 +88,7 @@ class Aircraft:
         self.wing_ar = self.configuration.get_wing(self._ref_wing_uid).get_aspect_ratio()
 
     def get_main_wing_idx(self):
-        """ Find the larest wing index
+        """Find the larest wing index
 
         Args:
             self (object)
@@ -111,7 +111,7 @@ class Aircraft:
         text_line = []
         text_line.append("\nAircraft data -------------------------------------------------------")
         text_line.append(" ")
-        text_line.append(f"Reference lengh: \t{self.ref_lenght} [m]")
+        text_line.append(f"Reference lengh: \t{self.ref_length} [m]")
         text_line.append(f"Reference area: \t{self.ref_area} [m^2]")
         text_line.append(
             f"Reference point: \t({self.ref_point_x},{self.ref_point_y},{self.ref_point_z}) [m]"
