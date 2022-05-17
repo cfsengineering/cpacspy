@@ -4,7 +4,7 @@
 import setuptools
 
 NAME = "cpacspy"
-VERSION = "0.0.9"
+VERSION = "0.0.10"
 AUTHOR = "Aidan Jungo"
 EMAIL = "aidan.jungo@cfse.ch"
 DESCRIPTION = "PyPI package to work with CPACS file and AeroMaps"
@@ -12,7 +12,7 @@ LONG_DESCRIPTION = "Python package to read, write and analyse CPACS AeroPerforma
 URL = ""
 REQUIRES_PYTHON = ">=3.7.0"
 REQUIRED = []
-README = "README.rst"
+README = "README.md"
 PACKAGE_DIR = "src"
 LICENSE = "Apache License 2.0"
 
@@ -36,8 +36,6 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
