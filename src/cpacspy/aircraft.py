@@ -41,7 +41,7 @@ class Aircraft:
         self.tigl = tigl
 
         # Reference values
-        self.ref_lenght = get_value_or_default(self.tixi, REF_XPATH + "/length", 1)
+        self.ref_length = get_value_or_default(self.tixi, REF_XPATH + "/length", 1)
         self.ref_area = get_value_or_default(self.tixi, REF_XPATH + "/area", 1)
         self.ref_point_x = get_value_or_default(self.tixi, REF_XPATH + "/point/x", 0)
         self.ref_point_y = get_value_or_default(self.tixi, REF_XPATH + "/point/y", 0)
@@ -111,7 +111,7 @@ class Aircraft:
         text_line = []
         text_line.append("\nAircraft data -------------------------------------------------------")
         text_line.append(" ")
-        text_line.append(f"Reference lengh: \t{self.ref_lenght} [m]")
+        text_line.append(f"Reference lengh: \t{self.ref_length} [m]")
         text_line.append(f"Reference area: \t{self.ref_area} [m^2]")
         text_line.append(
             f"Reference point: \t({self.ref_point_x},{self.ref_point_y},{self.ref_point_z}) [m]"

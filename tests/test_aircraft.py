@@ -35,7 +35,7 @@ def test_main_attrib():
     cpacs = CPACS(D150_TESTS_PATH)
 
     # Check that reference value are saved
-    assert cpacs.aircraft.ref_lenght == 4.193
+    assert cpacs.aircraft.ref_length == 4.193
     assert cpacs.aircraft.ref_area == 122.4
     assert cpacs.aircraft.ref_point_x == 0
     assert cpacs.aircraft.ref_point_y == 0

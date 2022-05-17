@@ -549,7 +549,7 @@ class AeroMap:
         for coef in COEF2MOMENT_DICT:
             if coef in self.df:
                 self.df[COEF2MOMENT_DICT[coef]] = self.df.apply(
-                    lambda row: coef2force(row, coef) * aircraft.ref_lenght, axis=1
+                    lambda row: coef2force(row, coef) * aircraft.ref_length, axis=1
                 )
             else:
                 print(
