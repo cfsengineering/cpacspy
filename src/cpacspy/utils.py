@@ -35,6 +35,7 @@ D150_TESTS_PATH = str(Path(TESTS_PATH, "D150_simple.xml"))
 # XPATH
 AEROPERFORMANCE_XPATH = "/cpacs/vehicles/aircraft/model/analyses/aeroPerformance"
 REF_XPATH = "/cpacs/vehicles/aircraft/model/reference"
+AC_NAME_XPATH = "/cpacs/header/name"
 
 # Lists
 PARAMS = ["altitude", "machNumber", "angleOfSideslip", "angleOfAttack"]

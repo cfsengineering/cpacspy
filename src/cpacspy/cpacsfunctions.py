@@ -22,12 +22,13 @@ Author: Aidan Jungo
 
 """
 
+from pathlib import Path
+
 import numpy as np
 
 try:
     from tixi3 import tixi3wrapper
     from tixi3.tixi3wrapper import Tixi3Exception
-
 except ImportError:
     TIXI_INSTALLED = False
 else:
@@ -38,7 +39,6 @@ try:
     from tigl3 import tigl3wrapper
 
     # from tigl3.tigl3wrapper import Tigl3Exception
-
 except ImportError:
     TIGL_INSTALLED = False
 else:
@@ -66,6 +66,10 @@ def open_tixi(cpacs_path):
         """
         print(err_msg)
         raise ModuleNotFoundError(err_msg)
+
+    # To accept either a Path or a string
+    if isinstance(cpacs_path, Path):
+        cpacs_path = str(cpacs_path)
 
     tixi_handle = tixi3wrapper.Tixi3()
     tixi_handle.open(cpacs_path)

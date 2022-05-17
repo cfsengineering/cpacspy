@@ -23,12 +23,16 @@ Author: Aidan Jungo
 """
 
 import os
+from pathlib import Path
+
 import pandas as pd
 
 from cpacspy.aeromap import AeroMap
 from cpacspy.aircraft import Aircraft
-from cpacspy.cpacsfunctions import open_tigl, open_tixi, get_xpath_parent
+from cpacspy.cpacsfunctions import get_xpath_parent, open_tigl, open_tixi
 from cpacspy.utils import AEROPERFORMANCE_XPATH
+
+from src.cpacspy.utils import AC_NAME_XPATH
 
 
 class CPACS:
@@ -36,15 +40,19 @@ class CPACS:
 
     def __init__(self, cpacs_file):
 
+        # To accept either a Path or a string
+        if isinstance(cpacs_file, Path):
+            self.cpacs_file = str(cpacs_file)
+        else:
+            self.cpacs_file = cpacs_file
+
         # CPACS
-        self.cpacs_file = cpacs_file
         self.tixi = open_tixi(cpacs_file)
         self.tigl = open_tigl(self.tixi)
 
         # Aircraft name
-        ac_name_xpath = "/cpacs/header/name"
-        if self.tixi.checkElement(ac_name_xpath):
-            self.ac_name = self.tixi.getTextElement(ac_name_xpath)
+        if self.tixi.checkElement(AC_NAME_XPATH):
+            self.ac_name = self.tixi.getTextElement(AC_NAME_XPATH)
 
         # Aircraft data
         self.aircraft = Aircraft(self.tixi, self.tigl)
@@ -163,6 +171,12 @@ class CPACS:
 
     def save_cpacs(self, cpacs_file, overwrite=False):
         """ Save a CPACS file from the TIXI object at a chosen path. """
+
+        # To accept either a Path or a string
+        if isinstance(cpacs_file, Path):
+            cpacs_file = str(cpacs_file)
+        else:
+            cpacs_file = cpacs_file
 
         # Check for .xml file
         if not cpacs_file.endswith(".xml"):

@@ -162,10 +162,11 @@ def test_save_cpacs():
 
     test_path = "tests/output.xml"
     test_path_1 = "tests/output_1.xml"
+    test_path_2 = Path("tests", "output_2.xml")
 
     cpacs = CPACS(D150_TESTS_PATH)
 
-    # Raise error when tring to save a not xml file
+    # Raise error when trying to save a not xml file
     with pytest.raises(ValueError):
         cpacs.save_cpacs("tests/output.txt")
 
@@ -180,6 +181,10 @@ def test_save_cpacs():
     cpacs.save_cpacs(test_path, True)
     assert os.path.exists(test_path)
 
+    # Save CPACS file with a Path object
+    cpacs.save_cpacs(test_path_2, True)
+    assert os.path.exists(test_path_2)
+
     # Save CPACS file with already existing name (no overwrite)
     cpacs.save_cpacs(test_path, False)
     assert os.path.exists(test_path)
@@ -190,3 +195,6 @@ def test_save_cpacs():
 
     if os.path.exists(test_path_1):
         os.remove(test_path_1)
+
+    if os.path.exists(test_path_2):
+        os.remove(test_path_2)

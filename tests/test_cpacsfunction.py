@@ -23,6 +23,7 @@ Author: Aidan Jungo
 """
 import pytest
 import numpy as np
+from pathlib import Path
 
 # from tigl3.tigl3wrapper import Tigl3Exception
 from tixi3.tixi3wrapper import Tixi3Exception
@@ -50,9 +51,12 @@ def test_open_tixi():
 
     """Test the function 'open_tixi'"""
 
-    # Create TIXI handles for a valid CPACS file
+    # Create TIXI handles for a valid CPACS file (from str)
     tixi_handle = open_tixi(D150_TESTS_PATH)
+    assert tixi_handle
 
+    # Create TIXI handles for a valid CPACS file (from Path)
+    tixi_handle = open_tixi(Path(D150_TESTS_PATH))
     assert tixi_handle
 
     # Raise error for an invalid CPACS path
