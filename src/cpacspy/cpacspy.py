@@ -32,7 +32,7 @@ from cpacspy.aircraft import Aircraft
 from cpacspy.cpacsfunctions import get_xpath_parent, open_tigl, open_tixi
 from cpacspy.utils import AEROPERFORMANCE_XPATH
 
-from src.cpacspy.utils import AC_NAME_XPATH
+from cpacspy.utils import AC_NAME_XPATH
 
 
 class CPACS:
