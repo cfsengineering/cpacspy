@@ -46,7 +46,7 @@ else:
 
 
 def open_tixi(cpacs_path):
-    """ Create the TIXI Handle of a CPACS file given as input
+    """Create the TIXI Handle of a CPACS file given as input
     by its path. If this operation is not possible, it returns 'None'
 
     Source :
@@ -80,7 +80,7 @@ def open_tixi(cpacs_path):
 
 
 def open_tigl(tixi_handle):
-    """ Function 'open_tigl' return the TIGL Handle from its TIXI Handle.
+    """Function 'open_tigl' return the TIGL Handle from its TIXI Handle.
     If this operation is not possible, it returns 'None'
 
     Source :
@@ -117,7 +117,7 @@ def open_tigl(tixi_handle):
 
 
 def get_tigl_configuration(tigl):
-    """ Get the TiGL aircraft configuration manager. """
+    """Get the TiGL aircraft configuration manager."""
 
     # Get the configuration manager
     mgr = tigl3.configuration.CCPACSConfigurationManager_get_instance()
@@ -127,7 +127,7 @@ def get_tigl_configuration(tigl):
 
 
 def copy_branch(tixi, xpath_from, xpath_to):
-    """ Function to copy a CPACS branch.
+    """Function to copy a CPACS branch.
 
     Function 'copy_branch' copy the branch (with sub-branches) from
     'xpath_from' to 'xpath_to' by using recursion. The new branch should
@@ -201,7 +201,7 @@ def copy_branch(tixi, xpath_from, xpath_to):
 
 
 def get_uid(tixi, xpath):
-    """ Function to get uID from a specific XPath.
+    """Function to get uID from a specific XPath.
 
     Function 'get_uid' checks the xpath and get the corresponding uID.
 
@@ -227,7 +227,7 @@ def get_uid(tixi, xpath):
 
 
 def add_uid(tixi, xpath, uid):
-    """ Function to add UID at a specific XPath.
+    """Function to add UID at a specific XPath.
 
     Function 'add_uid' checks and add UID to a specific path, the function will
     automatically update the chosen UID if it exists already.
@@ -255,7 +255,7 @@ def add_uid(tixi, xpath, uid):
 
 
 def get_value(tixi, xpath):
-    """ Check first if the the xpath exist and that a value is stored
+    """Check first if the the xpath exist and that a value is stored
     at this place. Returns this value. It returns a:
     - float value if the value can be read as a float
     - boolean if the value is 'True'/'False',
@@ -298,7 +298,7 @@ def get_value(tixi, xpath):
 
 
 def get_value_or_default(tixi, xpath, default_value):
-    """ Do the same than the function 'get_value' but if no value is found
+    """Do the same than the function 'get_value' but if no value is found
     at the xpath it returns the default value and add it in the CPACS file
     at the xpath. If the xpath does not exist, it is created.
 
@@ -361,7 +361,7 @@ def get_value_or_default(tixi, xpath, default_value):
 
 
 def get_float_vector(tixi, xpath):
-    """ Get a vector (composed by float) at the
+    """Get a vector (composed by float) at the
     given XPath, if the node does not exist, an error will be raised.
 
     Args:
@@ -389,7 +389,7 @@ def get_float_vector(tixi, xpath):
 
 
 def add_float_vector(tixi, xpath, vector):
-    """ Add a vector (composed by float) at the given XPath,
+    """Add a vector (composed by float) at the given XPath,
     if the node does not exist, it will be created. Values will be
     overwritten if paths exists.
 
@@ -421,7 +421,7 @@ def add_float_vector(tixi, xpath, vector):
 
 
 def add_string_vector(tixi, xpath, vector):
-    """ Add a vector (of string) at given CPACS xpath
+    """Add a vector (of string) at given CPACS xpath
 
     Function 'add_string_vector' will add a vector (composed by stings) at the
     given XPath, if the node does not exist, it will be created. Values will be
@@ -453,7 +453,7 @@ def add_string_vector(tixi, xpath, vector):
 
 
 def get_string_vector(tixi, xpath):
-    """ Get a vector (of string) at given CPACS xpath
+    """Get a vector (of string) at given CPACS xpath
 
     Function 'get_string_vector' will get a vector (composed by string) at the
     given XPath, if the node does not exist, an error will be raised.
@@ -480,7 +480,7 @@ def get_string_vector(tixi, xpath):
 
 
 def get_xpath_parent(xpath, level=1):
-    """ Get the parent xpath at any level, 1 is parent just above the input xpath.
+    """Get the parent xpath at any level, 1 is parent just above the input xpath.
 
     Args:
         xpath (str): Input xpath
@@ -500,7 +500,7 @@ def get_xpath_parent(xpath, level=1):
 
 
 def create_branch(tixi, xpath, add_child=False):
-    """ Create a branch in the tixi handle and also all the missing parent nodes.
+    """Create a branch in the tixi handle and also all the missing parent nodes.
     Be careful, the xpath must be unique until the last element, it means,
     if several element exist, its index must be precised (index start at 1).
     e.g.: '/cpacs/vehicles/aircraft/model/wings/wing[2]/name'

@@ -29,7 +29,7 @@ from cpacspy.utils import D150_TESTS_PATH
 
 
 def test_main_attrib():
-    """ Test main attributes of the CPACS class """
+    """Test main attributes of the CPACS class"""
 
     # Load the CPACS file and all AeroMap in it
     cpacs = CPACS(D150_TESTS_PATH)

@@ -64,7 +64,7 @@ DAMPING_COEFS = [
 
 
 def listify(value):
-    """If variable, return a list of 1 value, if already a list don't change a list. """
+    """If variable, return a list of 1 value, if already a list don't change a list."""
 
     if value is not None:
         if not isinstance(value, list):

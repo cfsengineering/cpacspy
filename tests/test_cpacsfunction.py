@@ -274,7 +274,7 @@ def test_copy_branch():
 
 
 def test_add_string_vector():
-    """ Test the function 'add_sting_vector'"""
+    """Test the function 'add_sting_vector'"""
 
     tixi = open_tixi(D150_TESTS_PATH)
     xpath = "/cpacs/toolspecific/CEASIOMpy/testVector/"
@@ -299,7 +299,7 @@ def test_add_string_vector():
 
 
 def test_get_string_vector():
-    """ Test the function 'get_string_vector'"""
+    """Test the function 'get_string_vector'"""
 
     tixi = open_tixi(D150_TESTS_PATH)
     xpath = "/cpacs/toolspecific/CEASIOMpy/testVector"
