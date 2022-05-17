@@ -124,7 +124,7 @@ def test_get_damping_derivatives():
         == 0.00118
     )
 
-    # Test if non existing parameter gives a vector of lenght 0
+    # Test if non existing parameter gives a vector of length 0
     assert (
         len(
             aeromap_dampder.get_damping_derivatives(

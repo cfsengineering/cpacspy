@@ -11,7 +11,7 @@ print(cpacs)
 print(cpacs.aircraft)
 
 # Aircraft reference value
-print("Ref lenght:", f_lenght, "m")
+print("Ref length:", cpacs.aircraft.ref_length, "m")
 print("Ref area:", cpacs.aircraft.ref_area, "m^2")
 print(
     "Ref point:",
