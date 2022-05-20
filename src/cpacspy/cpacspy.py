@@ -31,11 +31,7 @@ from cpacspy.aeromap import AeroMap
 from cpacspy.aircraft import Aircraft
 from cpacspy.cpacsfunctions import get_xpath_parent, open_tigl, open_tixi
 from cpacspy.rotorcraft import Rotorcraft
-from cpacspy.utils import AC_NAME_XPATH, AEROPERFORMANCE_XPATH
-
-from cpacspy.utils import ROTORCRAFT_XPATH
-
-from src.cpacspy.utils import AIRCRAFT_XPATH
+from cpacspy.utils import AC_NAME_XPATH, AEROPERFORMANCE_XPATH, AIRCRAFT_XPATH, ROTORCRAFT_XPATH
 
 
 class CPACS:
