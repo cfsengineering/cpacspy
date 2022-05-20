@@ -25,6 +25,7 @@ Author: Aidan Jungo
 from pathlib import Path
 
 import numpy as np
+from cpacspy.utils import AIRCRAFT_XPATH, ROTORCRAFT_XPATH
 
 try:
     from tixi3 import tixi3wrapper
@@ -79,7 +80,7 @@ def open_tixi(cpacs_path):
     return tixi_handle
 
 
-def open_tigl(tixi_handle):
+def open_tigl(tixi_handle, rotorcraft=False):
     """Function 'open_tigl' return the TIGL Handle from its TIXI Handle.
     If this operation is not possible, it returns 'None'
 
@@ -88,6 +89,7 @@ def open_tigl(tixi_handle):
 
     Args:
         tixi_handle (handles): TIXI Handle of the CPACS file
+        rotorcraft (bool, optional): Define if the aircraft is a rotorcraft.
 
     Returns:
         tigl_handle (handles): TIGL Handle of the CPACS file
@@ -102,7 +104,11 @@ def open_tigl(tixi_handle):
         raise ModuleNotFoundError(err_msg)
 
     # Get model uid to open TiGL handle (in case there is also a rotorcraft in the CPACS file)
-    model_xpath = "/cpacs/vehicles/aircraft/model"
+    if rotorcraft:
+        model_xpath = ROTORCRAFT_XPATH
+    else:
+        model_xpath = AIRCRAFT_XPATH
+
     if tixi_handle.checkAttribute(model_xpath, "uID"):
         model_uid = tixi_handle.getTextAttribute(model_xpath, "uID")
     else:
