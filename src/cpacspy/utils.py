@@ -31,11 +31,13 @@ CPACSPY_ROOT = CPACSPY_LIB.parents[1]
 EXAMPLES_PATH = Path(CPACSPY_ROOT, "examples")
 TESTS_PATH = Path(CPACSPY_ROOT, "tests")
 D150_TESTS_PATH = str(Path(TESTS_PATH, "D150_simple.xml"))
+PROPELLER_TESTS_PATH = str(Path(TESTS_PATH, "SimpleAircraft_propeller.xml"))
 
 # XPATH
-AEROPERFORMANCE_XPATH = "/cpacs/vehicles/aircraft/model/analyses/aeroPerformance"
-REF_XPATH = "/cpacs/vehicles/aircraft/model/reference"
 AC_NAME_XPATH = "/cpacs/header/name"
+AIRCRAFT_XPATH = "/cpacs/vehicles/aircraft/model"
+ROTORCRAFT_XPATH = "/cpacs/vehicles/rotorcraft/model"
+AEROPERFORMANCE_XPATH = "/cpacs/vehicles/aircraft/model/analyses/aeroPerformance"
 
 # Lists
 PARAMS = ["altitude", "machNumber", "angleOfSideslip", "angleOfAttack"]

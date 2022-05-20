@@ -22,8 +22,8 @@ Author: Aidan Jungo
 
 """
 
-from cpacspy.cpacsfunctions import get_value_or_default, get_tigl_configuration
-from cpacspy.utils import REF_XPATH
+from cpacspy.cpacsfunctions import get_tigl_configuration, get_value_or_default
+from cpacspy.utils import AIRCRAFT_XPATH
 
 
 class Aircraft:
@@ -41,11 +41,12 @@ class Aircraft:
         self.tigl = tigl
 
         # Reference values
-        self.ref_length = get_value_or_default(self.tixi, REF_XPATH + "/length", 1)
-        self.ref_area = get_value_or_default(self.tixi, REF_XPATH + "/area", 1)
-        self.ref_point_x = get_value_or_default(self.tixi, REF_XPATH + "/point/x", 0)
-        self.ref_point_y = get_value_or_default(self.tixi, REF_XPATH + "/point/y", 0)
-        self.ref_point_z = get_value_or_default(self.tixi, REF_XPATH + "/point/z", 0)
+        reference_xpath = AIRCRAFT_XPATH + "/reference"
+        self.ref_length = get_value_or_default(self.tixi, reference_xpath + "/length", 1)
+        self.ref_area = get_value_or_default(self.tixi, reference_xpath + "/area", 1)
+        self.ref_point_x = get_value_or_default(self.tixi, reference_xpath + "/point/x", 0)
+        self.ref_point_y = get_value_or_default(self.tixi, reference_xpath + "/point/y", 0)
+        self.ref_point_z = get_value_or_default(self.tixi, reference_xpath + "/point/z", 0)
 
         # Aircraft specific values (extract with TiGL)
         self.configuration = get_tigl_configuration(self.tigl)
