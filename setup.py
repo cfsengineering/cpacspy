@@ -4,7 +4,7 @@
 import setuptools
 
 NAME = "cpacspy"
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 AUTHOR = "Aidan Jungo"
 EMAIL = "aidan.jungo@cfse.ch"
 DESCRIPTION = "PyPI package to work with CPACS file and AeroMaps"
