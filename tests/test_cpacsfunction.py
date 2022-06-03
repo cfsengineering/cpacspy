@@ -21,17 +21,15 @@ limitations under the License.
 Author: Aidan Jungo
 
 """
-import pytest
-import numpy as np
 from pathlib import Path
 
-# from tigl3.tigl3wrapper import Tigl3Exception
-from tixi3.tixi3wrapper import Tixi3Exception
-
+import numpy as np
+import pytest
 from cpacspy.cpacsfunctions import (
     add_float_vector,
     add_string_vector,
     add_uid,
+    add_value,
     copy_branch,
     create_branch,
     get_float_vector,
@@ -45,6 +43,9 @@ from cpacspy.cpacsfunctions import (
     open_tixi,
 )
 from cpacspy.utils import D150_TESTS_PATH
+
+# from tigl3.tigl3wrapper import Tigl3Exception
+from tixi3.tixi3wrapper import Tixi3Exception
 
 
 def test_open_tixi():
@@ -83,6 +84,29 @@ def test_get_tigl_configuration():
     tixi_handle = open_tixi(D150_TESTS_PATH)
     tigl_handle = open_tigl(tixi_handle)
     assert get_tigl_configuration(tigl_handle)
+
+
+def test_add_value():
+
+    tixi = open_tixi(D150_TESTS_PATH)
+
+    xpath = "/cpacs/toolspecific/pytest/addedValueStr"
+
+    add_value(tixi, xpath, "test1")
+    assert tixi.getTextElement(xpath) == "test1"
+
+    add_value(tixi, xpath, "test2")
+    assert tixi.getTextElement(xpath) == "test2"
+
+    xpath = "/cpacs/toolspecific/pytest/addedValueInt"
+
+    add_value(tixi, xpath, 44)
+    assert tixi.getTextElement(xpath) == "44"
+
+    xpath = "/cpacs/toolspecific/pytest/addedValueFloat"
+
+    add_value(tixi, xpath, 5.55)
+    assert tixi.getTextElement(xpath) == "5.55"
 
 
 def test_get_value():

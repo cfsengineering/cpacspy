@@ -25,6 +25,7 @@ Author: Aidan Jungo
 from pathlib import Path
 
 import numpy as np
+
 from cpacspy.utils import AIRCRAFT_XPATH, ROTORCRAFT_XPATH
 
 try:
@@ -258,6 +259,33 @@ def add_uid(tixi, xpath, uid):
             i = i + 1
             uid_new = uid + str(i)
             print("UID already existing changed to: " + uid_new)
+
+
+def add_value(tixi, xpath, value):
+    """Add a value (string, integer of float) at the given XPath,
+    if the node does not exist, it will be created. Values will be
+    overwritten if paths exists.
+
+    Args:
+        tixi (handle): Tixi handle
+        xpath (str): XPath of the vector to add
+        value (list, tuple): Value to add
+    """
+
+    # Strip trailing '/' (has no meaning here)
+    xpath = xpath.rstrip("/")
+
+    # Get the field name and the parent CPACS path
+    xpath_child_name = xpath.split("/")[-1]
+    xpath_parent = xpath[: -(len(xpath_child_name) + 1)]
+
+    if not tixi.checkElement(xpath_parent):
+        create_branch(tixi, xpath_parent)
+
+    if not tixi.checkElement(xpath):
+        tixi.createElement(xpath_parent, xpath_child_name)
+
+    tixi.updateTextElement(xpath, str(value))
 
 
 def get_value(tixi, xpath):
