@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import setuptools
+from src.cpacspy.__version__ import __version__
 
 NAME = "cpacspy"
-VERSION = "0.1.2"
+VERSION = __version__
 AUTHOR = "Aidan Jungo"
 EMAIL = "aidan.jungo@cfse.ch"
 DESCRIPTION = "PyPI package to work with CPACS file and AeroMaps"
