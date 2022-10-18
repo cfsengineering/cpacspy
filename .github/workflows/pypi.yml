@@ -4,8 +4,11 @@
 name: Publish on pypi
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/cpacspy/__version__.py'
 
 jobs:
   deploy:
