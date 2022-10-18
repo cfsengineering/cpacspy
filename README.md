@@ -7,7 +7,7 @@
 
 # cpacspy
 
-<img align="right" width="250" height="250" src="./logo/logo_white_bg.png">
+<img align="right" width="250" height="250" src="logo/logo_white_bg.png">
 
 `cpacspy` is a Python package which could be used to read, write and analyse [CPACS](https://www.cpacs.de/) aerodynamics data. It simplify the handling of AeroMaps.
 

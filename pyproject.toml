@@ -17,6 +17,7 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 source = ["src"]
+omit = ["*/__init__.py", "*/__specs__.py", "*/__version__.py"]
 
 [tool.coverage.report]
 exclude_lines = ['def __repr__', 'def __str__', 'if __name__ == "__main__":']

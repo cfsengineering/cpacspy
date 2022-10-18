@@ -134,7 +134,7 @@ class CPACS:
         return new_aeromap
 
     def duplicate_aeromap(self, uid_base, uid_duplicate):
-        """Duplicate an aeromap and retrun the new aeromap object."""
+        """Duplicate an aeromap and return the new aeromap object."""
 
         # Check uid's
         if uid_base not in self.get_aeromap_uid_list():
@@ -164,7 +164,7 @@ class CPACS:
             raise ValueError("AeroMap uid should not contain any space!")
 
         if uid not in self.get_aeromap_uid_list():
-            raise ValueError(f'uid "{uid}"" does not exit! The aeroMap canno be deleted!')
+            raise ValueError(f'uid "{uid}"" does not exit! The aeroMap cannot be deleted!')
 
         # Remove the aeromap  from the CPACS file
         aeromap = self.get_aeromap_by_uid(uid)

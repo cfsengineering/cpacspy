@@ -192,7 +192,7 @@ class AeroMap:
                 Must be one of the following: {"dp","dq","dr"}'
             )
 
-        if rates in ["posivitive", "pos", "p"]:
+        if rates in ["positive", "pos", "p"]:
             rates_name = "positiveRates"
         elif rates in ["negative", "neg", "n"]:
             rates_name = "negativeRates"
@@ -200,7 +200,7 @@ class AeroMap:
             raise ValueError(
                 f'Invalid rates "{rates}"! \n \
                              Must be written as: \n \
-                                 ("posivitive","pos","p" or "+") for positiveRates or \n \
+                                 ("positive","pos","p" or "+") for positiveRates or \n \
                                      ("negative","neg","n" or "-") for negativeRates'
             )
 
@@ -263,7 +263,7 @@ class AeroMap:
             "cms": cms,
         }
 
-        # Check if all colomn already exist
+        # Check if all column already exist
         for col in new_row:
             if col not in self.df.columns:
                 self.df[col] = np.nan
@@ -307,7 +307,7 @@ class AeroMap:
         cml=np.nan,
         cms=np.nan,
     ):
-        """Add coefficients to existing set of parmeter.
+        """Add coefficients to existing set of parameter.
 
         Args:
             alt (float): Altitude
@@ -335,7 +335,7 @@ class AeroMap:
         self.df.loc[filt, ["cd", "cl", "cs", "cmd", "cml", "cms"]] = [cd, cl, cs, cmd, cml, cms]
 
     def add_damping_derivatives(self, alt, mach, aos, aoa, coef, axis, value, rate=-1.0):
-        """Add a damping derivative coeficient for an existing set of alt,mach,aos,aoa.
+        """Add a damping derivative coefficients for an existing set of alt,mach,aos,aoa.
 
         Args:
             alt (float): Altitude
@@ -344,7 +344,7 @@ class AeroMap:
             aoa (float): Angle of attack
             coef (str) : equivalent aero coefficient (cd,cl,cs,cmd,cml,cms)
             axis (str) : axis of rotation (dp,dq,dr)
-            value (float) : value of the coeficient
+            value (float) : value of the coefficient
             rate (float, optional): Rotation rate. Defaults to -1.0.
 
         """
@@ -352,7 +352,7 @@ class AeroMap:
         damping_coef = "d" + coef + axis + "Star"
 
         if damping_coef not in DAMPING_COEFS:
-            raise ValueError(f'Damping coeficient "{damping_coef}" is not valid!')
+            raise ValueError(f'Damping coefficient "{damping_coef}" is not valid!')
 
         if rate < 0:
             col_name = "dampingDerivatives_negativeRates_" + damping_coef
@@ -414,12 +414,12 @@ class AeroMap:
                     add_float_vector(self.tixi, param_xpath, self.df[param].tolist())
                 else:
                     raise ValueError(
-                        "All the 4 parametres (alt,mach,aos,aoa) must not contains NaN value to \
+                        "All the 4 parameters (alt,mach,aos,aoa) must not contains NaN value to \
                             be saved in an aeroMap!"
                     )
             else:
                 raise ValueError(
-                    "All the 4 parametres (alt,mach,aos,aoa) must be define to save an aeroMap!"
+                    "All the 4 parameters (alt,mach,aos,aoa) must be define to save an aeroMap!"
                 )
 
         # Create and fill coefficients fields
@@ -431,8 +431,8 @@ class AeroMap:
                     add_float_vector(self.tixi, coef_xpath, self.df[coef].tolist())
                 else:
                     print(
-                        f'Warning: {coef} coeffiecient from "{self.uid}" aeroMap will not be \
-                          written in the CPACS file becuase it contains only NaN!'
+                        f'Warning: {coef} coefficient from "{self.uid}" aeroMap will not be \
+                          written in the CPACS file because it contains only NaN!'
                     )
 
         # Create and fill damping derivatives fields
@@ -446,8 +446,8 @@ class AeroMap:
                         add_float_vector(self.tixi, coef_xpath, self.df[col_name].tolist())
                     else:
                         print(
-                            f'Warning: {damping_coef} coeffiecient from "{self.uid}" aeroMap will \
-                              not be written in the CPACS file becuase it contains onlz NaN!'
+                            f'Warning: {damping_coef} coefficient from "{self.uid}" aeroMap will \
+                              not be written in the CPACS file because it contains onlz NaN!'
                         )
 
         # Create and fill incrementMap fields
@@ -522,7 +522,7 @@ class AeroMap:
         return cd0, e
 
     def calculate_forces(self, aircraft):
-        """Calculate forces and momement from coefficients"""
+        """Calculate forces and moment from coefficients"""
 
         COEF2FORCE_DICT = {"cd": "drag", "cl": "lift", "cs": "side"}
         COEF2MOMENT_DICT = {"cmd": "md", "cml": "ml", "cms": "ms"}

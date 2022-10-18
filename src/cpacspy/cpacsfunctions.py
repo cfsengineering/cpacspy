@@ -409,7 +409,7 @@ def get_float_vector(tixi, xpath):
     float_vector_str = tixi.getTextElement(xpath)
 
     if float_vector_str == "":
-        raise ValueError("No value has been fournd at " + xpath)
+        raise ValueError("No value has been found at " + xpath)
 
     if float_vector_str.endswith(";"):
         float_vector_str = float_vector_str[:-1]
