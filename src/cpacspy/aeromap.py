@@ -145,7 +145,7 @@ class AeroMap:
         self.df = pd.concat([self.df, df_param], axis=0)
 
     def get(self, list_of, alt=None, mach=None, aos=None, aoa=None):
-        """Get parameter or coefficient as a numpy vector with other parameters as filter (optional).
+        """Get parameter or coeffs as a numpy vector with other parameters as filter (optional).
 
         Args:
             list_of (str): Parameter or coefficient to get.
@@ -431,8 +431,8 @@ class AeroMap:
                     add_float_vector(self.tixi, coef_xpath, self.df[coef].tolist())
                 else:
                     print(
-                        f'Warning: {coef} coeffiecient from "{self.uid}" aeroMap will not be written in the \
-                          CPACS file becuase it contains only NaN!'
+                        f'Warning: {coef} coeffiecient from "{self.uid}" aeroMap will not be \
+                          written in the CPACS file becuase it contains only NaN!'
                     )
 
         # Create and fill damping derivatives fields
@@ -542,8 +542,8 @@ class AeroMap:
                 )
             else:
                 print(
-                    f"Warning: {COEF2FORCE_DICT[coef]} will not be calculated because there is no {coef} \
-                    coefficient in the aeroMap!"
+                    f"Warning: {COEF2FORCE_DICT[coef]} will not be calculated because there is \
+                    no {coef} coefficient in the aeroMap!"
                 )
 
         for coef in COEF2MOMENT_DICT:
@@ -553,8 +553,8 @@ class AeroMap:
                 )
             else:
                 print(
-                    f"Warning: {COEF2MOMENT_DICT[coef]} will not be calculated because there is no \
-                    {coef} coefficient in the aeroMap!"
+                    f"Warning: {COEF2MOMENT_DICT[coef]} will not be calculated because there is \
+                    no {coef} coefficient in the aeroMap!"
                 )
 
     def __str__(self):
