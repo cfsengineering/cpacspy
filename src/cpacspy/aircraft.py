@@ -89,7 +89,7 @@ class Aircraft:
         self.wing_ar = self.configuration.get_wing(self._ref_wing_uid).get_aspect_ratio()
 
     def get_main_wing_idx(self):
-        """Find the larest wing index
+        """Find the largest wing index
 
         Args:
             self (object)
@@ -112,7 +112,7 @@ class Aircraft:
         text_line = []
         text_line.append("\nAircraft data -------------------------------------------------------")
         text_line.append(" ")
-        text_line.append(f"Reference lengh: \t{self.ref_length} [m]")
+        text_line.append(f"Reference length: \t{self.ref_length} [m]")
         text_line.append(f"Reference area: \t{self.ref_area} [m^2]")
         text_line.append(
             f"Reference point: \t({self.ref_point_x},{self.ref_point_y},{self.ref_point_z}) [m]"

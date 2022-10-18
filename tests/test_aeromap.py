@@ -113,7 +113,7 @@ def test_get_damping_derivatives():
         aeromap_dampder.get_damping_derivatives("cl", "dp", "should_be_pos_or_neg")
 
     # Test all possible keyword for rates
-    for rate in ["posivitive", "pos", "p", "negative", "neg", "n"]:
+    for rate in ["positive", "pos", "p", "negative", "neg", "n"]:
         assert aeromap_dampder.get_damping_derivatives("cl", "dp", rate)[1] == 0.00112
 
     # Test to get one value
