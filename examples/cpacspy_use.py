@@ -75,7 +75,7 @@ for i in range(12):
         alt=15000,
         aos=0.0,
         aoa=i,
-        cd=0.001 * i**2,
+        cd=0.001 * i ** 2,
         cl=0.1 * i,
         cs=0.0,
         cmd=0.0,
