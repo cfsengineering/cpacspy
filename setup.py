@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import setuptools
+from src.cpacspy.__version__ import __version__
 
 NAME = "cpacspy"
-VERSION = "0.1.2"
+VERSION = __version__
 AUTHOR = "Aidan Jungo"
 EMAIL = "aidan.jungo@cfse.ch"
 DESCRIPTION = "PyPI package to work with CPACS file and AeroMaps"
-LONG_DESCRIPTION = "Python package to read, write and analyse CPACS AeroPerformanceMaps. You need to have TIXI and TIGL install on your computer to use this package."
-URL = ""
+LONG_DESCRIPTION = open("README.md").read()
+URL = "https://github.com/cfsengineering/cpacspy"
 REQUIRES_PYTHON = ">=3.7.0"
 REQUIRED = []
 README = "README.md"
@@ -24,6 +25,7 @@ setuptools.setup(
     author_email=EMAIL,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
+    long_description_content_type="text/markdown",
     url=URL,
     include_package_data=True,
     package_dir={"": PACKAGE_DIR},
