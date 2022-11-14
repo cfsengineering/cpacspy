@@ -601,6 +601,48 @@ class AeroMap:
         else:
             return False, msg
 
+    def check_directional_stability(self, alt=None, mach=None, aoa=None):
+        """Check longitudinal stability (cml vs aos) with other parameters as filter (optional).
+        The stability is checked by making a linear regression on cml vs aos and analyzing the
+        slope sign.
+
+        Args:
+            alt (list, optional): List of altitudes to filter. Defaults to None.
+            mach (list, optional): List of Mach numbers to filter. Defaults to None.
+            aoa (list, optional): List of angle of attack to filter. Defaults to None.
+
+        Return:
+            stable (bool): Return if this set of conditions is stable (return False if neutral)
+            msg (str): Message description
+
+        """
+
+        msg = ""
+
+        alt_list = listify(alt)
+        mach_list = listify(mach)
+        aoa_list = listify(aoa)
+
+        if len(alt_list) > 1 or len(mach_list) > 1 or len(aoa_list) > 1:
+            msg = MSG_STAB_ONE_PARAM
+
+        filt = get_filter(self.df, alt_list, mach_list, aoa_list, [])
+        df_filt = self.df.loc[filt]
+        x = df_filt["angleOfSideslip"].to_numpy()
+        y = df_filt["cml"].to_numpy()
+
+        if len(x) < 2:
+            return None, MSG_STAB_NOT_ENOUGH
+
+        res = stats.linregress(x, y)
+
+        if res.slope == 0:
+            return False, MSG_STAB_NEUTRAL
+        elif res.slope < 0:
+            return True, msg
+        else:
+            return False, msg
+
     def __str__(self):
 
         text_line = []
