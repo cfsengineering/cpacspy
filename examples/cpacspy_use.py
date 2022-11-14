@@ -46,8 +46,8 @@ print(one_aeromap.get("angleOfAttack", alt=15500.0, aos=0.0, mach=[0.3, 0.4, 0.5
 print(one_aeromap.get("cd", alt=15500.0, aos=0.0, mach=[0.3, 0.4, 0.5]))
 
 # Plot aeromap
-# one_aeromap.plot('cd', 'cl', alt=15500, aos=0.0, mach=0.5)
-# one_aeromap.plot('angleOfAttack', 'cd', alt=15500, aos=0.0, mach=0.5)
+# one_aeromap.plot("cd", "cl", alt=15500, aos=0.0, mach=0.5)
+# one_aeromap.plot("angleOfAttack", "cd", alt=15500, aos=0.0, mach=0.5)
 
 # Add new values to the aeromap
 simple_aeromap = cpacs.get_aeromap_by_uid("aeromap_test2")
@@ -151,9 +151,10 @@ print(
 # Also works with the simple "get" function, but the "coef name" is a bit more complicated
 print(aeromap_dd.get("dampingDerivatives_negativeRates_dcddpStar", aoa=[4.0, 6.0, 8.0]))
 
-# Damping derivatives coefficients can alos be plotted
-# aeromap_dd.plot('angleOfAttack', 'dampingDerivatives_negativeRates_dcddpStar',
-#                  alt=15000, aos=0.0, mach=0.555)
+# Damping derivatives coefficients can also be plotted
+# aeromap_dd.plot(
+#     "angleOfAttack", "dampingDerivatives_negativeRates_dcddpStar", alt=15000, aos=0.0, mach=0.555
+# )
 
 
 ## Analyses

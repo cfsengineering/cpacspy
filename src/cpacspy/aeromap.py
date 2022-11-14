@@ -388,7 +388,7 @@ class AeroMap:
         aoa_list = listify(aoa)
 
         filt = get_filter(self.df, alt_list, mach_list, aos_list, aoa_list)
-        self.df.loc[filt].plot(x=x_param, y=y_param, marker="o")
+        self.df.loc[filt].plot(x=x_param, y=y_param, ylabel=y_param, legend=False, marker="o")
         plt.show()
 
     def save(self):
