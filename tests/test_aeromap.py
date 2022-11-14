@@ -36,6 +36,8 @@ from unittest.mock import patch
 from cpacspy.cpacspy import CPACS
 from cpacspy.utils import D150_TESTS_PATH, TESTS_PATH
 
+from src.cpacspy.utils import MSG_STAB_NEUTRAL, MSG_STAB_NOT_ENOUGH, MSG_STAB_ONE_PARAM
+
 
 D150_OUTPUT_TESTS_PATH = str(Path(TESTS_PATH, "D150_simple_out.xml"))
 CSV_IN_FILE = Path(TESTS_PATH, "aeromap_test.csv")
@@ -378,12 +380,12 @@ def test_check_longitudinal_stability():
 
     stability, msg = aeromap_4.check_longitudinal_stability()
     assert stability is None
-    assert msg == "Not enough value to check stability"
+    assert msg == MSG_STAB_NOT_ENOUGH
 
     aeromap_4.add_row(alt=10000, mach=0.3, aoa=5.0, aos=0.0, cms=0.3)
     stability, msg = aeromap_4.check_longitudinal_stability()
     assert not stability
-    assert msg == "Neutral stability"
+    assert msg == MSG_STAB_NEUTRAL
 
     aeromap_4.add_row(alt=9000, mach=0.3, aoa=0.0, aos=0.0, cms=0.4)
     aeromap_4.add_row(alt=9000, mach=0.3, aoa=5.0, aos=0.0, cms=0.5)
@@ -407,4 +409,4 @@ def test_check_longitudinal_stability():
 
     stability, msg = aeromap_4.check_longitudinal_stability(alt=[7000, 8000], mach=[0.3, 0.4])
     assert stability
-    assert msg == "Warning, normally stability should be check for one parameter at the time."
+    assert msg == MSG_STAB_ONE_PARAM

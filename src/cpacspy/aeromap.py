@@ -45,6 +45,8 @@ from cpacspy.utils import (
     listify,
 )
 
+from src.cpacspy.utils import MSG_STAB_NEUTRAL, MSG_STAB_NOT_ENOUGH, MSG_STAB_ONE_PARAM
+
 
 def get_filter(df, alt_list, mach_list, aos_list, aoa_list):
     """Get a dataframe filter for a set of parameters lists."""
@@ -580,7 +582,7 @@ class AeroMap:
         aos_list = listify(aos)
 
         if len(alt_list) > 1 or len(mach_list) > 1 or len(aos_list) > 1:
-            msg = "Warning, normally stability should be check for one parameter at the time."
+            msg = MSG_STAB_ONE_PARAM
 
         filt = get_filter(self.df, alt_list, mach_list, aos_list, [])
         df_filt = self.df.loc[filt]
@@ -588,12 +590,12 @@ class AeroMap:
         y = df_filt["cms"].to_numpy()
 
         if len(x) < 2:
-            return None, "Not enough value to check stability"
+            return None, MSG_STAB_NOT_ENOUGH
 
         res = stats.linregress(x, y)
 
         if res.slope == 0:
-            return False, "Neutral stability"
+            return False, MSG_STAB_NEUTRAL
         elif res.slope < 0:
             return True, msg
         else:
