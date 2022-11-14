@@ -45,7 +45,7 @@ from cpacspy.utils import (
     listify,
 )
 
-from src.cpacspy.utils import MSG_STAB_NEUTRAL, MSG_STAB_NOT_ENOUGH, MSG_STAB_ONE_PARAM
+from cpacspy.utils import MSG_STAB_NEUTRAL, MSG_STAB_NOT_ENOUGH, MSG_STAB_ONE_PARAM
 
 
 def get_filter(df, alt_list, mach_list, aos_list, aoa_list):
@@ -589,7 +589,7 @@ class AeroMap:
         x = df_filt["angleOfAttack"].to_numpy()
         y = df_filt["cms"].to_numpy()
 
-        if len(x) < 2:
+        if len(set(x)) < 2:
             return None, MSG_STAB_NOT_ENOUGH
 
         res = stats.linregress(x, y)
@@ -631,7 +631,7 @@ class AeroMap:
         x = df_filt["angleOfSideslip"].to_numpy()
         y = df_filt["cml"].to_numpy()
 
-        if len(x) < 2:
+        if len(set(x)) < 2:
             return None, MSG_STAB_NOT_ENOUGH
 
         res = stats.linregress(x, y)
@@ -673,7 +673,7 @@ class AeroMap:
         x = df_filt["angleOfSideslip"].to_numpy()
         y = df_filt["cmd"].to_numpy()
 
-        if len(x) < 2:
+        if len(set(x)) < 2:
             return None, MSG_STAB_NOT_ENOUGH
 
         res = stats.linregress(x, y)
