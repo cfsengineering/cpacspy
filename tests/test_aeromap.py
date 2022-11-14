@@ -367,3 +367,44 @@ def test_get_cd0_oswald():
 def test_calcuate_forces():
     """TODO: create the test when the function is finalized!"""
     pass
+
+
+def test_check_longitudinal_stability():
+    """Test 'check_longitudinal_stability' function."""
+
+    cpacs = CPACS(D150_TESTS_PATH)
+    aeromap_4 = cpacs.create_aeromap("aeromap_test_long_stab")
+    aeromap_4.add_row(alt=10000, mach=0.3, aoa=0.0, aos=0.0, cms=0.3)
+
+    stability, msg = aeromap_4.check_longitudinal_stability()
+    assert stability is None
+    assert msg == "Not enough value to check stability"
+
+    aeromap_4.add_row(alt=10000, mach=0.3, aoa=5.0, aos=0.0, cms=0.3)
+    stability, msg = aeromap_4.check_longitudinal_stability()
+    assert not stability
+    assert msg == "Neutral stability"
+
+    aeromap_4.add_row(alt=9000, mach=0.3, aoa=0.0, aos=0.0, cms=0.4)
+    aeromap_4.add_row(alt=9000, mach=0.3, aoa=5.0, aos=0.0, cms=0.5)
+    stability, msg = aeromap_4.check_longitudinal_stability(alt=9000)
+    assert not stability
+    assert msg == ""
+
+    aeromap_4.add_row(alt=8000, mach=0.3, aoa=0.0, aos=0.0, cms=0.1)
+    aeromap_4.add_row(alt=8000, mach=0.3, aoa=5.0, aos=0.0, cms=-0.1)
+    stability, msg = aeromap_4.check_longitudinal_stability(alt=8000)
+    assert stability
+    assert msg == ""
+
+    aeromap_4.add_row(alt=7000, mach=0.4, aoa=-2.0, aos=0.0, cms=0.2)
+    aeromap_4.add_row(alt=7000, mach=0.4, aoa=0.0, aos=0.0, cms=0.1)
+    aeromap_4.add_row(alt=7000, mach=0.4, aoa=2.0, aos=0.0, cms=0.1)
+    aeromap_4.add_row(alt=7000, mach=0.4, aoa=4.0, aos=0.0, cms=-0.1)
+    stability, msg = aeromap_4.check_longitudinal_stability(alt=7000, mach=0.4)
+    assert stability
+    assert msg == ""
+
+    stability, msg = aeromap_4.check_longitudinal_stability(alt=[7000, 8000], mach=[0.3, 0.4])
+    assert stability
+    assert msg == "Warning, normally stability should be check for one parameter at the time."
