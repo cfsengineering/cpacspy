@@ -26,9 +26,9 @@ import math
 
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
-
 from ambiance import Atmosphere
+from matplotlib import pyplot as plt
+from scipy import stats
 
 from cpacspy.cpacsfunctions import (
     add_float_vector,
@@ -39,11 +39,13 @@ from cpacspy.cpacsfunctions import (
 from cpacspy.utils import (
     AEROPERFORMANCE_XPATH,
     COEFS,
+    DAMPING_COEFS,
     PARAMS,
     PARAMS_COEFS,
-    DAMPING_COEFS,
     listify,
 )
+
+from cpacspy.utils import MSG_STAB_NEUTRAL, MSG_STAB_NOT_ENOUGH, MSG_STAB_ONE_PARAM
 
 
 def get_filter(df, alt_list, mach_list, aos_list, aoa_list):
@@ -556,6 +558,132 @@ class AeroMap:
                     f"Warning: {COEF2MOMENT_DICT[coef]} will not be calculated because there is \
                     no {coef} coefficient in the aeroMap!"
                 )
+
+    def check_longitudinal_stability(self, alt=None, mach=None, aos=None):
+        """Check longitudinal stability (cms vs aoa) with other parameters as filter (optional).
+        The stability is checked by making a linear regression on cms vs aoa and analyzing the
+        slope sign.
+
+        Args:
+            alt (list, optional): List of altitudes to filter. Defaults to None.
+            mach (list, optional): List of Mach numbers to filter. Defaults to None.
+            aos (list, optional): List of angle of sideslip to filter. Defaults to None.
+
+        Return:
+            stable (bool): Return if this set of conditions is stable (return False if neutral)
+            msg (str): Message description
+
+        """
+
+        msg = ""
+
+        alt_list = listify(alt)
+        mach_list = listify(mach)
+        aos_list = listify(aos)
+
+        if len(alt_list) > 1 or len(mach_list) > 1 or len(aos_list) > 1:
+            msg = MSG_STAB_ONE_PARAM
+
+        filt = get_filter(self.df, alt_list, mach_list, aos_list, [])
+        df_filt = self.df.loc[filt]
+        x = df_filt["angleOfAttack"].to_numpy()
+        y = df_filt["cms"].to_numpy()
+
+        if len(set(x)) < 2:
+            return None, MSG_STAB_NOT_ENOUGH
+
+        res = stats.linregress(x, y)
+
+        if res.slope == 0:
+            return False, MSG_STAB_NEUTRAL
+        elif res.slope < 0:
+            return True, msg
+        else:
+            return False, msg
+
+    def check_directional_stability(self, alt=None, mach=None, aoa=None):
+        """Check directional stability (cml vs aos) with other parameters as filter (optional).
+        The stability is checked by making a linear regression on cml vs aos and analyzing the
+        slope sign.
+
+        Args:
+            alt (list, optional): List of altitudes to filter. Defaults to None.
+            mach (list, optional): List of Mach numbers to filter. Defaults to None.
+            aoa (list, optional): List of angle of attack to filter. Defaults to None.
+
+        Return:
+            stable (bool): Return if this set of conditions is stable (return False if neutral)
+            msg (str): Message description
+
+        """
+
+        msg = ""
+
+        alt_list = listify(alt)
+        mach_list = listify(mach)
+        aoa_list = listify(aoa)
+
+        if len(alt_list) > 1 or len(mach_list) > 1 or len(aoa_list) > 1:
+            msg = MSG_STAB_ONE_PARAM
+
+        filt = get_filter(self.df, alt_list, mach_list, aoa_list, [])
+        df_filt = self.df.loc[filt]
+        x = df_filt["angleOfSideslip"].to_numpy()
+        y = df_filt["cml"].to_numpy()
+
+        if len(set(x)) < 2:
+            return None, MSG_STAB_NOT_ENOUGH
+
+        res = stats.linregress(x, y)
+
+        if res.slope == 0:
+            return False, MSG_STAB_NEUTRAL
+        elif res.slope < 0:
+            return True, msg
+        else:
+            return False, msg
+
+    def check_lateral_stability(self, alt=None, mach=None, aoa=None):
+        """Check lateral stability (cmd vs aos) with other parameters as filter (optional).
+        The stability is checked by making a linear regression on cmd vs aos and analyzing the
+        slope sign.
+
+        Args:
+            alt (list, optional): List of altitudes to filter. Defaults to None.
+            mach (list, optional): List of Mach numbers to filter. Defaults to None.
+            aoa (list, optional): List of angle of attack to filter. Defaults to None.
+
+        Return:
+            stable (bool): Return if this set of conditions is stable (return False if neutral)
+            msg (str): Message description
+
+        """
+
+        msg = ""
+
+        alt_list = listify(alt)
+        mach_list = listify(mach)
+        aoa_list = listify(aoa)
+
+        if len(alt_list) > 1 or len(mach_list) > 1 or len(aoa_list) > 1:
+            msg = MSG_STAB_ONE_PARAM
+
+        filt = get_filter(self.df, alt_list, mach_list, aoa_list, [])
+        df_filt = self.df.loc[filt]
+        x = df_filt["angleOfSideslip"].to_numpy()
+        y = df_filt["cmd"].to_numpy()
+
+        if len(set(x)) < 2:
+            return None, MSG_STAB_NOT_ENOUGH
+
+        res = stats.linregress(x, y)
+
+        if res.slope == 0:
+            return False, MSG_STAB_NEUTRAL
+        elif res.slope < 0:
+            return True, msg
+        else:
+            return False, msg
 
     def __str__(self):
 

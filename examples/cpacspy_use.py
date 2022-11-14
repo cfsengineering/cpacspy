@@ -168,6 +168,17 @@ print(one_aeromap.get("cd", alt=15500.0, aos=0.0, mach=[0.3, 0.4, 0.5]))
 print(one_aeromap.get("drag", alt=15500.0, aos=0.0, mach=[0.3, 0.4, 0.5]))
 
 
+# Check Stability
+stable, msg = one_aeromap.check_longitudinal_stability(alt=15500.0, aos=0.0, mach=0.5)
+print("Longitudinal: ", stable)
+
+stable, msg = one_aeromap.check_directional_stability(alt=15500.0, aoa=0.0, mach=0.4)
+print("Directional: ", stable, "->", msg)
+
+stable, msg = one_aeromap.check_lateral_stability(alt=15500.0, aoa=0.0, mach=0.3)
+print("Lateral: ", stable, "->", msg)
+
+
 ## Save
 
 # Save all the change in a CPACS file

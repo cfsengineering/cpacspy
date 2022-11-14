@@ -65,6 +65,12 @@ DAMPING_COEFS = [
 ]
 
 
+# Stability messages
+MSG_STAB_ONE_PARAM = "Warning, normally stability should be check for one parameter at the time."
+MSG_STAB_NOT_ENOUGH = "Not enough value to check stability"
+MSG_STAB_NEUTRAL = "Neutral stability"
+
+
 def listify(value):
     """If variable, return a list of 1 value, if already a list don't change a list."""
 

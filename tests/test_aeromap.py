@@ -36,6 +36,8 @@ from unittest.mock import patch
 from cpacspy.cpacspy import CPACS
 from cpacspy.utils import D150_TESTS_PATH, TESTS_PATH
 
+from src.cpacspy.utils import MSG_STAB_NEUTRAL, MSG_STAB_NOT_ENOUGH, MSG_STAB_ONE_PARAM
+
 
 D150_OUTPUT_TESTS_PATH = str(Path(TESTS_PATH, "D150_simple_out.xml"))
 CSV_IN_FILE = Path(TESTS_PATH, "aeromap_test.csv")
@@ -367,3 +369,131 @@ def test_get_cd0_oswald():
 def test_calcuate_forces():
     """TODO: create the test when the function is finalized!"""
     pass
+
+
+def test_check_longitudinal_stability():
+    """Test 'check_longitudinal_stability' function."""
+
+    cpacs = CPACS(D150_TESTS_PATH)
+    aeromap_4 = cpacs.create_aeromap("aeromap_test_long_stab")
+
+    aeromap_4.add_row(alt=10000, mach=0.3, aoa=0.0, aos=0.0, cms=0.3)
+    stability, msg = aeromap_4.check_longitudinal_stability()
+    assert stability is None
+    assert msg == MSG_STAB_NOT_ENOUGH
+
+    aeromap_4.add_row(alt=10000, mach=0.4, aoa=0.0, aos=0.0, cms=0.3)
+    stability, msg = aeromap_4.check_longitudinal_stability()
+    assert stability is None
+    assert msg == MSG_STAB_NOT_ENOUGH
+
+    aeromap_4.add_row(alt=10000, mach=0.3, aoa=5.0, aos=0.0, cms=0.3)
+    stability, msg = aeromap_4.check_longitudinal_stability()
+    assert not stability
+    assert msg == MSG_STAB_NEUTRAL
+
+    aeromap_4.add_row(alt=9000, mach=0.3, aoa=0.0, aos=0.0, cms=0.4)
+    aeromap_4.add_row(alt=9000, mach=0.3, aoa=5.0, aos=0.0, cms=0.5)
+    stability, msg = aeromap_4.check_longitudinal_stability(alt=9000)
+    assert not stability
+    assert msg == ""
+
+    aeromap_4.add_row(alt=8000, mach=0.3, aoa=0.0, aos=0.0, cms=0.1)
+    aeromap_4.add_row(alt=8000, mach=0.3, aoa=5.0, aos=0.0, cms=-0.1)
+    stability, msg = aeromap_4.check_longitudinal_stability(alt=8000)
+    assert stability
+    assert msg == ""
+
+    aeromap_4.add_row(alt=7000, mach=0.4, aoa=-2.0, aos=0.0, cms=0.2)
+    aeromap_4.add_row(alt=7000, mach=0.4, aoa=0.0, aos=0.0, cms=0.1)
+    aeromap_4.add_row(alt=7000, mach=0.4, aoa=2.0, aos=0.0, cms=0.1)
+    aeromap_4.add_row(alt=7000, mach=0.4, aoa=4.0, aos=0.0, cms=-0.1)
+    stability, msg = aeromap_4.check_longitudinal_stability(alt=7000, mach=0.4)
+    assert stability
+    assert msg == ""
+
+    stability, msg = aeromap_4.check_longitudinal_stability(alt=[7000, 8000], mach=[0.3, 0.4])
+    assert stability
+    assert msg == MSG_STAB_ONE_PARAM
+
+
+def test_check_directional_stability():
+    """Test 'check_directional_stability' function."""
+
+    cpacs = CPACS(D150_TESTS_PATH)
+    aeromap_5 = cpacs.create_aeromap("aeromap_test_dir_stab")
+    aeromap_5.add_row(alt=10000, mach=0.3, aoa=2.0, aos=0.0, cml=0.3)
+
+    stability, msg = aeromap_5.check_directional_stability()
+    assert stability is None
+    assert msg == MSG_STAB_NOT_ENOUGH
+
+    aeromap_5.add_row(alt=10000, mach=0.3, aoa=2.0, aos=5.0, cml=0.3)
+    stability, msg = aeromap_5.check_directional_stability()
+    assert not stability
+    assert msg == MSG_STAB_NEUTRAL
+
+    aeromap_5.add_row(alt=9000, mach=0.3, aoa=2.0, aos=0.0, cml=0.4)
+    aeromap_5.add_row(alt=9000, mach=0.3, aoa=2.0, aos=5.0, cml=0.5)
+    stability, msg = aeromap_5.check_directional_stability(alt=9000)
+    assert not stability
+    assert msg == ""
+
+    aeromap_5.add_row(alt=8000, mach=0.3, aoa=2.0, aos=-1.0, cml=0.1)
+    aeromap_5.add_row(alt=8000, mach=0.3, aoa=2.0, aos=2.0, cml=-0.1)
+    stability, msg = aeromap_5.check_directional_stability(alt=8000)
+    assert stability
+    assert msg == ""
+
+    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=-4.0, cml=0.3)
+    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=-2.0, cml=0.3)
+    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=0.0, cml=0.1)
+    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=2.0, cml=-0.05)
+    stability, msg = aeromap_5.check_directional_stability(alt=7000, mach=0.4)
+    assert stability
+    assert msg == ""
+
+    stability, msg = aeromap_5.check_directional_stability(alt=[7000, 8000], mach=[0.3, 0.4])
+    assert stability
+    assert msg == MSG_STAB_ONE_PARAM
+
+
+def test_check_lateral_stability():
+    """Test 'check_lateral_stability' function."""
+
+    cpacs = CPACS(D150_TESTS_PATH)
+    aeromap_6 = cpacs.create_aeromap("aeromap_test_lat_stab")
+    aeromap_6.add_row(alt=10000, mach=0.3, aoa=2.0, aos=0.0, cmd=0.0)
+
+    stability, msg = aeromap_6.check_lateral_stability()
+    assert stability is None
+    assert msg == MSG_STAB_NOT_ENOUGH
+
+    aeromap_6.add_row(alt=10000, mach=0.3, aoa=2.0, aos=5.0, cmd=0.0)
+    stability, msg = aeromap_6.check_lateral_stability()
+    assert not stability
+    assert msg == MSG_STAB_NEUTRAL
+
+    aeromap_6.add_row(alt=9000, mach=0.3, aoa=2.0, aos=0.0, cmd=-0.04)
+    aeromap_6.add_row(alt=9000, mach=0.3, aoa=2.0, aos=5.0, cmd=0.05)
+    stability, msg = aeromap_6.check_lateral_stability(alt=9000)
+    assert not stability
+    assert msg == ""
+
+    aeromap_6.add_row(alt=8000, mach=0.3, aoa=2.0, aos=-5.0, cmd=0.2)
+    aeromap_6.add_row(alt=8000, mach=0.3, aoa=2.0, aos=2.0, cmd=-0.9)
+    stability, msg = aeromap_6.check_lateral_stability(alt=8000)
+    assert stability
+    assert msg == ""
+
+    aeromap_6.add_row(alt=7000, mach=0.4, aoa=2.0, aos=-4.0, cmd=0.01)
+    aeromap_6.add_row(alt=7000, mach=0.4, aoa=2.0, aos=-2.0, cmd=0.0)
+    aeromap_6.add_row(alt=7000, mach=0.4, aoa=2.0, aos=0.0, cmd=0.0)
+    aeromap_6.add_row(alt=7000, mach=0.4, aoa=2.0, aos=2.0, cmd=-0.01)
+    stability, msg = aeromap_6.check_lateral_stability(alt=7000, mach=0.4)
+    assert stability
+    assert msg == ""
+
+    stability, msg = aeromap_6.check_lateral_stability(alt=[7000, 8000], mach=[0.3, 0.4])
+    assert stability
+    assert msg == MSG_STAB_ONE_PARAM
