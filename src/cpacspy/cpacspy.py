@@ -25,6 +25,7 @@ Author: Aidan Jungo
 import os
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from cpacspy.aeromap import AeroMap
@@ -129,7 +130,10 @@ class CPACS:
             raise ValueError(f"CSV file not found at {os.path.abspath(csv_path)}")
 
         new_aeromap = self.create_aeromap(uid)
-        new_aeromap.df = pd.read_csv(csv_path, keep_default_na=False)
+
+        new_aeromap.df = pd.read_csv(
+            csv_path, keep_default_na=True, na_values=float(np.nan), dtype=float
+        )
 
         return new_aeromap
 

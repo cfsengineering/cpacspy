@@ -87,7 +87,7 @@ class AeroMap:
         self.name = uid
         self.description = ""
         self.atmospheric_model = "ISA"
-        self.df = pd.DataFrame(columns=PARAMS_COEFS)
+        self.df = pd.DataFrame(columns=PARAMS_COEFS, dtype=float)
 
         if create_new:
             self.name = uid
