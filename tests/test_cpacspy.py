@@ -22,7 +22,6 @@ Author: Aidan Jungo
 
 """
 
-import os
 from pathlib import Path
 import pytest
 
@@ -96,7 +95,7 @@ def test_create_aeromap_from_csv():
 
     # Raise error when uid already exist
     with pytest.raises(ValueError):
-        cpacs.create_aeromap_from_csv("/not/exiting/path.csv")
+        cpacs.create_aeromap_from_csv(Path("not", "exiting", "path.csv"))
 
     # Create a new aeromap from a CSV file
     cpacs.create_aeromap_from_csv(CSV_PATH)
@@ -160,41 +159,45 @@ def test_delete_aeromap():
 
 def test_save_cpacs():
 
-    test_path = "tests/output.xml"
-    test_path_1 = "tests/output_1.xml"
-    test_path_2 = Path("tests", "output_2.xml")
+    test_path = Path(TESTS_PATH, "output.xml")
+    test_path_str = str(test_path)
+    test_path_1 = Path(TESTS_PATH, "output_1.xml")
+    test_path_2 = Path(TESTS_PATH, "output_2.xml")
 
     cpacs = CPACS(D150_TESTS_PATH)
 
     # Raise error when trying to save a not xml file
     with pytest.raises(ValueError):
-        cpacs.save_cpacs("tests/output.txt")
+        cpacs.save_cpacs(Path(TESTS_PATH, "output.txt"))
 
     # Delete test file from a past run (could be still there if an error occurs)
-    if os.path.exists(test_path):
-        os.remove(test_path)
+    if test_path.exists():
+        test_path.unlink()
 
-    if os.path.exists(test_path_1):
-        os.remove(test_path_1)
+    if test_path_1.exists():
+        test_path_1.unlink()
 
-    # Save CPACS file
-    cpacs.save_cpacs(test_path, True)
-    assert os.path.exists(test_path)
+    if test_path_2.exists():
+        test_path_2.unlink()
+
+    # Save CPACS file with a path given as a string
+    cpacs.save_cpacs(test_path_str, True)
+    assert test_path.exists()
 
     # Save CPACS file with a Path object
     cpacs.save_cpacs(test_path_2, True)
-    assert os.path.exists(test_path_2)
+    assert test_path_2.exists()
 
     # Save CPACS file with already existing name (no overwrite)
     cpacs.save_cpacs(test_path, False)
-    assert os.path.exists(test_path)
+    assert test_path.exists()
 
     # Delete test file
-    if os.path.exists(test_path):
-        os.remove(test_path)
+    if test_path.exists():
+        test_path.unlink()
 
-    if os.path.exists(test_path_1):
-        os.remove(test_path_1)
+    if test_path_1.exists():
+        test_path_1.unlink()
 
-    if os.path.exists(test_path_2):
-        os.remove(test_path_2)
+    if test_path_2.exists():
+        test_path_2.unlink()
