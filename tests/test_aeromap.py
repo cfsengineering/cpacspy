@@ -70,6 +70,8 @@ def test_aeromap_class():
     )
     assert aeromap_1.df.altitude.size == 1
 
+    assert all(aeromap_1.df.dtypes == float)
+
     # Test if damping derivatives coefficients are correctly loaded
     aeromap_dampder = cpacs.get_aeromap_by_uid("aeromap_test_dampder")
     assert aeromap_dampder.df["dampingDerivatives_negativeRates_dcddpStar"].tolist()[0] == 0.00111
@@ -313,6 +315,7 @@ def test_save():
     assert aeromap_3.get("cms", alt=10000, mach=0.3)[0] == 0.555
     assert aeromap_3.get("cms", alt=10000, mach=0.3)[1] == 0.666
     assert np.isnan(aeromap_3.get("cms", alt=10000, mach=0.3)[2])
+    assert all(aeromap_3.df.dtypes == float)
 
     # Modify name and description
     aeromap_3.name = "aeromap_new_name"
@@ -346,6 +349,7 @@ def test_csv():
 
     cpacs = CPACS(D150_TESTS_PATH)
     aeromap_dampder_csv = cpacs.create_aeromap_from_csv(CSV_IN_FILE)
+    assert all(aeromap_dampder_csv.df.dtypes == float)
     # TODO: maybe save and reopen the CPACS file inbetween the import and export?
     aeromap_dampder_csv.export_csv(CSV_OUT_FILE)
 
