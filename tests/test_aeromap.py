@@ -22,7 +22,6 @@ Author: Aidan Jungo
 
 """
 
-import os
 import numpy as np
 from pathlib import Path
 
@@ -361,8 +360,8 @@ def test_csv():
     assert csv_in == csv_export
 
     # Delete test file from a past run
-    if os.path.exists(CSV_OUT_FILE):
-        os.remove(CSV_OUT_FILE)
+    if CSV_OUT_FILE.exists():
+        CSV_OUT_FILE.unlink()
 
 
 def test_get_cd0_oswald():

@@ -22,7 +22,6 @@ Author: Aidan Jungo
 
 """
 
-import os
 from pathlib import Path
 
 import numpy as np
@@ -122,12 +121,14 @@ class CPACS:
     def create_aeromap_from_csv(self, csv_path, uid=None):
         """Create a new aeromap object from a CSV file."""
 
-        if not uid:
-            _, tail = os.path.split(csv_path)
-            uid = tail.split(".")[0]
+        if isinstance(csv_path, str):
+            csv_path = Path(csv_path)
 
-        if not os.path.exists(csv_path):
-            raise ValueError(f"CSV file not found at {os.path.abspath(csv_path)}")
+        if not uid:
+            uid = csv_path.stem
+
+        if not csv_path.exists():
+            raise ValueError(f"CSV file not found at {csv_path.absolute}")
 
         new_aeromap = self.create_aeromap(uid)
 
@@ -182,28 +183,26 @@ class CPACS:
         """Save a CPACS file from the TIXI object at a chosen path."""
 
         # To accept either a Path or a string
-        if isinstance(cpacs_file, Path):
-            cpacs_file = str(cpacs_file)
-        else:
-            cpacs_file = cpacs_file
+        if isinstance(cpacs_file, str):
+            cpacs_file = Path(cpacs_file)
 
         # Check for .xml file
-        if not cpacs_file.endswith(".xml"):
+        if cpacs_file.suffix != ".xml":
             raise ValueError("The CPACS file name must be a .xml file!")
 
         # Check if file name must be change to avoid overwrite
-        if os.path.exists(cpacs_file) and not overwrite:
+        if cpacs_file.exists() and not overwrite:
             find_name = False
             i = 1
             while not find_name:
-                cpacs_file_new_name = cpacs_file.split(".xml")[0] + f"_{str(i)}.xml"
-                if not os.path.exists(cpacs_file_new_name):
+                cpacs_file_new_name = Path(cpacs_file.parent, f"{cpacs_file.stem}_{i}.xml")
+                if not cpacs_file_new_name.exists():
                     find_name = True
                     cpacs_file = cpacs_file_new_name
                 else:
                     i += 1
 
-        self.tixi.save(cpacs_file)
+        self.tixi.save(str(cpacs_file))
 
     def __str__(self):
 
