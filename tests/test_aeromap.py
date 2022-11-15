@@ -421,7 +421,8 @@ def test_check_longitudinal_stability():
 
 
 def test_check_directional_stability():
-    """Test 'check_directional_stability' function."""
+    """Test 'check_directional_stability' function. With the CPACS angle convention cml vs aos must
+    be positive to be stable."""
 
     cpacs = CPACS(D150_TESTS_PATH)
     aeromap_5 = cpacs.create_aeromap("aeromap_test_dir_stab")
@@ -436,22 +437,22 @@ def test_check_directional_stability():
     assert not stability
     assert msg == MSG_STAB_NEUTRAL
 
-    aeromap_5.add_row(alt=9000, mach=0.3, aoa=2.0, aos=0.0, cml=0.4)
-    aeromap_5.add_row(alt=9000, mach=0.3, aoa=2.0, aos=5.0, cml=0.5)
+    aeromap_5.add_row(alt=9000, mach=0.3, aoa=2.0, aos=0.0, cml=0.2)
+    aeromap_5.add_row(alt=9000, mach=0.3, aoa=2.0, aos=5.0, cml=0.1)
     stability, msg = aeromap_5.check_directional_stability(alt=9000)
     assert not stability
     assert msg == ""
 
-    aeromap_5.add_row(alt=8000, mach=0.3, aoa=2.0, aos=-1.0, cml=0.1)
-    aeromap_5.add_row(alt=8000, mach=0.3, aoa=2.0, aos=2.0, cml=-0.1)
+    aeromap_5.add_row(alt=8000, mach=0.3, aoa=2.0, aos=-1.0, cml=-0.1)
+    aeromap_5.add_row(alt=8000, mach=0.3, aoa=2.0, aos=2.0, cml=0.1)
     stability, msg = aeromap_5.check_directional_stability(alt=8000)
     assert stability
     assert msg == ""
 
-    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=-4.0, cml=0.3)
-    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=-2.0, cml=0.3)
-    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=0.0, cml=0.1)
-    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=2.0, cml=-0.05)
+    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=-4.0, cml=-0.3)
+    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=-2.0, cml=-0.3)
+    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=0.0, cml=-0.1)
+    aeromap_5.add_row(alt=7000, mach=0.4, aoa=2.0, aos=2.0, cml=0.05)
     stability, msg = aeromap_5.check_directional_stability(alt=7000, mach=0.4)
     assert stability
     assert msg == ""
