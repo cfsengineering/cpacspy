@@ -604,7 +604,7 @@ class AeroMap:
     def check_directional_stability(self, alt=None, mach=None, aoa=None):
         """Check directional stability (cml vs aos) with other parameters as filter (optional).
         The stability is checked by making a linear regression on cml vs aos and analyzing the
-        slope sign.
+        slope sign. With the CPACS angle convention cml vs aos slope must be positive to be stable.
 
         Args:
             alt (list, optional): List of altitudes to filter. Defaults to None.
@@ -638,7 +638,7 @@ class AeroMap:
 
         if res.slope == 0:
             return False, MSG_STAB_NEUTRAL
-        elif res.slope < 0:
+        elif res.slope > 0:
             return True, msg
         else:
             return False, msg
