@@ -421,8 +421,8 @@ def test_check_longitudinal_stability():
 
 
 def test_check_directional_stability():
-    """Test 'check_directional_stability' function. With the CPACS angle convention cml vs aos must
-    be positive to be stable."""
+    """Test 'check_directional_stability' function. With the CPACS angle convention cml vs aos
+    slope must be positive to be stable."""
 
     cpacs = CPACS(D150_TESTS_PATH)
     aeromap_5 = cpacs.create_aeromap("aeromap_test_dir_stab")
