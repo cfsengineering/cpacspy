@@ -51,21 +51,21 @@ from cpacspy.utils import MSG_STAB_NEUTRAL, MSG_STAB_NOT_ENOUGH, MSG_STAB_ONE_PA
 def get_filter(df, alt_list, mach_list, aos_list, aoa_list):
     """Get a dataframe filter for a set of parameters lists."""
 
-    filt = pd.Series(True, index=df.index)
+    filter = pd.Series(True, index=df.index)
 
     if alt_list:
-        filt &= df["altitude"].isin(alt_list)
+        filter &= df["altitude"].isin(alt_list)
 
     if mach_list:
-        filt &= df["machNumber"].isin(mach_list)
+        filter &= df["machNumber"].isin(mach_list)
 
     if aos_list:
-        filt &= df["angleOfSideslip"].isin(aos_list)
+        filter &= df["angleOfSideslip"].isin(aos_list)
 
     if aoa_list:
-        filt &= df["angleOfAttack"].isin(aoa_list)
+        filter &= df["angleOfAttack"].isin(aoa_list)
 
-    return filt
+    return filter
 
 
 class AeroMap:
@@ -580,11 +580,12 @@ class AeroMap:
         alt_list = listify(alt)
         mach_list = listify(mach)
         aos_list = listify(aos)
+        aoa_list = []
 
         if len(alt_list) > 1 or len(mach_list) > 1 or len(aos_list) > 1:
             msg = MSG_STAB_ONE_PARAM
 
-        filt = get_filter(self.df, alt_list, mach_list, aos_list, [])
+        filt = get_filter(self.df, alt_list, mach_list, aos_list, aoa_list)
         df_filt = self.df.loc[filt]
         x = df_filt["angleOfAttack"].to_numpy()
         y = df_filt["cms"].to_numpy()
@@ -622,14 +623,19 @@ class AeroMap:
         alt_list = listify(alt)
         mach_list = listify(mach)
         aoa_list = listify(aoa)
+        aos_list = []
 
         if len(alt_list) > 1 or len(mach_list) > 1 or len(aoa_list) > 1:
             msg = MSG_STAB_ONE_PARAM
 
-        filt = get_filter(self.df, alt_list, mach_list, aoa_list, [])
+        print(self.df)
+        filt = get_filter(self.df, alt_list, mach_list, aos_list, aoa_list)
         df_filt = self.df.loc[filt]
+        print(df_filt)
         x = df_filt["angleOfSideslip"].to_numpy()
         y = df_filt["cml"].to_numpy()
+
+        print(x)
 
         if len(set(x)) < 2:
             return None, MSG_STAB_NOT_ENOUGH
@@ -664,11 +670,12 @@ class AeroMap:
         alt_list = listify(alt)
         mach_list = listify(mach)
         aoa_list = listify(aoa)
+        aos_list = []
 
         if len(alt_list) > 1 or len(mach_list) > 1 or len(aoa_list) > 1:
             msg = MSG_STAB_ONE_PARAM
 
-        filt = get_filter(self.df, alt_list, mach_list, aoa_list, [])
+        filt = get_filter(self.df, alt_list, mach_list, aos_list, aoa_list)
         df_filt = self.df.loc[filt]
         x = df_filt["angleOfSideslip"].to_numpy()
         y = df_filt["cmd"].to_numpy()
