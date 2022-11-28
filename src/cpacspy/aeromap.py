@@ -628,14 +628,11 @@ class AeroMap:
         if len(alt_list) > 1 or len(mach_list) > 1 or len(aoa_list) > 1:
             msg = MSG_STAB_ONE_PARAM
 
-        print(self.df)
         filt = get_filter(self.df, alt_list, mach_list, aos_list, aoa_list)
         df_filt = self.df.loc[filt]
-        print(df_filt)
+
         x = df_filt["angleOfSideslip"].to_numpy()
         y = df_filt["cml"].to_numpy()
-
-        print(x)
 
         if len(set(x)) < 2:
             return None, MSG_STAB_NOT_ENOUGH
