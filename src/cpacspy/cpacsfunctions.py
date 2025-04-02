@@ -315,9 +315,9 @@ def get_value(tixi, xpath):
         raise ValueError(f"No value has been found at {xpath}")
 
     # Check if the value should be return as boolean
-    if value == "True":
+    if value in ["true", "True"]:
         return True
-    elif value == "False":
+    elif value in ["false", "False"]:
         return False
 
     # Check if the value should be return as float
