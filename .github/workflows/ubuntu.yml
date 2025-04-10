@@ -13,16 +13,16 @@ env:
 
 jobs:
   build-linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.7
+    - name: Set up Python 3.11.11
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7
+        python-version: 3.11.11
 
     - name: Setup Mambaforge
       uses: conda-incubator/setup-miniconda@v2

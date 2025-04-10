@@ -32,7 +32,7 @@ from unittest.mock import patch
 # from tixi3.tixi3wrapper import Tixi3Exception
 # from tigl3.tigl3wrapper import Tigl3Exception
 
-from cpacspy.cpacspy import CPACS
+from cpacspy.cpacspy import CPACS, AeroMap
 from cpacspy.utils import D150_TESTS_PATH, TESTS_PATH
 
 from src.cpacspy.utils import MSG_STAB_NEUTRAL, MSG_STAB_NOT_ENOUGH, MSG_STAB_ONE_PARAM
@@ -47,7 +47,7 @@ def test_aeromap_class():
 
     # Load the CPACS file and 'aeromap_test1'
     cpacs = CPACS(D150_TESTS_PATH)
-    aeromap_1 = cpacs.get_aeromap_by_uid("aeromap_test1")
+    aeromap_1: AeroMap = cpacs.get_aeromap_by_uid("aeromap_test1")
 
     assert aeromap_1.uid == "aeromap_test1"
     assert aeromap_1.name == "aeromap_test1"
@@ -101,7 +101,7 @@ def test_get_damping_derivatives():
 
     # Load the CPACS file and 'aeromap_test_dampder'
     cpacs = CPACS(D150_TESTS_PATH)
-    aeromap_dampder = cpacs.get_aeromap_by_uid("aeromap_test_dampder")
+    aeromap_dampder: AeroMap = cpacs.get_aeromap_by_uid("aeromap_test_dampder")
 
     # Test if wrong damping derivatives coefficients raises ValueError
     with pytest.raises(ValueError):
@@ -289,7 +289,7 @@ def test_plot(mock_show):
     """Test 'plot' function."""
 
     cpacs = CPACS(D150_TESTS_PATH)
-    aeromap_1 = cpacs.get_aeromap_by_uid("aeromap_test1")
+    aeromap_1: AeroMap = cpacs.get_aeromap_by_uid("aeromap_test1")
 
     aeromap_1.plot("cl", "angleOfAttack")
 
@@ -326,7 +326,7 @@ def test_save():
 
     # Check value after it has been saved and reopened
     cpacs_test = CPACS(D150_OUTPUT_TESTS_PATH)
-    aeromap_3_test = cpacs_test.get_aeromap_by_uid("aeromap_test3")
+    aeromap_3_test: AeroMap = cpacs_test.get_aeromap_by_uid("aeromap_test3")
 
     assert (aeromap_3_test.get("cl", alt=10000, mach=0.3) == np.array([0.5, 0.6, 0.7])).all()
     assert aeromap_3_test.get("cms", alt=10000, mach=0.3)[0] == 0.555
