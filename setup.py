@@ -6,8 +6,8 @@ from src.cpacspy.__version__ import __version__
 
 NAME = "cpacspy"
 VERSION = __version__
-AUTHOR = "Aidan Jungo"
-EMAIL = "aidan.jungo@cfse.ch"
+AUTHOR = "Giacomo Benedetti"
+EMAIL = "giacomo.benedetti@cfse.ch"
 DESCRIPTION = "PyPI package to work with CPACS file and AeroMaps"
 LONG_DESCRIPTION = open("README.md").read()
 URL = "https://github.com/cfsengineering/cpacspy"
