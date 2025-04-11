@@ -37,7 +37,7 @@ setuptools.setup(
     # See: https://pypi.org/classifiers/
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.11.11",
+        "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
