@@ -11,7 +11,7 @@ EMAIL = "giacomo.benedetti@cfse.ch"
 DESCRIPTION = "PyPI package to work with CPACS file and AeroMaps"
 LONG_DESCRIPTION = open("README.md").read()
 URL = "https://github.com/cfsengineering/cpacspy"
-REQUIRES_PYTHON = ">=3.11.11"
+REQUIRES_PYTHON = ">=3.11"
 REQUIRED = []
 README = "README.md"
 PACKAGE_DIR = "src"
