@@ -27,6 +27,7 @@ import math
 import numpy as np
 import pandas as pd
 from ambiance import Atmosphere
+from tixi3.tixi3wrapper import Tixi3
 from matplotlib import pyplot as plt
 from scipy import stats
 
@@ -71,7 +72,7 @@ def get_filter(df, alt_list, mach_list, aos_list, aoa_list):
 class AeroMap:
     """AeroMap class for CPACS AeroMap."""
 
-    def __init__(self, tixi, uid, create_new=False):
+    def __init__(self, tixi: Tixi3, uid, create_new=False):
         """Init aeromap class
 
         Args:
@@ -271,7 +272,7 @@ class AeroMap:
                 self.df[col] = np.nan
 
         # Add the new row
-        self.df = self.df.append(new_row, ignore_index=True)
+        self.df = pd.concat([self.df, pd.DataFrame([new_row])], ignore_index=True)
 
     def remove_row(self, alt, mach, aos, aoa):
         """Remove a row in an Aeromap dataframe for a set of parameters.

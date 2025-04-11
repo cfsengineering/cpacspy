@@ -11,7 +11,7 @@ EMAIL = "aidan.jungo@cfse.ch"
 DESCRIPTION = "PyPI package to work with CPACS file and AeroMaps"
 LONG_DESCRIPTION = open("README.md").read()
 URL = "https://github.com/cfsengineering/cpacspy"
-REQUIRES_PYTHON = ">=3.7.0"
+REQUIRES_PYTHON = ">=3.11.11"
 REQUIRED = []
 README = "README.md"
 PACKAGE_DIR = "src"
@@ -37,7 +37,7 @@ setuptools.setup(
     # See: https://pypi.org/classifiers/
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.11.11",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
