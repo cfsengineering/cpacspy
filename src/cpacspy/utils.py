@@ -27,7 +27,23 @@ from pathlib import Path
 
 # PATH
 CPACSPY_LIB = Path(__file__).absolute().parent
-CPACSPY_ROOT = CPACSPY_LIB.parents[1]
+
+
+def _find_project_root():
+    """Return the repository root that holds the bundled test data."""
+
+    expected_files = ["D150_simple.xml", "SimpleAircraft_propeller.xml"]
+    candidates = [Path.cwd()] + list(Path(__file__).resolve().parents)
+
+    for candidate in candidates:
+        tests_dir = candidate / "tests"
+        if tests_dir.exists() and all((tests_dir / file).exists() for file in expected_files):
+            return candidate
+
+    return CPACSPY_LIB.parents[1]
+
+
+CPACSPY_ROOT = _find_project_root()
 EXAMPLES_PATH = Path(CPACSPY_ROOT, "examples")
 TESTS_PATH = Path(CPACSPY_ROOT, "tests")
 D150_TESTS_PATH = Path(TESTS_PATH, "D150_simple.xml")

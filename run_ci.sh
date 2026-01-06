@@ -12,4 +12,9 @@ echo -e "\n## Running Flake8 ## \n"
 flake8
 
 echo -e "\n## Running PyTest and Coverage ## \n"
+
+# Use the local module
+pip install -e .
+
+# Run the test
 pytest
