@@ -60,15 +60,27 @@ class Aircraft:
     def ref_wing_idx(self, new_idx):
         self._ref_wing_idx = new_idx
 
-        self._ref_wing_uid = self.configuration.get_wing(self._ref_wing_idx).get_uid()
+        wing_count = self.configuration.get_wing_count()
+        if wing_count == 0 or new_idx is None:
+            self._ref_wing_uid = None
+            self.wing_span = None
+            self.wing_area = None
+            self.wing_ar = None
+            return
+
+        if new_idx < 1 or new_idx > wing_count:
+            raise ValueError(f"Reference wing index {new_idx} out of range (1-{wing_count})")
+
+        wing = self.configuration.get_wing(self._ref_wing_idx)
+        self._ref_wing_uid = wing.get_uid()
 
         sym = 1
-        if self.configuration.get_wing(self._ref_wing_idx).get_symmetry():
+        if wing.get_symmetry():
             sym = 2
 
-        self.wing_span = self.configuration.get_wing(self._ref_wing_idx).get_wing_half_span() * sym
-        self.wing_area = self.configuration.get_wing(self._ref_wing_idx).get_surface_area()
-        self.wing_ar = self.configuration.get_wing(self._ref_wing_idx).get_aspect_ratio()
+        self.wing_span = wing.get_wing_half_span() * sym
+        self.wing_area = wing.get_surface_area()
+        self.wing_ar = wing.get_aspect_ratio()
 
     @property
     def ref_wing_uid(self):

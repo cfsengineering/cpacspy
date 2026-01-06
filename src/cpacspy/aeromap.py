@@ -26,10 +26,12 @@ import math
 
 import numpy as np
 import pandas as pd
+
 from ambiance import Atmosphere
 from tixi3.tixi3wrapper import Tixi3
 from matplotlib import pyplot as plt
 from scipy import stats
+
 
 from cpacspy.cpacsfunctions import (
     add_float_vector,
