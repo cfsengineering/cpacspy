@@ -57,21 +57,31 @@ class Aircraft:
         return self._ref_wing_idx
 
     @ref_wing_idx.setter
-    def ref_wing_idx(self, new_idx):
-        self._ref_wing_idx = new_idx
+    def ref_wing_idx(self, new_idx) -> None:
+        if new_idx is None:
+            self._clear_wing_reference()
+            return
 
-        wing_count = self.configuration.get_wing_count()
-        if wing_count == 0 or new_idx is None:
-            self._ref_wing_uid = None
-            self.wing_span = None
-            self.wing_area = None
-            self.wing_ar = None
+        try:
+            wing_count = self.configuration.get_wing_count()
+        except Exception:
+            self._clear_wing_reference()
+            return
+
+        if wing_count == 0:
+            self._clear_wing_reference()
             return
 
         if new_idx < 1 or new_idx > wing_count:
             raise ValueError(f"Reference wing index {new_idx} out of range (1-{wing_count})")
 
-        wing = self.configuration.get_wing(self._ref_wing_idx)
+        try:
+            wing = self.configuration.get_wing(new_idx)
+        except Exception:
+            self._clear_wing_reference()
+            return
+
+        self._ref_wing_idx = new_idx
         self._ref_wing_uid = wing.get_uid()
 
         sym = 1
@@ -88,30 +98,62 @@ class Aircraft:
 
     @ref_wing_uid.setter
     def ref_wing_uid(self, uid):
-        self._ref_wing_uid = uid
+        if uid is None:
+            self._clear_wing_reference()
+            return
 
-        self._ref_wing_idx = self.configuration.get_wing_index(uid)
+        try:
+            wing_count = self.configuration.get_wing_count()
+        except Exception:
+            self._clear_wing_reference()
+            return
+
+        if wing_count == 0:
+            self._clear_wing_reference()
+            return
+
+        try:
+            self._ref_wing_idx = self.configuration.get_wing_index(uid)
+        except ValueError as err:
+            raise ValueError(f'No wing with uid "{uid}" found') from err
+        except Exception:
+            self._clear_wing_reference()
+            return
 
         sym = 1
-        if self.configuration.get_wing(self._ref_wing_idx).get_symmetry():
+        try:
+            wing = self.configuration.get_wing(self._ref_wing_idx)
+        except Exception:
+            self._clear_wing_reference()
+            return
+
+        if wing.get_symmetry():
             sym = 2
 
-        self.wing_span = self.configuration.get_wing(self._ref_wing_uid).get_wing_half_span() * sym
-        self.wing_area = self.configuration.get_wing(self._ref_wing_uid).get_surface_area()
-        self.wing_ar = self.configuration.get_wing(self._ref_wing_uid).get_aspect_ratio()
+        self._ref_wing_uid = uid
+        self.wing_span = wing.get_wing_half_span() * sym
+        self.wing_area = wing.get_surface_area()
+        self.wing_ar = wing.get_aspect_ratio()
 
-    def get_main_wing_idx(self):
-        """Find the largest wing index
-
-        Args:
-            self (object)
-        """
+    def get_main_wing_idx(self) -> int | None:
+        """Find the largest wing index"""
 
         wing_area_max = 0
         wing_idx = None
 
-        for i_wing in range(self.configuration.get_wing_count()):
-            wing_area = self.configuration.get_wing(i_wing + 1).get_surface_area()
+        try:
+            wing_count = self.configuration.get_wing_count()
+        except Exception:
+            return wing_idx
+
+        if wing_count == 0:
+            return wing_idx
+
+        for i_wing in range(wing_count):
+            try:
+                wing_area = self.configuration.get_wing(i_wing + 1).get_surface_area()
+            except Exception:
+                continue
 
             if wing_area > wing_area_max:
                 wing_area_max = wing_area
@@ -119,8 +161,7 @@ class Aircraft:
 
         return wing_idx
 
-    def __str__(self):
-
+    def __str__(self) -> str:
         text_line = []
         text_line.append("\nAircraft data -------------------------------------------------------")
         text_line.append(" ")
@@ -137,3 +178,12 @@ class Aircraft:
         text_line.append(" ")
         text_line.append("---------------------------------------------------------------------\n")
         return ("\n").join(text_line)
+
+    def _clear_wing_reference(self) -> None:
+        """Clear cached wing reference data when no wing is available."""
+
+        self._ref_wing_idx = None
+        self._ref_wing_uid = None
+        self.wing_span = None
+        self.wing_area = None
+        self.wing_ar = None
